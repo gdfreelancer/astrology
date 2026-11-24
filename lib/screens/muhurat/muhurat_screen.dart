@@ -28,7 +28,7 @@ class _MuhuratScreenState extends State<MuhuratScreen> {
   void dispose() { _placeController.dispose(); super.dispose(); }
 
   Future<void> _pickDate() async {
-    final picked = await showDatePicker(context: context, initialDate: _selectedDate, firstDate: DateTime.now().subtract(const Duration(days: 1)), lastDate: DateTime.now().add(const Duration(days: 730)));
+    final picked = await showDatePicker(context: context, initialDate: _selectedDate, firstDate: DateUtils.dateOnly(DateTime.now().subtract(const Duration(days: 1))), lastDate: DateTime.now().add(const Duration(days: 730)));
     if (picked != null) setState(() { _selectedDate = DateUtils.dateOnly(picked); _showNotice = false; });
   }
 
