@@ -1,0 +1,135 @@
+import 'dart:math' as math;
+import 'package:geoengine/geoengine.dart' as astro;
+import 'package:timezone/timezone.dart' as tz;
+import '../data/nakshatra_data.dart';
+import '../models/panchang_data.dart';
+
+class PanchangService {
+  static const tithis=['Pratipada','Dwitiya','Tritiya','Chaturthi','Panchami','Shashthi','Saptami','Ashtami','Navami','Dashami','Ekadashi','Dwadashi','Trayodashi','Chaturdashi','Purnima'];
+  static const yogas=['Vishkambha','Priti','Ayushman','Saubhagya','Shobhana','Atiganda','Sukarma','Dhriti','Shoola','Ganda','Vriddhi','Dhruva','Vyaghata','Harshana','Vajra','Siddhi','Vyatipata','Variyana','Parigha','Shiva','Siddha','Sadhya','Shubha','Shukla','Brahma','Indra','Vaidhriti'];
+  static const karanas=['Kimstughna','Bava','Balava','Kaulava','Taitila','Garaja','Vanija','Vishti (Bhadra)','Shakuni','Chatushpada','Naga'];
+  static const weekdays=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  static const rashis=['Mesha','Vrishabha','Mithuna','Karka','Simha','Kanya','Tula','Vrishchika','Dhanu','Makara','Kumbha','Meena'];
+  static const ritus=['Vasanta','Vasanta','Grishma','Grishma','Varsha','Varsha','Sharad','Sharad','Hemanta','Hemanta','Shishira','Shishira'];
+  static const dayChoghadiya=[
+    ['Udveg','Char','Labh','Amrit','Kaal','Shubh','Rog','Udveg'],
+    ['Amrit','Kaal','Shubh','Rog','Udveg','Char','Labh','Amrit'],
+    ['Rog','Udveg','Char','Labh','Amrit','Kaal','Shubh','Rog'],
+    ['Labh','Amrit','Kaal','Shubh','Rog','Udveg','Char','Labh'],
+    ['Shubh','Rog','Udveg','Char','Labh','Amrit','Kaal','Shubh'],
+    ['Char','Labh','Amrit','Kaal','Shubh','Rog','Udveg','Char'],
+    ['Kaal','Shubh','Rog','Udveg','Char','Labh','Amrit','Kaal'],
+  ];
+  static const nightChoghadiya=[
+    ['Shubh','Amrit','Char','Rog','Kaal','Labh','Udveg','Shubh'],
+    ['Char','Rog','Kaal','Labh','Udveg','Shubh','Amrit','Char'],
+    ['Kaal','Labh','Udveg','Shubh','Amrit','Char','Rog','Kaal'],
+    ['Udveg','Shubh','Amrit','Char','Rog','Kaal','Labh','Udveg'],
+    ['Labh','Udveg','Shubh','Amrit','Char','Rog','Kaal','Labh'],
+    ['Rog','Kaal','Labh','Udveg','Shubh','Amrit','Char','Rog'],
+    ['Amrit','Char','Rog','Kaal','Labh','Udveg','Shubh','Amrit'],
+  ];
+
+  static PanchangData calculate({required DateTime date,required PanchangLocation location}) {
+    final zone=tz.getLocation(location.timeZoneId);
+    final local=tz.TZDateTime(zone,date.year,date.month,date.day);
+    final observer=astro.Observer(location.latitude,location.longitude,0);
+    final rise=astro.searchRiseSet(astro.Body.Sun,observer,1,local.toUtc(),1.0);
+    if(rise==null) throw StateError('Sunrise unavailable for this location and date.');
+    final sunrise=rise.date;
+    final set=astro.searchRiseSet(astro.Body.Sun,observer,-1,sunrise.add(const Duration(seconds:1)),1.0);
+    if(set==null) throw StateError('Sunset unavailable for this location and date.');
+    final sunset=set.date;
+    final nextRise=astro.searchRiseSet(astro.Body.Sun,observer,1,sunset.add(const Duration(seconds:1)),1.5)?.date??sunset.add(const Duration(hours:12));
+    final moonrise=astro.searchRiseSet(astro.Body.Moon,observer,1,local.toUtc(),1.0)?.date;
+    final moonset=astro.searchRiseSet(astro.Body.Moon,observer,-1,local.toUtc(),1.0)?.date;
+    final wd=tz.TZDateTime.from(sunrise,zone).weekday%7;
+    final phase=_phase(sunrise);
+    final ti=(phase/12).floor().clamp(0,29);
+    final ni=(_moon(sunrise)/(360/27)).floor()%27;
+    final yi=(((_sun(sunrise)+_moon(sunrise))%360)/(360/27)).floor()%27;
+    final ki=(phase/6).floor()%60;
+    final sign=(_sun(sunrise)/30).floor().clamp(0,11);
+    final pada=(((_moon(sunrise)%(360/27))/(360/108)).floor()+1).clamp(1,4);
+    final paksha=ti<15?'Shukla Paksha':'Krishna Paksha';
+    final lunarDay=(ti%15)+1;
+    final yogaNumber=yi+1;
+    final elements=<PanchangElement>[
+      _element('Tithi',_tithi(ti),sunrise,_phase,12,paksha+' · Lunar day '+lunarDay.toString(),'Angular separation of the Sun and Moon; each tithi spans 12 degrees.'),
+      PanchangElement(name:'Vara',value:weekdays[wd],start:sunrise,end:sunset,description:'Weekday at local sunrise',detail:'The Panchang weekday is determined by local sunrise.'),
+      _element('Nakshatra',nakshatras[ni].name,sunrise,_moon,360/27,'Pada '+pada.toString()+' · Lunar mansion','The 27 Nakshatras divide the sidereal zodiac into equal segments of 13°20′.'),
+      _element('Yoga',yogas[yi],sunrise,(d)=>(_sun(d)+_moon(d))%360,360/27,'Yoga '+yogaNumber.toString()+' of 27','Calculated from the sum of the sidereal longitudes of the Sun and Moon.'),
+      _element('Karana',_karana(ki),sunrise,_phase,6,'Half of a lunar tithi','A karana is half of a tithi; seven movable and four fixed karanas are used.'),
+    ];
+    final day=sunset.difference(sunrise);
+    final rahu=_dayPeriod(sunrise,day,const [8,2,7,5,6,4,3][wd],'Rahu Kaal');
+    final yama=_dayPeriod(sunrise,day,const [5,4,3,2,1,7,6][wd],'Yamaganda');
+    final gulika=_dayPeriod(sunrise,day,const [7,6,5,4,3,2,1][wd],'Gulika Kaal');
+    final abStart=sunrise.add(Duration(microseconds:(day.inMicroseconds*7/15).round()));
+    final abhijit=PanchangPeriod(name:'Abhijit Muhurat',start:abStart,end:abStart.add(Duration(microseconds:(day.inMicroseconds/15).round())),category:'Auspicious');
+    final brahma=PanchangPeriod(name:'Brahma Muhurat',start:sunrise.subtract(const Duration(minutes:96)),end:sunrise.subtract(const Duration(minutes:48)),category:'Auspicious');
+    return PanchangData(date:DateTime(date.year,date.month,date.day),location:location,sunrise:sunrise,sunset:sunset,nextSunrise:nextRise,moonrise:moonrise,moonset:moonset,elements:elements,weekday:weekdays[wd],paksha:paksha,lunarDay:lunarDay,sunRashi:rashis[sign],ritu:ritus[sign],ayana:sign>=9||sign<=2?'Uttarayana':'Dakshinayana',rahuKaal:rahu,yamaganda:yama,gulika:gulika,abhijit:abhijit,brahma:brahma,choghadiyaDay:_choghadiya(sunrise,sunset,dayChoghadiya[wd]),choghadiyaNight:_choghadiya(sunset,nextRise,nightChoghadiya[wd]),ayanamsha:_ayanamsha(sunrise));
+  }
+
+  static PanchangElement _element(String name,String value,DateTime at,double Function(DateTime) fn,double span,String description,String detail) {
+    final idx=(fn(at)/span).floor();
+    return PanchangElement(name:name,value:value,start:_boundary(at,fn,span,idx,-1),end:_boundary(at,fn,span,idx,1),description:description,detail:detail);
+  }
+  static DateTime _boundary(DateTime at,double Function(DateTime) fn,double span,int idx,int dir) {
+    var previous=at;
+    for(var i=1;i<=96;i++){
+      final probe=at.add(Duration(minutes:30*i*dir));
+      if((fn(probe)/span).floor()!=idx){
+        var a=dir>0?previous:probe; var b=dir>0?probe:previous;
+        for(var j=0;j<20;j++){
+          final mid=a.add(Duration(microseconds:b.difference(a).inMicroseconds~/2));
+          if((fn(mid)/span).floor()==idx){if(dir>0)a=mid;else b=mid;}else{if(dir>0)b=mid;else a=mid;}
+        }
+        return dir>0?b:a;
+      }
+      previous=probe;
+    }
+    return at;
+  }
+  static PanchangPeriod _dayPeriod(DateTime start,Duration duration,int segment,String name){
+    final us=duration.inMicroseconds/8;
+    final from=start.add(Duration(microseconds:(us*(segment-1)).round()));
+    return PanchangPeriod(name:name,start:from,end:from.add(Duration(microseconds:us.round())),category:'Inauspicious period');
+  }
+  static List<PanchangPeriod> _choghadiya(DateTime start,DateTime end,List<String> names){
+    final us=end.difference(start).inMicroseconds/8;
+    return List.generate(8,(i){
+      final name=names[i]; final good=['Amrit','Shubh','Labh','Char'].contains(name);
+      return PanchangPeriod(name:name,start:start.add(Duration(microseconds:(us*i).round())),end:start.add(Duration(microseconds:(us*(i+1)).round())),category:good?'Favourable':'Avoid for auspicious starts');
+    });
+  }
+  static List<PanchangObservance> upcomingObservances({required DateTime from,required PanchangLocation location,int days=45}){
+    final zone=tz.getLocation(location.timeZoneId); final observer=astro.Observer(location.latitude,location.longitude,0);
+    final out=<PanchangObservance>[];
+    for(var i=0;i<days;i++){
+      final d=DateTime(from.year,from.month,from.day+i); final local=tz.TZDateTime(zone,d.year,d.month,d.day);
+      final rise=astro.searchRiseSet(astro.Body.Sun,observer,1,local.toUtc(),1.0); if(rise==null)continue;
+      final idx=(_phase(rise.date)/12).floor().clamp(0,29); final title=_observance(idx);
+      if(title!=null){final p=idx<15?'Shukla':'Krishna';out.add(PanchangObservance(date:d,title:title,subtitle:p+' Paksha · '+_tithi(idx),category:idx%15==10?'Vrat':'Tithi'));}
+    }
+    return out;
+  }
+  static List<PanchangCalendarDay> monthDays({required DateTime month,required PanchangLocation location}){
+    final first=DateTime(month.year,month.month,1); final start=first.subtract(Duration(days:first.weekday%7));
+    final zone=tz.getLocation(location.timeZoneId); final observer=astro.Observer(location.latitude,location.longitude,0);
+    return List.generate(42,(i){
+      final d=start.add(Duration(days:i)); final local=tz.TZDateTime(zone,d.year,d.month,d.day);
+      final rise=astro.searchRiseSet(astro.Body.Sun,observer,1,local.toUtc(),1.0);
+      final idx=rise==null?0:(_phase(rise.date)/12).floor().clamp(0,29);
+      final short=idx==29?'Ama':idx==14?'Purn':tithis[idx%15].substring(0,math.min(4,tithis[idx%15].length));
+      return PanchangCalendarDay(date:d,tithi:short,paksha:idx<15?'S':'K',isObservance:_observance(idx)!=null);
+    });
+  }
+  static String? _observance(int i){final d=i%15;if(d==10)return 'Ekadashi';if(d==12)return 'Pradosh Vrat';if(d==14)return i<15?'Purnima':'Amavasya';if(d==3)return 'Chaturthi observance';return null;}
+  static String _tithi(int i)=>i==29?'Amavasya':tithis[i%15];
+  static String _karana(int i){if(i==0)return karanas[0];if(i>=57)return karanas[i-56];return karanas[1+((i-1)%7)];}
+  static double _phase(DateTime d)=>(_moon(d)-_sun(d)+360)%360;
+  static double _moon(DateTime d)=>(astro.eclipticGeoMoon(d).lon-_ayanamsha(d)+360)%360;
+  static double _sun(DateTime d)=>(astro.sunPosition(d).eLon-_ayanamsha(d)+360)%360;
+  static double _ayanamsha(DateTime d){final j=DateTime.utc(2000,1,1,12);final t=d.difference(j).inMicroseconds/Duration.microsecondsPerDay/36525;return ((23*3600+51*60+25.532)+5029.0966*t+1.11161*t*t)/3600;}
+}
