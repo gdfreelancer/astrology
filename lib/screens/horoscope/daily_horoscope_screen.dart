@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../data/rashi_data.dart';
-import '../../models/rashi_info.dart';
+import '../rashi/rashi_data.dart';
+import '../rashi/rashi_info.dart';
 import '../../theme/app_theme.dart';
 
 class DailyHoroscopeScreen extends StatefulWidget {
