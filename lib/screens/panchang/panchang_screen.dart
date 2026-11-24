@@ -20,7 +20,7 @@ class _PanchangScreenState extends State<PanchangScreen>{
   @override
   void initState(){super.initState();timezone_data.initializeTimeZones();_load();}
   Future<void> _load() async{
-    setState(()=>_loading=true);
+    setState(()=>{_loading=true;_error=null;});
     try{
       final result=await Future<PanchangData>(()=>PanchangService.calculate(date:_date,location:_location));
       if(!mounted)return;setState(()=>_data=result);
@@ -63,7 +63,7 @@ class _PanchangScreenState extends State<PanchangScreen>{
               if(!mounted)return;
               setState(()=>_location=PanchangLocation(name:input.text.trim(),latitude:found.first.latitude,longitude:found.first.longitude,timeZoneId:zone));
               if(sheet.mounted)Navigator.pop(sheet);_load();
-            }catch(_){ss(()=>{busy=false,error='Could not find this place. Add the state and country.'});}
+            }catch(_){ss(() { busy=false; error='Could not find this place. Add the state and country.'; });}
           },
           style:FilledButton.styleFrom(backgroundColor:AppTheme.plum),child:busy?const SizedBox(width:18,height:18,child:CircularProgressIndicator(color:Colors.white,strokeWidth:2)):const Text('Use this location'),
         )),
