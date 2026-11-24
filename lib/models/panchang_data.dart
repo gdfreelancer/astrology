@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class PanchangLocation {
   const PanchangLocation({
     required this.name,
