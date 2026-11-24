@@ -39,7 +39,7 @@ class BirthChartService {
     final nakshatraIndex = (siderealLongitude / nakshatraSpan).floor();
     final withinNakshatra = siderealLongitude - nakshatraIndex * nakshatraSpan;
     final pada = (withinNakshatra / padaSpan).floor() + 1;
-    final rashiIndex = (siderealLongitude / 30.0).floor().clamp(0, 11);
+    final rashiIndex = (siderealLongitude / 30.0).floor().clamp(0, 11).toInt();
 
     final boundaryDistance = math.min(
       withinNakshatra % padaSpan,
