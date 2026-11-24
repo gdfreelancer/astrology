@@ -12,7 +12,7 @@ class BabyNameSuggestion {
 
 const babyNames = <BabyNameSuggestion>[
   BabyNameSuggestion(name: 'Chudamani', meaning: 'Crest jewel; precious ornament', gender: 'Boy'),
-  BabyNameSuggestion(name: 'Cheshta', meaning: '努力; effort and sincere endeavour', gender: 'Girl'),
+  BabyNameSuggestion(name: 'Cheshta', meaning: 'Effort; sincere endeavour', gender: 'Girl'),
   BabyNameSuggestion(name: 'Lalit', meaning: 'Graceful and beautiful', gender: 'Boy'),
   BabyNameSuggestion(name: 'Laksh', meaning: 'Aim or destination', gender: 'Boy'),
   BabyNameSuggestion(name: 'Lakshmi', meaning: 'Goddess of prosperity', gender: 'Girl'),
@@ -74,7 +74,7 @@ const babyNames = <BabyNameSuggestion>[
   BabyNameSuggestion(name: 'Parth', meaning: 'A name of Arjuna', gender: 'Boy'),
   BabyNameSuggestion(name: 'Parnika', meaning: 'A sacred leaf; Goddess Durga', gender: 'Girl'),
   BabyNameSuggestion(name: 'Pihu', meaning: 'Sweet chirping sound', gender: 'Girl'),
-  BabyNameSuggestion(name: 'Piyush', meaning: 'Nectar; अमृत', gender: 'Boy'),
+  BabyNameSuggestion(name: 'Piyush', meaning: 'Nectar; divine drink', gender: 'Boy'),
   BabyNameSuggestion(name: 'Purvi', meaning: 'Eastern; a classical raga', gender: 'Girl'),
   BabyNameSuggestion(name: 'Shaurya', meaning: 'Valour and courage', gender: 'Boy'),
   BabyNameSuggestion(name: 'Sharvi', meaning: 'Divine; sacred', gender: 'Girl'),
@@ -84,7 +84,7 @@ const babyNames = <BabyNameSuggestion>[
   BabyNameSuggestion(name: 'Raghav', meaning: 'A name of Lord Rama', gender: 'Boy'),
   BabyNameSuggestion(name: 'Riya', meaning: 'Singer; graceful', gender: 'Girl'),
   BabyNameSuggestion(name: 'Rohan', meaning: 'Ascending; growing', gender: 'Boy'),
-  BabyNameSuggestion(name: 'Rishabh', meaning: ' श्रेष्ठ; excellent', gender: 'Boy'),
+  BabyNameSuggestion(name: 'Rishabh', meaning: 'Excellent; noble', gender: 'Boy'),
   BabyNameSuggestion(name: 'Riddhi', meaning: 'Prosperity and good fortune', gender: 'Girl'),
   BabyNameSuggestion(name: 'Rudra', meaning: 'A fierce form of Lord Shiva', gender: 'Boy'),
   BabyNameSuggestion(name: 'Reva', meaning: 'A name of the Narmada River', gender: 'Girl'),
