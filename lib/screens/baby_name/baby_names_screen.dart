@@ -118,7 +118,7 @@ class _BabyNamesScreenState extends State<BabyNamesScreen> {
                     height: 39,
                     decoration: BoxDecoration(color: const Color(0xFFF2ECFA), borderRadius: BorderRadius.circular(13)),
                     alignment: Alignment.center,
-                    child: Text(entry.name.characters.first, style: const TextStyle(color: AppTheme.plum, fontSize: 17, fontWeight: FontWeight.w800)),
+                    child: Text(entry.name.substring(0, 1), style: const TextStyle(color: AppTheme.plum, fontSize: 17, fontWeight: FontWeight.w800)),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
