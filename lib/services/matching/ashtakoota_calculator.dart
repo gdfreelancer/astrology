@@ -104,8 +104,8 @@ class AshtakootaCalculator {
     'Lion', 'Horse', 'Lion', 'Cow', 'Elephant',
   ];
   static const _yoniEnemies = {
-    'Horse|Buffalo', 'Elephant|Lion', 'Sheep|Monkey',
-    'Serpent|Mongoose', 'Dog|Deer', 'Cat|Rat', 'Cow|Tiger',
+    'Buffalo|Horse', 'Elephant|Lion', 'Monkey|Sheep',
+    'Mongoose|Serpent', 'Deer|Dog', 'Cat|Rat', 'Cow|Tiger',
   };
 
   static KootaResult _yoni(int bride, int groom) {
