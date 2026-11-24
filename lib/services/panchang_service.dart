@@ -121,7 +121,7 @@ class PanchangService {
       final d=start.add(Duration(days:i)); final local=tz.TZDateTime(zone,d.year,d.month,d.day);
       final rise=astro.searchRiseSet(astro.Body.Sun,observer,1,local.toUtc(),1.0);
       final idx=rise==null?0:(_phase(rise.date)/12).floor().clamp(0,29);
-      final short=idx==29?'Ama':idx==14?'Purn':tithis[idx%15].substring(0,math.min(4,tithis[idx%15].length));
+      final short=idx==29?'Ama':idx==14?'Purn':tithis[idx%15].substring(0,math.min(4,tithis[idx%15].length).toInt());
       return PanchangCalendarDay(date:d,tithi:short,paksha:idx<15?'S':'K',isObservance:_observance(idx)!=null);
     });
   }
