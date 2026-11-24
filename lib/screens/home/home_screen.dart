@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../theme/app_theme.dart';
 import '../baby_name/baby_birth_details_screen.dart';
+import '../kundali/create_kundali_screen.dart';
 import '../rashi/rashi_list_screen.dart';
 import '../horoscope/daily_horoscope_screen.dart';
 import '../muhurat/muhurat_screen.dart';
@@ -45,11 +46,8 @@ class HomeScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   _KundaliBanner(
-                    onTap: () => AppNavigation.openFeature(
-                      context,
-                      title: 'Create Kundali',
-                      subtitle: 'Your birth chart and planetary positions will be available here.',
-                      emoji: '🪷',
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(builder: (_) => const CreateKundaliScreen()),
                     ),
                   ),
                   const SizedBox(height: 29),
