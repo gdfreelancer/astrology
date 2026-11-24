@@ -16,7 +16,8 @@ class MatchingPersonForm extends StatefulWidget {
   State<MatchingPersonForm> createState() => MatchingPersonFormState();
 }
 
-class MatchingPersonFormState extends State<MatchingPersonForm> {
+class MatchingPersonFormState extends State<MatchingPersonForm>
+    with AutomaticKeepAliveClientMixin<MatchingPersonForm> {
   final _formKey = GlobalKey<FormState>();
   final _name = TextEditingController();
   final _place = TextEditingController();
@@ -27,6 +28,9 @@ class MatchingPersonFormState extends State<MatchingPersonForm> {
   String? _error;
 
   String get name => _name.text.trim();
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void dispose() {
@@ -97,6 +101,7 @@ class MatchingPersonFormState extends State<MatchingPersonForm> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(
       padding: const EdgeInsets.all(17),
       decoration: BoxDecoration(
