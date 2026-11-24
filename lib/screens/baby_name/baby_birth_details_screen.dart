@@ -19,7 +19,7 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
   final _placeController = TextEditingController();
   DateTime? _birthDate;
   TimeOfDay? _birthTime;
-  String _timeZoneId = 'Asia/Kolkata';
+  String? _timeZoneId;
   String _gender = 'Not specified';
   Location? _location;
   bool _isResolvingPlace = false;
@@ -68,7 +68,7 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
       context: context,
       builder: (dialogContext) => _TimeZonePicker(
         zones: zones,
-        selected: _timeZoneId,
+        selected: _timeZoneId ?? '',
       ),
     );
     if (selected != null) setState(() => _timeZoneId = selected);
@@ -111,8 +111,8 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
 
   Future<void> _calculate() async {
     if (!_formKey.currentState!.validate()) return;
-    if (_birthDate == null || _birthTime == null) {
-      _showMessage('Please select the birth date and exact birth time.');
+    if (_birthDate == null || _birthTime == null || _timeZoneId == null) {
+      _showMessage('Please select the birth date, exact birth time and birth time zone.');
       return;
     }
 
@@ -125,7 +125,7 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
         birthDate: _birthDate!,
         hour: _birthTime!.hour,
         minute: _birthTime!.minute,
-        timeZoneId: _timeZoneId,
+        timeZoneId: _timeZoneId!,
         placeName: _placeController.text.trim(),
         latitude: place.latitude,
         longitude: place.longitude,
@@ -267,8 +267,8 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
               _FieldLabel('Birth time zone'),
               _PickerTile(
                 iconText: '🌐',
-                value: _timeZoneId,
-                isPlaceholder: false,
+                value: _timeZoneId ?? 'Select birth time zone',
+                isPlaceholder: _timeZoneId == null,
                 onTap: _chooseTimeZone,
                 trailing: 'Change',
               ),
