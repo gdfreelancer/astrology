@@ -19,12 +19,12 @@ class AshtakootaCalculator {
     }
 
     return [
-      _varna(brideRashi, groomRashi),
-      _vashya(brideRashi, groomRashi),
+      _varnaScore(_varnaRanks[brideRashi], _varnaRanks[groomRashi]),
+      _vashya(brideRashi, groomRashi, bride.siderealMoonLongitude, groom.siderealMoonLongitude),
       _tara(brideNak, groomNak),
       _yoni(brideNak, groomNak),
       _grahaMaitri(brideRashi, groomRashi),
-      _gana(brideNak, groomNak),
+      _ganaResult(brideNak, groomNak),
       _bhakoot(brideRashi, groomRashi),
       _nadi(brideNak, groomNak),
     ];
@@ -44,7 +44,7 @@ class AshtakootaCalculator {
       );
 
   // Traditional Rashi Varna hierarchy: Brahmin > Kshatriya > Vaishya > Shudra.
-  static const _varna = [3, 2, 1, 4, 3, 2, 1, 4, 3, 2, 1, 4];
+  static const _varnaRanks = [3, 2, 1, 4, 3, 2, 1, 4, 3, 2, 1, 4];
   static const _varnaNames = ['Shudra', 'Vaishya', 'Kshatriya', 'Brahmin'];
 
   static KootaResult _varnaScore(int bride, int groom) => _result(
@@ -53,9 +53,6 @@ class AshtakootaCalculator {
     groom >= bride ? 'Traditional Varna order is compatible' : 'Traditional Varna order differs',
     'Varna compares the traditional classifications of the Moon signs. This implementation applies the conventional groom-equal-or-higher rule; it is a traditional scoring convention, not a measure of personal worth.',
   );
-
-  static KootaResult _varna(int brideRashi, int groomRashi) =>
-      _varnaScore(_varna[brideRashi], _varna[groomRashi]);
 
   // Vashya sign groups. Sagittarius and Capricorn are split by their 15-degree halves.
   static String _vashyaGroup(int rashi, double longitude) {
@@ -76,9 +73,9 @@ class AshtakootaCalculator {
     [0.0, 0.0, 0.0, 0.0, 2.0],
   ];
 
-  static KootaResult _vashya(int bride, int groom) {
-    final a = _vashyaGroup(bride, 0);
-    final b = _vashyaGroup(groom, 0);
+  static KootaResult _vashya(int bride, int groom, double brideLongitude, double groomLongitude) {
+    final a = _vashyaGroup(bride, brideLongitude);
+    final b = _vashyaGroup(groom, groomLongitude);
     final score = _vashyaMatrix[_vashyaGroups.indexOf(a)][_vashyaGroups.indexOf(b)];
     return _result('vashya', 'Vashya', 2, score, a, b,
       score >= 1.5 ? 'Favorable traditional Vashya pairing' : 'Partial Vashya compatibility',
@@ -197,13 +194,6 @@ class AshtakootaCalculator {
       dosha ? 'Traditional Bhakoot Dosha pattern' : 'Favorable Rashi relationship',
       'Bhakoot compares the Moon-sign distance. The conventional 2/12, 5/9 and 6/8 relationships receive zero points in this baseline. Cancellation rules and regional interpretations are not evaluated here.');
   }
-
-  static const _nadi = [
-    'Adi', 'Madhya', 'Antya', 'Antya', 'Madhya', 'Adi', 'Adi', 'Madhya',
-    'Antya', 'Antya', 'Madhya', 'Man?','Adi','Madhya','Antya','Antya',
-    'Madhya','Adi','Adi','Madhya','Antya','Antya','Madhya','Adi',
-    'Adi','Madhya','Antya',
-  ];
 
   static KootaResult _nadi(int bride, int groom) {
     // Explicit traditional sequence for the 27 Nakshatras (Adi/Madhya/Antya).
