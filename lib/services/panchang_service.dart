@@ -109,8 +109,20 @@ class PanchangService {
     for(var i=0;i<days;i++){
       final d=DateTime(from.year,from.month,from.day+i); final local=tz.TZDateTime(zone,d.year,d.month,d.day);
       final rise=astro.searchRiseSet(astro.Body.Sun,observer,1,local.toUtc(),1.0); if(rise==null)continue;
-      final idx=(_phase(rise.date)/12).floor().clamp(0,29); final title=_observance(idx);
-      if(title!=null){final p=idx<15?'Shukla':'Krishna';out.add(PanchangObservance(date:d,title:title,subtitle:p+' Paksha · '+_tithi(idx),category:idx%15==10?'Vrat':'Tithi'));}
+      final idx=(_phase(rise.date)/12).floor().clamp(0,29);
+      final title=_observance(idx);
+      if(title!=null){
+        final p=idx<15?'Shukla':'Krishna';
+        out.add(PanchangObservance(date:d,title:title,subtitle:p+' Paksha · '+_tithi(idx),category:idx%15==10?'Vrat':'Tithi'));
+      }
+      final sunset=astro.searchRiseSet(astro.Body.Sun,observer,-1,rise.date.add(const Duration(seconds:1)),1.0);
+      if(sunset!=null){
+        final eveningIndex=(_phase(sunset.date)/12).floor().clamp(0,29);
+        if(eveningIndex%15==12){
+          final p=eveningIndex<15?'Shukla':'Krishna';
+          out.add(PanchangObservance(date:d,title:'Pradosh Vrat',subtitle:p+' Paksha · Trayodashi at sunset',category:'Vrat'));
+        }
+      }
     }
     return out;
   }
@@ -125,7 +137,7 @@ class PanchangService {
       return PanchangCalendarDay(date:d,tithi:short,paksha:idx<15?'S':'K',isObservance:_observance(idx)!=null);
     });
   }
-  static String? _observance(int i){final d=i%15;if(d==10)return 'Ekadashi';if(d==12)return 'Pradosh Vrat';if(d==14)return i<15?'Purnima':'Amavasya';if(d==3)return 'Chaturthi observance';return null;}
+  static String? _observance(int i){final d=i%15;if(d==10)return 'Ekadashi';if(d==14)return i<15?'Purnima':'Amavasya';if(d==3)return 'Chaturthi Tithi';return null;}
   static String _tithi(int i)=>i==29?'Amavasya':tithis[i%15];
   static String _karana(int i){if(i==0)return karanas[0];if(i>=57)return karanas[i-56];return karanas[1+((i-1)%7)];}
   static double _phase(DateTime d)=>(_moon(d)-_sun(d)+360)%360;
