@@ -12,7 +12,7 @@
 <g fill="#FFF0D1" opacity=".82"><circle cx="104" cy="112" r="2.4"/><circle cx="586" cy="92" r="2"/><circle cx="626" cy="316" r="2.8"/><circle cx="112" cy="390" r="2"/><circle cx="246" cy="54" r="1.8"/><circle cx="490" cy="48" r="2"/><circle cx="542" cy="448" r="2"/><circle cx="178" cy="472" r="2.4"/><circle cx="360" cy="42" r="2"/></g>
 <g stroke="#9DCBE5" stroke-opacity=".6" fill="none"><path d="M105 112 L145 145 L188 130 M586 92 L550 130 L520 172 M112 390 L156 360 L198 382 M542 448 L510 410 L472 430"/></g>
 <circle cx="360" cy="250" r="112" fill="#1D1529" fill-opacity=".35" stroke="#9DCBE5" stroke-opacity=".55" stroke-width="2"/>
-<text x="360" y="306" text-anchor="middle" font-family="Noto Sans Symbols, DejaVu Sans, sans-serif" font-size="176" fill="url(#gold)" stroke="#FFF0C8" stroke-opacity=".25" stroke-width="1">♒</text>
+
 <path d="M230 454 Q360 490 490 454" fill="none" stroke="#9DCBE5" stroke-opacity=".55" stroke-width="1.5"/>
 <path d="M280 470 H440" stroke="#FFF0D1" stroke-opacity=".28"/><circle cx="360" cy="470" r="4" fill="#9DCBE5"/>
 </svg>
