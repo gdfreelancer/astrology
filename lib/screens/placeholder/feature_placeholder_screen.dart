@@ -17,7 +17,14 @@ class FeaturePlaceholderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(title, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800))),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('‹', style: TextStyle(fontSize: 32, height: 1, color: AppTheme.plum)),
+        ),
+        title: Text(title, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(30),
