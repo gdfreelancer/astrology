@@ -26,6 +26,8 @@ class MatchingPersonFormState extends State<MatchingPersonForm> {
   bool _busy = false;
   String? _error;
 
+  String get name => _name.text.trim();
+
   @override
   void dispose() {
     _name.dispose();
