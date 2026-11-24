@@ -20,7 +20,7 @@ class _PanchangScreenState extends State<PanchangScreen>{
   @override
   void initState(){super.initState();timezone_data.initializeTimeZones();_load();}
   Future<void> _load() async{
-    setState(()=>{_loading=true;_error=null;});
+    setState(() { _loading=true; _error=null; });
     try{
       final result=await Future<PanchangData>(()=>PanchangService.calculate(date:_date,location:_location));
       if(!mounted)return;setState(()=>_data=result);
