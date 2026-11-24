@@ -14,8 +14,16 @@ class BabyNamesScreen extends StatefulWidget {
 }
 
 class _BabyNamesScreenState extends State<BabyNamesScreen> {
-  String _genderFilter = 'All';
+  late String _genderFilter;
   String _query = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _genderFilter = widget.result.gender == 'Boy' || widget.result.gender == 'Girl'
+        ? widget.result.gender
+        : 'All';
+  }
 
   @override
   Widget build(BuildContext context) {
