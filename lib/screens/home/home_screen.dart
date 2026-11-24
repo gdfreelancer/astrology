@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../theme/app_theme.dart';
+import '../baby_name/baby_birth_details_screen.dart';
 import '../../utils/app_navigation.dart';
 import '../../widgets/feature_card.dart';
 
@@ -63,7 +64,7 @@ class HomeScreen extends StatelessWidget {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     children: [
-                      FeatureCard(emoji: '👶', title: 'Baby Name & Rashi', description: 'Find a name by birth details', tint: const Color(0xFFFFF0E2), onTap: () => _open(context, 'Baby Name & Rashi', 'Discover a suitable starting letter and rashi for a newborn.', '👶')),
+                      FeatureCard(emoji: '👶', title: 'Baby Name & Rashi', description: 'Find a name by birth details', tint: const Color(0xFFFFF0E2), onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const BabyBirthDetailsScreen()))),
                       FeatureCard(emoji: '♈', title: 'All 12 Rashis', description: 'Traits, symbols and details', tint: const Color(0xFFF0EAFE), onTap: () => _open(context, 'All 12 Rashis', 'Explore all zodiac signs, their traits and characteristics.', '♈')),
                       FeatureCard(emoji: '📅', title: 'Panchang', description: 'Tithi, nakshatra and yoga', tint: const Color(0xFFE9F5EE), onTap: () => _open(context, 'Panchang', 'Daily Hindu calendar details and auspicious timings.', '📅')),
                       FeatureCard(emoji: '💞', title: 'Kundali Matching', description: 'Compatibility and guna milan', tint: const Color(0xFFFFEDEF), onTap: () => _open(context, 'Kundali Matching', 'Check compatibility using two birth charts.', '💞')),
