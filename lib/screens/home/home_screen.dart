@@ -159,7 +159,7 @@ class _KundaliBanner extends StatelessWidget {
                         width: 22,
                         height: 22,
                         decoration: const BoxDecoration(color: Color(0xFFFFE3A8), shape: BoxShape.circle),
-                        child: const Icon(Icons.arrow_forward_rounded, size: 13, color: AppTheme.plum),
+                        child: const Center(child: Text('→', style: TextStyle(fontSize: 14, height: 1, color: AppTheme.plum, fontWeight: FontWeight.w800))),
                       ),
                     ],
                   ),
