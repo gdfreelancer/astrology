@@ -231,11 +231,21 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
               _FieldLabel('Place of birth'),
               TextFormField(
                 controller: _placeController,
+                keyboardType: TextInputType.streetAddress,
                 textCapitalization: TextCapitalization.words,
-                onChanged: (_) => setState(() {
+                textInputAction: TextInputAction.done,
+                autocorrect: false,
+                enableSuggestions: true,
+                onChanged: (_) {
+                  // Avoid rebuilding the entire form on every keystroke. Rebuilding
+                  // while the platform text input is composing can interrupt typing
+                  // on some Android keyboards.
+                  final hadResolvedPlace = _location != null || _placeError != null;
                   _location = null;
                   _placeError = null;
-                }),
+                  if (hadResolvedPlace && mounted) setState(() {});
+                },
+                onFieldSubmitted: (_) => FocusScope.of(context).unfocus(),
                 validator: (value) => value == null || value.trim().isEmpty ? 'Enter the birth place.' : null,
                 decoration: InputDecoration(
                   hintText: 'City, state, country',
