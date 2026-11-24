@@ -74,6 +74,82 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
     if (selected != null) setState(() => _timeZoneId = selected);
   }
 
+  Future<void> _editBirthPlace() async {
+    final input = TextEditingController(text: _placeController.text);
+    String? error;
+    bool searching = false;
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (sheetContext) => StatefulBuilder(
+        builder: (context, setSheetState) => Padding(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(22, 12, 22, 24),
+            decoration: const BoxDecoration(color: Color(0xFFFFFCF8), borderRadius: BorderRadius.vertical(top: Radius.circular(26))),
+            child: SafeArea(
+              top: false,
+              child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Center(child: Container(width: 38, height: 4, decoration: BoxDecoration(color: const Color(0xFFD9D1C9), borderRadius: BorderRadius.circular(8)))),
+                const SizedBox(height: 22),
+                const Text('Where was the baby born?', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+                const SizedBox(height: 6),
+                const Text('Enter a city, town or village. Add the state and country for a more accurate match.', style: TextStyle(fontSize: 11, height: 1.45, color: AppTheme.muted)),
+                const SizedBox(height: 18),
+                TextField(
+                  controller: input,
+                  autofocus: true,
+                  textCapitalization: TextCapitalization.words,
+                  keyboardType: TextInputType.streetAddress,
+                  textInputAction: TextInputAction.search,
+                  decoration: InputDecoration(
+                    hintText: 'e.g. Junagadh, Gujarat, India',
+                    prefixIcon: const Icon(Icons.search_rounded, color: AppTheme.plum),
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 16),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: Color(0xFFEAE5EF))),
+                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: Color(0xFFEAE5EF))),
+                    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: AppTheme.plum, width: 1.4)),
+                  ),
+                  onSubmitted: (_) async {
+                    if (searching || input.text.trim().isEmpty) return;
+                    setSheetState(() { searching = true; error = null; });
+                    _placeController.text = input.text.trim();
+                    final found = await _resolvePlace();
+                    if (!mounted) return;
+                    if (found != null) { if (sheetContext.mounted) Navigator.of(sheetContext).pop(); }
+                    else { setSheetState(() { searching = false; error = _placeError; }); }
+                  },
+                ),
+                if (error != null) ...[
+                  const SizedBox(height: 8),
+                  Text(error!, style: const TextStyle(color: Color(0xFFB94C4C), fontSize: 11)),
+                ],
+                const SizedBox(height: 16),
+                SizedBox(width: double.infinity, height: 52, child: FilledButton(
+                  onPressed: searching ? null : () async {
+                    if (input.text.trim().isEmpty) { setSheetState(() => error = 'Enter a city, town or village.'); return; }
+                    setSheetState(() { searching = true; error = null; });
+                    _placeController.text = input.text.trim();
+                    final found = await _resolvePlace();
+                    if (!mounted) return;
+                    if (found != null) { if (sheetContext.mounted) Navigator.of(sheetContext).pop(); }
+                    else { setSheetState(() { searching = false; error = _placeError; }); }
+                  },
+                  style: FilledButton.styleFrom(backgroundColor: AppTheme.plum, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                  child: searching ? const SizedBox(width: 21, height: 21, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)) : const Text('Find this place', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800)),
+                )),
+              ]),
+            ),
+          ),
+        ),
+      ),
+    );
+    input.dispose();
+  }
+
   Future<Location?> _resolvePlace() async {
     final query = _placeController.text.trim();
     if (query.isEmpty) {
@@ -110,6 +186,11 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
   }
 
   Future<void> _calculate() async {
+    if (_placeController.text.trim().isEmpty) {
+      setState(() => _placeError = 'Please select the place of birth.');
+      _showMessage('Please select the place of birth.');
+      return;
+    }
     if (!_formKey.currentState!.validate()) return;
     if (_birthDate == null || _birthTime == null || _timeZoneId == null) {
       _showMessage('Please select the birth date, exact birth time and birth time zone.');
@@ -229,50 +310,14 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
               const _SectionHeading(number: '02', title: 'Place and time zone'),
               const SizedBox(height: 13),
               _FieldLabel('Place of birth'),
-              TextFormField(
-                controller: _placeController,
-                keyboardType: TextInputType.streetAddress,
-                textCapitalization: TextCapitalization.words,
-                textInputAction: TextInputAction.done,
-                autocorrect: false,
-                enableSuggestions: true,
-                onChanged: (_) {
-                  // Avoid rebuilding the entire form on every keystroke. Rebuilding
-                  // while the platform text input is composing can interrupt typing
-                  // on some Android keyboards.
-                  final hadResolvedPlace = _location != null || _placeError != null;
-                  _location = null;
-                  _placeError = null;
-                  if (hadResolvedPlace && mounted) setState(() {});
-                },
-                onFieldSubmitted: (_) => FocusScope.of(context).unfocus(),
-                validator: (value) => value == null || value.trim().isEmpty ? 'Enter the birth place.' : null,
-                decoration: InputDecoration(
-                  hintText: 'City, state, country',
-                  prefixIcon: const Padding(
-                    padding: EdgeInsets.only(left: 14, right: 10),
-                    child: Center(child: Text('📍', style: TextStyle(fontSize: 19))),
-                  ),
-                  prefixIconConstraints: const BoxConstraints(minWidth: 45),
-                  suffixIcon: _isResolvingPlace
-                      ? const Padding(
-                          padding: EdgeInsets.all(14),
-                          child: SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2)),
-                        )
-                      : null,
-                ),
+              _BirthPlaceTile(
+                placeName: _placeController.text.trim(),
+                isResolving: _isResolvingPlace,
+                isMatched: _location != null,
+                error: _placeError,
+                onTap: _isResolvingPlace ? null : _editBirthPlace,
               ),
-              if (_placeError != null) ...[
-                const SizedBox(height: 6),
-                Text(_placeError!, style: const TextStyle(color: Color(0xFFB94C4C), fontSize: 11)),
-              ],
-              if (_location != null) ...[
-                const SizedBox(height: 8),
-                Text(
-                  'Place matched · ${_location!.latitude.toStringAsFixed(4)}, ${_location!.longitude.toStringAsFixed(4)}',
-                  style: const TextStyle(color: Color(0xFF438466), fontSize: 10, fontWeight: FontWeight.w700),
-                ),
-              ],
+              const SizedBox(height: 15),
               const SizedBox(height: 15),
               _FieldLabel('Birth time zone'),
               _PickerTile(
@@ -322,6 +367,48 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
         ),
       ),
     );
+  }
+}
+
+class _BirthPlaceTile extends StatelessWidget {
+  const _BirthPlaceTile({required this.placeName, required this.isResolving, required this.isMatched, required this.error, required this.onTap});
+  final String placeName;
+  final bool isResolving;
+  final bool isMatched;
+  final String? error;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final hasPlace = placeName.isNotEmpty;
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Material(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(18),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(18), border: Border.all(color: error != null ? const Color(0xFFB94C4C) : const Color(0xFFEAE5EF))),
+            child: Row(children: [
+              Container(width: 45, height: 45, alignment: Alignment.center, decoration: BoxDecoration(color: const Color(0xFFF0EAFE), borderRadius: BorderRadius.circular(14)), child: const Icon(Icons.location_on_rounded, color: AppTheme.plum, size: 23)),
+              const SizedBox(width: 13),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(hasPlace ? placeName : 'Choose birth location', maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12, height: 1.35, fontWeight: FontWeight.w800, color: hasPlace ? AppTheme.ink : AppTheme.muted)),
+                const SizedBox(height: 4),
+                Text(isResolving ? 'Finding location…' : isMatched ? 'Location successfully matched' : 'City, town or village', style: TextStyle(fontSize: 10, color: isMatched ? const Color(0xFF438466) : AppTheme.muted, fontWeight: isMatched ? FontWeight.w700 : FontWeight.w400)),
+              ])),
+              const SizedBox(width: 8),
+              if (isResolving) const SizedBox(width: 19, height: 19, child: CircularProgressIndicator(strokeWidth: 2))
+              else Text(hasPlace ? 'Change' : 'Select', style: const TextStyle(color: AppTheme.plum, fontSize: 11, fontWeight: FontWeight.w800)),
+            ]),
+          ),
+        ),
+      ),
+      if (error != null) ...[const SizedBox(height: 6), Text(error!, style: const TextStyle(color: Color(0xFFB94C4C), fontSize: 11))],
+      if (isMatched) ...[const SizedBox(height: 7), const Text('Coordinates verified for birth-chart calculation.', style: TextStyle(color: Color(0xFF438466), fontSize: 10))],
+    ]);
   }
 }
 
