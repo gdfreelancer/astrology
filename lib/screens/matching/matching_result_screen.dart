@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../../models/matching/koota_result.dart';
 import '../../models/matching/matching_report.dart';
+import '../../models/matching/matching_person.dart';
 import '../../theme/app_theme.dart';
 
 class MatchingResultScreen extends StatelessWidget {
@@ -132,7 +133,7 @@ class MatchingResultScreen extends StatelessWidget {
 class _PersonCard extends StatelessWidget {
   const _PersonCard({required this.role, required this.person, required this.accent});
   final String role;
-  final dynamic person;
+  final MatchingPerson person;
   final Color accent;
 
   @override
