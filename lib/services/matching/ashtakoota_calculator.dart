@@ -91,7 +91,7 @@ class AshtakootaCalculator {
     final b = reverse % 9;
     final goodA = _taraGood.contains(a);
     final goodB = _taraGood.contains(b);
-    final score = (goodA ? 1.5 : 0) + (goodB ? 1.5 : 0);
+    final score = ((goodA ? 1.5 : 0.0) + (goodB ? 1.5 : 0.0)).toDouble();
     return _result('tara', 'Tara', 3, score, 'Tara $forward', 'Tara $reverse',
       score == 3 ? 'Both Tara directions are favorable' : score == 0 ? 'Both Tara directions are challenging' : 'One Tara direction is favorable',
       'Tara evaluates the distance between the two birth Nakshatras in both directions. Sampat, Kshema, Sadhaka, Mitra and Parama Mitra are treated as favorable in this scoring convention.');
