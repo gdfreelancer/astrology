@@ -149,7 +149,7 @@ class _BabyNamesScreenState extends State<BabyNamesScreen> {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  Text(entry.gender, style: const TextStyle(color: AppTheme.plum, fontSize: 9, fontWeight: FontWeight.w700)),
+                  Text(context.tr(entry.gender.toLowerCase()), style: const TextStyle(color: AppTheme.plum, fontSize: 9, fontWeight: FontWeight.w700)),
                 ],
               ),
             )),
