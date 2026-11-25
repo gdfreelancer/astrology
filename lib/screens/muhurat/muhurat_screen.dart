@@ -85,7 +85,7 @@ class _MuhuratScreenState extends State<MuhuratScreen> {
   ])));
 
   Widget _calculationNotice(_MuhuratActivity activity) => Container(padding: const EdgeInsets.all(16), decoration: BoxDecoration(color: const Color(0xFFFFF5E4), borderRadius: BorderRadius.circular(17), border: Border.all(color: const Color(0xFFF0DFBE)),), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    const Row(children: [Icon(Icons.info_outline_rounded, color: Color(0xFF9B6B25), size: 19), SizedBox(width: 8), Expanded(child: Text(context.tr('muhurat_preparing'), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppTheme.ink)))]),
+    Row(children: [const Icon(Icons.info_outline_rounded, color: Color(0xFF9B6B25), size: 19), const SizedBox(width: 8), Expanded(child: Text(context.tr('muhurat_preparing'), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppTheme.ink)))]),
     const SizedBox(height: 8),
     Text('Your selection: ${activity.title} on ${_dateLabel(_selectedDate)}${_placeController.text.trim().isEmpty ? '' : ' at ${_placeController.text.trim()}'}', style: const TextStyle(fontSize: 10, height: 1.5, color: AppTheme.ink)),
     const SizedBox(height: 7),
