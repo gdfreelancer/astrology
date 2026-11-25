@@ -241,16 +241,16 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
                 ),
               ),
               const SizedBox(height: 22),
-              _SectionTitle(context.tr('baby_information')),
+              _SectionTitle(context.tr('personal_information')),
               const SizedBox(height: 12),
-              _Label(context.tr('gender_optional')),
+              _Label(context.tr('full_name_optional')),
               TextFormField(
                 controller: _nameController,
                 textCapitalization: TextCapitalization.words,
-                decoration: _decoration(context.tr('enter_birth_place'), Icons.person_outline_rounded),
+                decoration: _decoration(context.tr('enter_name'), Icons.person_outline_rounded),
               ),
               const SizedBox(height: 14),
-              _Label(context.tr('gender_optional')),
+              _Label(context.tr('gender')),
               Wrap(spacing: 8, children: [
                 for (final option in [('Not specified', context.tr('not_specified')), ('Male', context.tr('boy')), ('Female', context.tr('girl'))])
                   ChoiceChip(
@@ -264,14 +264,14 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
                   ),
               ]),
               const SizedBox(height: 22),
-              const _SectionTitle('Birth date and time'),
+              _SectionTitle(context.tr('birth_date_and_time')),
               const SizedBox(height: 12),
               _Label(context.tr('date_of_birth')),
               _TapField(value: _dateText(), placeholder: _birthDate == null, icon: Icons.calendar_month_rounded, onTap: _pickDate),
               const SizedBox(height: 13),
               _Label(context.tr('exact_time_of_birth')),
               _TapField(
-                value: _birthTime?.format(context) ?? context.tr('select_local_birth_time'),
+                value: _birthTime == null ? context.tr('select_local_birth_time') : AppPreferencesService.cachedUse24HourTime ? '${_birthTime!.hour.toString().padLeft(2, '0')}:${_birthTime!.minute.toString().padLeft(2, '0')}' : _birthTime!.format(context),
                 placeholder: _birthTime == null,
                 icon: Icons.schedule_rounded,
                 onTap: _pickTime,
