@@ -850,5 +850,9 @@
   "motion": "ગતિ",
   "retrograde": "વક્રી",
   "direct": "માર્ગી",
-  "view_graha_analysis": "વિગતવાર ગ્રહ વિશ્લેષણ જુઓ"
+  "view_graha_analysis": "વિગતવાર ગ્રહ વિશ્લેષણ જુઓ",
+  "view_house_cusps": "બધી 12 ભાવ સંધિ જુઓ",
+  "start_boundary": "શરૂઆત",
+  "bhava_madhya": "ભાવ મધ્ય",
+  "end_boundary": "અંત"
 }
