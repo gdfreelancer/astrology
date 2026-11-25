@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_locale.dart';
+
 import '../../theme/app_theme.dart';
 import '../../widgets/rashi_artwork.dart';
 import 'rashi_data.dart';
@@ -35,7 +37,7 @@ class _RashiListScreenState extends State<RashiListScreen> {
     }).toList();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('All 12 Rashis', style: TextStyle(fontWeight: FontWeight.w800))),
+      appBar: AppBar(title: Text(context.tr('all_rashis'), style: TextStyle(fontWeight: FontWeight.w800))),
       body: CustomScrollView(
         slivers: [
           SliverPadding(
@@ -50,11 +52,11 @@ class _RashiListScreenState extends State<RashiListScreen> {
                   ),
                   child: Row(children: [
                     const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Text('VEDIC ZODIAC', style: TextStyle(color: Color(0xFFFFDCA0), fontSize: 9, letterSpacing: 1.8, fontWeight: FontWeight.w800)),
+                      Text(context.tr('explore_astrology'), style: TextStyle(color: Color(0xFFFFDCA0), fontSize: 9, letterSpacing: 1.8, fontWeight: FontWeight.w800)),
                       SizedBox(height: 8),
-                      Text('Explore the\n12 Rashis', style: TextStyle(color: Colors.white, fontSize: 24, height: 1.12, fontWeight: FontWeight.w800)),
+                      Text(context.tr('all_rashis'), style: TextStyle(color: Colors.white, fontSize: 24, height: 1.12, fontWeight: FontWeight.w800)),
                       SizedBox(height: 8),
-                      Text('Signs, ruling planets and traditional meanings', style: TextStyle(color: Color(0xFFE7DDF5), fontSize: 10)),
+                      Text(context.tr('traditional_rashi_details'), style: TextStyle(color: Color(0xFFE7DDF5), fontSize: 10)),
                     ])),
                     const Text('☼', style: TextStyle(fontSize: 70, color: Color(0xFFFFDCA0))),
                   ]),
@@ -64,7 +66,7 @@ class _RashiListScreenState extends State<RashiListScreen> {
                   controller: _search,
                   onChanged: (_) => setState(() {}),
                   decoration: InputDecoration(
-                    hintText: 'Search Rashi',
+                    hintText: context.tr('default_rashi'),
                     prefixIcon: const Icon(Icons.search_rounded),
                     filled: true,
                     fillColor: Colors.white,
@@ -83,7 +85,7 @@ class _RashiListScreenState extends State<RashiListScreen> {
                       final value = _filters[i];
                       final selected = _element == value;
                       return ChoiceChip(
-                        label: Text(value == 'All' ? 'All elements' : value.split(' ').first),
+                        label: Text(value == 'All' ? context.tr('all_rashis') : value.split(' ').first),
                         selected: selected,
                         onSelected: (_) => setState(() => _element = value),
                         selectedColor: AppTheme.plum.withValues(alpha: .14),
