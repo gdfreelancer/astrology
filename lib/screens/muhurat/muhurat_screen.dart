@@ -40,7 +40,7 @@ class _MuhuratScreenState extends State<MuhuratScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(context.tr('muhurat'), style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18))),
       body: SafeArea(child: ListView(padding: const EdgeInsets.fromLTRB(20, 8, 20, 28), children: [
-        _hero(),
+        _hero(context),
         const SizedBox(height: 22),
         Text(context.tr('muhurat_question'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppTheme.ink)),
         const SizedBox(height: 4),
@@ -68,7 +68,7 @@ class _MuhuratScreenState extends State<MuhuratScreen> {
     );
   }
 
-  Widget _hero() => Container(padding: const EdgeInsets.all(19), decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFF526F8E), Color(0xFF344C6A)], begin: Alignment.topLeft, end: Alignment.bottomRight), borderRadius: BorderRadius.circular(23)), child: const Row(children: [
+  Widget _hero(BuildContext context) => Container(padding: const EdgeInsets.all(19), decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFF526F8E), Color(0xFF344C6A)], begin: Alignment.topLeft, end: Alignment.bottomRight), borderRadius: BorderRadius.circular(23)), child: Row(children: [
     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(context.tr('auspicious_moments'), style: TextStyle(color: Color(0xFFDCE8F5), fontSize: 9, letterSpacing: 1.3, fontWeight: FontWeight.w800)),
       SizedBox(height: 8), Text('Choose a time\nwith tradition in mind', style: TextStyle(color: Colors.white, fontSize: 20, height: 1.2, fontWeight: FontWeight.w800)),
