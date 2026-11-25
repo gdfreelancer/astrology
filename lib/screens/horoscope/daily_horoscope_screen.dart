@@ -68,7 +68,7 @@ class _DailyHoroscopeScreenState extends State<DailyHoroscopeScreen> {
           return GestureDetector(onTap: () => setState(() => _selectedRashi = index), child: AnimatedContainer(duration: const Duration(milliseconds: 180), width: 76, padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6), decoration: BoxDecoration(color: selected ? AppTheme.plum : Colors.white, borderRadius: BorderRadius.circular(18), border: Border.all(color: selected ? AppTheme.plum : const Color(0xFFEDE7E1))), child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             Text(item.symbol, style: TextStyle(fontSize: 25, color: selected ? Colors.white : AppTheme.plum)),
             const SizedBox(height: 5),
-            Text(item.gujarati, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: selected ? Colors.white : AppTheme.ink)),
+            Text(switch (AppLocale.locale.value.languageCode) { 'hi' => item.hindi, 'gu' => item.gujarati, _ => item.english }, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: selected ? Colors.white : AppTheme.ink)),
             Text(item.english, style: TextStyle(fontSize: 9, color: selected ? const Color(0xFFE9DFF8) : AppTheme.muted)),
           ])));
         })),
@@ -79,7 +79,7 @@ class _DailyHoroscopeScreenState extends State<DailyHoroscopeScreen> {
           Container(width: 48, height: 48, alignment: Alignment.center, decoration: BoxDecoration(color: const Color(0xFFF1EAFE), borderRadius: BorderRadius.circular(15)), child: Text(_rashi.symbol, style: const TextStyle(fontSize: 27, color: AppTheme.plum))),
           const SizedBox(width: 12),
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('${_rashi.english} • ${_rashi.gujarati}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+            Text('${switch (AppLocale.locale.value.languageCode) { 'hi' => _rashi.hindi, 'gu' => _rashi.gujarati, _ => _rashi.english }} • ${_rashi.english}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppTheme.ink)),
             Text('Ruled by ${_rashi.ruler}', style: const TextStyle(fontSize: 10, color: AppTheme.muted)),
           ])),
           Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6), decoration: BoxDecoration(color: const Color(0xFFFFF3DF), borderRadius: BorderRadius.circular(20)), child: Text(_rashi.element.split(' ').first, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF9B6B25)))),
