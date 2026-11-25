@@ -16,7 +16,7 @@ class VimshottariDashaScreen extends StatelessWidget {
   final DateTime birthDate;
 
   static const _planetKeys = {
-    'Ketu':'planet_rahu', // fallback is replaced by explicit display below
+    'Ketu':'planet_ketu',
     'Venus':'planet_venus','Sun':'planet_sun','Moon':'planet_moon',
     'Mars':'planet_mars','Rahu':'planet_rahu','Jupiter':'planet_jupiter',
     'Saturn':'planet_saturn','Mercury':'planet_mercury',
@@ -47,7 +47,7 @@ class VimshottariDashaScreen extends StatelessWidget {
               Text(context.tr('birth_dasha_basis'),
                 style: const TextStyle(color: Color(0xFFEDE5F8), fontSize: 9, fontWeight: FontWeight.w800)),
               const SizedBox(height: 5),
-              Text(timeline.birthNakshatra,
+              Text(_nakshatra(context, timeline.birthNakshatra),
                 style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800)),
               const SizedBox(height: 4),
               Text('${context.tr('birth_dasha_lord')}: ${_planet(context, timeline.birthNakshatraLord)}',
@@ -110,8 +110,14 @@ class VimshottariDashaScreen extends StatelessWidget {
   }
 
   static String _planet(BuildContext context, String name) {
-    final key = name == 'Ketu' ? 'planet_ketu' : _planetKeys[name]!;
-    return context.tr(key);
+    return context.tr(_planetKeys[name]!);
+  }
+
+  static String _nakshatra(BuildContext context, String name) {
+    final slug = name.toLowerCase().replaceAll(RegExp('[^a-z0-9]+'), '_');
+    final key = 'p_$slug';
+    final translated = context.tr(key);
+    return translated == key ? name : translated;
   }
 }
 
