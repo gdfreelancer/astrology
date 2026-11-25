@@ -27,7 +27,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   PanchangData? _today;
   bool _loadingPanchang = true;
-  String? _panchangError;
   String _locationName = 'Ahmedabad, Gujarat, India';
 
   @override
@@ -41,7 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
     if (mounted) {
       setState(() {
         _loadingPanchang = true;
-        _panchangError = null;
       });
     }
     try {
@@ -64,10 +62,9 @@ class _HomeScreenState extends State<HomeScreen> {
         _locationName = saved.name;
         _loadingPanchang = false;
       });
-    } catch (error) {
+    } catch (_) {
       if (!mounted) return;
       setState(() {
-        _panchangError = error.toString();
         _loadingPanchang = false;
       });
     }
@@ -80,8 +77,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   String _time(BuildContext context, DateTime value) {
-    final hour = value.toLocal().hour;
-    final minute = value.toLocal().minute.toString().padLeft(2, '0');
+    final zoneId = _today?.location.timeZoneId;
+    final localTime = zoneId == null
+        ? value.toLocal()
+        : tz.TZDateTime.from(value, tz.getLocation(zoneId));
+    final hour = localTime.hour;
+    final minute = localTime.minute.toString().padLeft(2, '0');
     if (AppPreferencesService.cachedUse24HourTime) {
       return '${hour.toString().padLeft(2, '0')}:$minute';
     }
