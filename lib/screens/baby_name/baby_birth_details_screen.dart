@@ -6,6 +6,7 @@ import 'package:timezone/data/latest.dart' as timezone_data;
 import 'package:timezone/timezone.dart' as tz;
 
 import '../../services/birth_chart_service.dart';
+import '../../services/settings/app_preferences_service.dart';
 import '../../theme/app_theme.dart';
 import 'rashi_result_screen.dart';
 
@@ -241,6 +242,7 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
 
   String _timeLabel(TimeOfDay? value) {
     if (value == null) return 'Select exact birth time';
+    if (AppPreferencesService.cachedUse24HourTime) return '${value.hour.toString().padLeft(2, '0')}:${value.minute.toString().padLeft(2, '0')}';
     return value.format(context);
   }
 
@@ -338,9 +340,9 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
               Wrap(
                 spacing: 9,
                 children: [
-                  _GenderChoice(label: 'Not specified', selected: _gender == 'Not specified', onTap: () => setState(() => _gender = 'Not specified')),
-                  _GenderChoice(label: 'Boy', selected: _gender == 'Boy', onTap: () => setState(() => _gender = 'Boy')),
-                  _GenderChoice(label: 'Girl', selected: _gender == 'Girl', onTap: () => setState(() => _gender = 'Girl')),
+                  _GenderChoice(label: context.tr('not_specified'), selected: _gender == 'Not specified', onTap: () => setState(() => _gender = 'Not specified')),
+                  _GenderChoice(label: context.tr('boy'), selected: _gender == 'Boy', onTap: () => setState(() => _gender = 'Boy')),
+                  _GenderChoice(label: context.tr('girl'), selected: _gender == 'Girl', onTap: () => setState(() => _gender = 'Girl')),
                 ],
               ),
               const SizedBox(height: 27),
