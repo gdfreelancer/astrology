@@ -88,7 +88,7 @@ class _PanchangScreenState extends State<PanchangScreen>{
   );
   Widget _body(PanchangData d)=>ListView(padding:const EdgeInsets.fromLTRB(18,8,18,28),children:[
     Row(children:[
-      Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(_dateLabel(d.date),style:const TextStyle(fontSize:17,fontWeight:FontWeight.w800)),Text(d.weekday,style:const TextStyle(fontSize:10,color:AppTheme.muted))])),
+      Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(_dateLabel(d.date),style:const TextStyle(fontSize:17,fontWeight:FontWeight.w800)),Text(AppLocale.text('weekday_${d.date.weekday}'),style:const TextStyle(fontSize:10,color:AppTheme.muted))])),
       _iconButton(Icons.chevron_left,()=>_move(-1)),const SizedBox(width:5),
       _iconButton(Icons.today,(){setState(()=>_date=DateUtils.dateOnly(DateTime.now()));_load();}),const SizedBox(width:5),
       _iconButton(Icons.chevron_right,()=>_move(1)),
@@ -230,4 +230,4 @@ class _FestivalsScreenState extends State<FestivalsScreen>{
 }
 
 String _fmt(DateTime utc,String zone){final d=tz.TZDateTime.from(utc,tz.getLocation(zone));final minute=d.minute.toString().padLeft(2,'0');if(AppPreferencesService.cachedUse24HourTime){return d.hour.toString().padLeft(2,'0')+':'+minute;}final h=d.hour%12==0?12:d.hour%12;return h.toString()+':'+minute+' '+(d.hour>=12?'PM':'AM');}
-String _monthName(int m)=>const ['January','February','March','April','May','June','July','August','September','October','November','December'][m-1];
+String _monthName(int m)=>AppLocale.text('month_$m');
