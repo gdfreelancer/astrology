@@ -172,5 +172,18 @@
   "upcoming_observances": "Upcoming lunar observances",
   "tithi_based_observances": "Dates identified from Tithi active at local sunrise.",
   "no_observances": "No matching observances found in this period.",
-  "observance_disclaimer": "This is a Tithi-based observance finder, not a complete festival calendar. Festival and vrata dates can require additional regional rules, moonrise checks and local traditions."
+  "observance_disclaimer": "This is a Tithi-based observance finder, not a complete festival calendar. Festival and vrata dates can require additional regional rules, moonrise checks and local traditions.",
+  "full_name": "Full name",
+  "enter_name": "Enter name",
+  "north_indian": "North Indian",
+  "south_indian": "South Indian",
+  "east_indian": "East Indian",
+  "north_indian_desc": "Fixed houses in a diamond-shaped chart.",
+  "south_indian_desc": "Fixed zodiac signs in a square layout.",
+  "east_indian_desc": "Traditional regional square chart layout.",
+  "personal_information": "Personal information",
+  "full_name_optional": "Full name (optional)",
+  "search_city_timezone": "Search city or time zone",
+  "notifications": "Notifications",
+  "notifications_coming_soon": "Notification reminders will be available in a future update."
 }
