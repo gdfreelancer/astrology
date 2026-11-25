@@ -104,7 +104,7 @@ class _KundaliChartStyleScreenState extends State<KundaliChartStyleScreen> {
               ),
             ),
             const SizedBox(height: 9),
-            const Text(
+            Text(
               context.tr('chart_style_tip'),
               textAlign: TextAlign.center,
               style: TextStyle(color: AppTheme.muted, fontSize: 10),
