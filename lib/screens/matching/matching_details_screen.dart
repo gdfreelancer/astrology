@@ -52,7 +52,7 @@ class _MatchingDetailsScreenState extends State<MatchingDetailsScreen> {
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Unable to calculate matching. Check both birth details and time zones, then retry.'),
+          content: Text(context.tr('matching_calculation_error')),
           behavior: SnackBarBehavior.floating,
         ));
       }
@@ -106,7 +106,7 @@ class _MatchingDetailsScreenState extends State<MatchingDetailsScreen> {
               child: const Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Icon(Icons.info_outline_rounded, color: Color(0xFF9C7138), size: 17),
                 SizedBox(width: 8),
-                Expanded(child: Text('The first report calculates the eight Ashtakoota categories from Moon sign and Nakshatra. Full planetary, Manglik and Dosha checks are not included until the complete chart engine is validated.', style: TextStyle(fontSize: 10, height: 1.5, color: Color(0xFF795D36)))),
+                Expanded(child: Text(context.tr('matching_method_note'), style: TextStyle(fontSize: 10, height: 1.5, color: Color(0xFF795D36)))),
               ]),
             ),
             const SizedBox(height: 18),
