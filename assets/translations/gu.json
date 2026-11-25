@@ -166,5 +166,11 @@
   "auspicious_moments": "શુભ મુહૂર્ત",
   "selected_date": "પસંદ કરેલી તારીખ",
   "muhurat_preparing": "મુહૂર્તની ગણતરી તૈયાર થઈ રહી છે",
-  "language_switch_saved": "ભાષાની પસંદગી સાચવાઈ."
+  "language_switch_saved": "ભાષાની પસંદગી સાચવાઈ.",
+  "india_timezone": "ભારત · Asia/Kolkata",
+  "tap_element": "સમય અને અર્થ જોવા તત્ત્વ પર ટૅપ કરો",
+  "upcoming_observances": "આગામી ચંદ્ર તિથિઓ",
+  "tithi_based_observances": "સ્થાનિક સૂર્યોદયે સક્રિય તિથિ મુજબની તારીખો.",
+  "no_observances": "આ સમયગાળામાં કોઈ સંબંધિત વ્રત મળ્યું નથી.",
+  "observance_disclaimer": "આ તિથિ આધારિત સૂચિ છે, સંપૂર્ણ તહેવાર કૅલેન્ડર નથી. તહેવારો માટે પ્રાદેશિક નિયમો અને ચંદ્રોદયની ચકાસણી જરૂરી હોઈ શકે છે."
 }
