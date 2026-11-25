@@ -996,5 +996,7 @@
   "yoga_budhaditya_desc": "Sun and Mercury occupy the same sign. Combustion and planetary strength are not assessed.",
   "yoga_chandra_mangal_desc": "Moon and Mars occupy the same sign in the natal chart.",
   "yoga_pancha_desc": "The planet is in a kendra house from the Ascendant and in a listed own or exaltation sign. Full classical conditions are not evaluated.",
-  "gochar_accuracy_note": "Transit positions use GeoEngine with the app's approximate mean Lahiri ayanamsha. Sade Sati shows only the selected-date phase, not exact start/end dates. Yoga checks are limited rule-based indicators, not predictions or a complete classical assessment."
+  "gochar_accuracy_note": "Transit positions use GeoEngine with the app's approximate mean Lahiri ayanamsha. Sade Sati shows only the selected-date phase, not exact start/end dates. Yoga checks are limited rule-based indicators, not predictions or a complete classical assessment.",
+  "moon_house_short": "Moon",
+  "lagna_house_short": "Lagna"
 }
