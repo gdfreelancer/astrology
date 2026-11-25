@@ -5,6 +5,7 @@ import 'package:timezone/timezone.dart' as tz;
 import '../../l10n/app_locale.dart';
 import '../../models/panchang_data.dart';
 import '../../services/panchang_service.dart';
+import '../../services/settings/app_preferences_service.dart';
 import '../../theme/app_theme.dart';
 
 class LunarEventsScreen extends StatefulWidget {
@@ -198,7 +199,7 @@ class _LunarEventTile extends StatelessWidget {
 
   static String _time(DateTime value) {
     final minute = value.minute.toString().padLeft(2, '0');
-    if (AppLocale.text('time_format_24') == 'time_format_24') {
+    if (AppPreferencesService.cachedUse24HourTime) {
       return '${value.hour.toString().padLeft(2, '0')}:$minute';
     }
     final hour = value.hour % 12 == 0 ? 12 : value.hour % 12;
