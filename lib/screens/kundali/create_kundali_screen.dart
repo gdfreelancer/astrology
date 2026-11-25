@@ -240,7 +240,7 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
                 ),
               ),
               const SizedBox(height: 22),
-              const _SectionTitle(context.tr('baby_information')),
+              _SectionTitle(context.tr('baby_information')),
               const SizedBox(height: 12),
               _Label(context.tr('gender_optional')),
               TextFormField(
@@ -278,7 +278,7 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
               const SizedBox(height: 7),
               Text(context.tr('use_local_birth_time'), style: TextStyle(color: AppTheme.muted, fontSize: 10)),
               const SizedBox(height: 22),
-              const _SectionTitle(context.tr('place_of_birth')),
+              _SectionTitle(context.tr('place_of_birth')),
               const SizedBox(height: 12),
               _Label(context.tr('city_state_country')),
               TextFormField(
