@@ -7,6 +7,7 @@ import 'package:timezone/timezone.dart' as tz;
 
 import '../../models/kundali/kundali_chart_style.dart';
 import '../../services/birth_chart_service.dart';
+import '../../services/settings/app_preferences_service.dart';
 import '../../services/kundali/kundali_preferences_service.dart';
 import '../../theme/app_theme.dart';
 import 'kundali_chart_style_screen.dart';
@@ -251,11 +252,11 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
               const SizedBox(height: 14),
               _Label(context.tr('gender_optional')),
               Wrap(spacing: 8, children: [
-                for (final value in ['Not specified', context.tr('boy'), context.tr('girl')])
+                for (final option in [('Not specified', context.tr('not_specified')), ('Male', context.tr('boy')), ('Female', context.tr('girl'))])
                   ChoiceChip(
                     label: Text(value),
-                    selected: _gender == value,
-                    onSelected: (_) => setState(() => _gender = value),
+                    selected: _gender == option.$1,
+                    onSelected: (_) => setState(() => _gender = option.$1),
                     selectedColor: const Color(0xFFEDE5F8),
                     side: BorderSide(color: _gender == value ? AppTheme.plum : const Color(0xFFEAE5EF)),
                     labelStyle: TextStyle(fontSize: 11, color: _gender == value ? AppTheme.plum : AppTheme.muted, fontWeight: FontWeight.w700),
