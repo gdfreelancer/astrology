@@ -45,6 +45,15 @@ class _DailyHoroscopeScreenState extends State<DailyHoroscopeScreen> {
   };
   RashiInfo get _rashi => rashis[_selectedRashi];
 
+  String _localizedPlanet(String ruler) {
+    final key = switch (ruler.split(' ').first) {
+      'Sun' => 'planet_sun', 'Moon' => 'planet_moon', 'Mars' => 'planet_mars',
+      'Mercury' => 'planet_mercury', 'Jupiter' => 'planet_jupiter',
+      'Venus' => 'planet_venus', 'Saturn' => 'planet_saturn', _ => ''
+    };
+    return key.isEmpty ? ruler : context.tr(key);
+  }
+
   Future<void> _pickDate() async {
     final picked = await showDatePicker(context: context, initialDate: _selectedDate, firstDate: DateTime(1900), lastDate: DateTime(2100));
     if (picked != null) setState(() => _selectedDate = DateUtils.dateOnly(picked));
@@ -80,22 +89,22 @@ class _DailyHoroscopeScreenState extends State<DailyHoroscopeScreen> {
           const SizedBox(width: 12),
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text('${switch (AppLocale.locale.value.languageCode) { 'hi' => _rashi.hindi, 'gu' => _rashi.gujarati, _ => _rashi.english }} • ${_rashi.english}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppTheme.ink)),
-            Text('Ruled by ${_rashi.ruler}', style: const TextStyle(fontSize: 10, color: AppTheme.muted)),
+            Text('${context.tr('ruled_by').replaceAll('{planet}', _localizedPlanet(_rashi.ruler))}', style: const TextStyle(fontSize: 10, color: AppTheme.muted)),
           ])),
           Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6), decoration: BoxDecoration(color: const Color(0xFFFFF3DF), borderRadius: BorderRadius.circular(20)), child: Text(_rashi.element.split(' ').first, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF9B6B25)))),
         ]),
         const SizedBox(height: 14),
-        _readingCard('🌤️', context.tr('overall'), '${_rashi.summary} ${_rashi.personality}', const Color(0xFFFFF4DF)),
+        _readingCard('🌤️', context.tr('overall'), context.tr('horoscope_${_rashi.number}_overall'), const Color(0xFFFFF4DF)),
         const SizedBox(height: 10),
-        _readingCard('💼', context.tr('career_work'), _guidance[_rashi.number]![0], const Color(0xFFEAF3FF)),
+        _readingCard('💼', context.tr('career_work'), context.tr('horoscope_${_rashi.number}_career'), const Color(0xFFEAF3FF)),
         const SizedBox(height: 10),
-        _readingCard('💗', context.tr('love_relationships'), _guidance[_rashi.number]![1], const Color(0xFFFFEDF0)),
+        _readingCard('💗', context.tr('love_relationships'), context.tr('horoscope_${_rashi.number}_love'), const Color(0xFFFFEDF0)),
         const SizedBox(height: 10),
-        _readingCard('💰', context.tr('money_finance'), _guidance[_rashi.number]![2], const Color(0xFFEAF5ED)),
+        _readingCard('💰', context.tr('money_finance'), context.tr('horoscope_${_rashi.number}_money'), const Color(0xFFEAF5ED)),
         const SizedBox(height: 18),
         Container(padding: const EdgeInsets.all(15), decoration: BoxDecoration(color: const Color(0xFFF2EDF9), borderRadius: BorderRadius.circular(18)), child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('ⓘ', style: TextStyle(fontSize: 18, color: AppTheme.plum)), SizedBox(width: 10),
-          Expanded(child: Text('These are general, sign-based reflections, not predictions calculated from live planetary transits or your personal birth chart.', style: TextStyle(fontSize: 11, height: 1.5, color: AppTheme.ink))),
+          Expanded(child: Text('${context.tr('horoscope_disclaimer')}', style: TextStyle(fontSize: 11, height: 1.5, color: AppTheme.ink))),
         ])),
       ])),
     );
