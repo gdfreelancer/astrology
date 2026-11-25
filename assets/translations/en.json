@@ -214,5 +214,21 @@
   "suggested_baby_names": "Suggested Baby Names",
   "horoscope_intro": "A little guidance for\nthe day ahead",
   "horoscope_choose_moon": "Choose your Moon sign to begin",
-  "horoscope_disclaimer": "These are general, sign-based reflections, not predictions calculated from live planetary transits or your personal birth chart."
+  "horoscope_disclaimer": "These are general, sign-based reflections, not predictions calculated from live planetary transits or your personal birth chart.",
+  "activity_marriage": "Marriage",
+  "activity_marriage_desc": "Traditional wedding dates and ceremony timings.",
+  "activity_griha_pravesh": "Griha Pravesh",
+  "activity_griha_pravesh_desc": "Auspicious entry into a new home.",
+  "activity_vehicle": "Vehicle Purchase",
+  "activity_vehicle_desc": "Timing considerations for buying a vehicle.",
+  "activity_business": "Business Opening",
+  "activity_business_desc": "Starting a shop, office or new venture.",
+  "activity_naming": "Naming Ceremony",
+  "activity_naming_desc": "Namkaran ceremony for a newborn.",
+  "activity_property": "Property Purchase",
+  "activity_property_desc": "Traditional timing considerations for property matters.",
+  "activity_journey": "Journey Start",
+  "activity_journey_desc": "Choosing a traditional time to begin a journey.",
+  "activity_learning": "Learning / Vidyarambh",
+  "activity_learning_desc": "Beginning education or a new course of study."
 }
