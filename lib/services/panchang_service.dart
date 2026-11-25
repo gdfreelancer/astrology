@@ -145,4 +145,146 @@ class PanchangService {
   static double _phase(DateTime d)=>AstrologyMath.angularSeparation(_sun(d),_moon(d));
   static double _moon(DateTime d)=>AstrologyMath.toSiderealLongitude(tropicalLongitude:astro.eclipticGeoMoon(d).lon,ayanamsha:AyanamshaService.lahiri(d));
   static double _sun(DateTime d)=>AstrologyMath.toSiderealLongitude(tropicalLongitude:astro.sunPosition(d).eLon,ayanamsha:AyanamshaService.lahiri(d));
+
+  /// Returns astronomical lunar phase/tithi boundaries and sidereal solar ingresses.
+  /// Events are instants, not a regional festival/vrata decision calendar.
+  static List<PanchangLunarEvent> upcomingLunarEvents({
+    required DateTime from,
+    required PanchangLocation location,
+    int days = 90,
+  }) {
+    final start = DateTime.utc(from.year, from.month, from.day);
+    final end = start.add(Duration(days: days));
+    final events = <PanchangLunarEvent>[];
+    var cursor = start;
+    var phaseAtCursor = _phase(cursor);
+    var sunAtCursor = _sun(cursor);
+    const step = Duration(hours: 6);
+
+    while (cursor.isBefore(end)) {
+      final next = cursor.add(step).isAfter(end) ? end : cursor.add(step);
+      final phaseAtNext = _phase(next);
+      final phaseTravel = _forward(phaseAtCursor, phaseAtNext);
+      if (phaseTravel > 0) {
+        final firstBoundary = (phaseAtCursor / 90).floor() + 1;
+        for (var boundaryNumber = firstBoundary; boundaryNumber <= 4; boundaryNumber++) {
+          final target = boundaryNumber * 90.0;
+          final distance = _forward(phaseAtCursor, target % 360);
+          if (distance <= phaseTravel + 1e-7) {
+            final instant = _findAngularBoundary(
+              cursor, next, phaseAtCursor, distance, _phase,
+            );
+            final phase = (target % 360).round() % 360;
+            final event = switch (phase) {
+              0 => const PanchangLunarEvent(
+                time: DateTime.utc(2000), titleKey: 'lunar_new_moon',
+                detailKey: 'lunar_new_moon_detail', categoryKey: 'lunar_phase'),
+              90 => const PanchangLunarEvent(
+                time: DateTime.utc(2000), titleKey: 'lunar_first_quarter',
+                detailKey: 'lunar_quarter_detail', categoryKey: 'lunar_phase'),
+              180 => const PanchangLunarEvent(
+                time: DateTime.utc(2000), titleKey: 'lunar_full_moon',
+                detailKey: 'lunar_full_moon_detail', categoryKey: 'lunar_phase'),
+              _ => const PanchangLunarEvent(
+                time: DateTime.utc(2000), titleKey: 'lunar_last_quarter',
+                detailKey: 'lunar_quarter_detail', categoryKey: 'lunar_phase'),
+            };
+            events.add(PanchangLunarEvent(
+              time: instant,
+              titleKey: event.titleKey,
+              detailKey: event.detailKey,
+              categoryKey: event.categoryKey,
+            ));
+          }
+        }
+
+        final tithiStart = ((phaseAtCursor / 12).floor() + 1) * 12.0;
+        final tithiDistance = _forward(phaseAtCursor, tithiStart % 360);
+        if (tithiDistance <= phaseTravel + 1e-7) {
+          final tithiIndex = (tithiStart.round() ~/ 12) % 30;
+          if (tithiIndex == 11 || tithiIndex == 26) {
+            final instant = _findAngularBoundary(
+              cursor, next, phaseAtCursor, tithiDistance, _phase,
+            );
+            events.add(PanchangLunarEvent(
+              time: instant,
+              titleKey: 'lunar_ekadashi',
+              detailKey: 'lunar_ekadashi_detail',
+              categoryKey: 'lunar_tithi',
+            ));
+          }
+        }
+      }
+
+      final sunAtNext = _sun(next);
+      final sunTravel = _forward(sunAtCursor, sunAtNext);
+      if (sunTravel > 0) {
+        final nextSignBoundary = ((sunAtCursor / 30).floor() + 1) * 30.0;
+        final distance = _forward(sunAtCursor, nextSignBoundary % 360);
+        if (distance <= sunTravel + 1e-7) {
+          final instant = _findAngularBoundary(
+            cursor, next, sunAtCursor, distance, _sun,
+          );
+          final signIndex = (nextSignBoundary.round() ~/ 30) % 12;
+          events.add(PanchangLunarEvent(
+            time: instant,
+            titleKey: 'lunar_sankranti',
+            detailKey: 'lunar_sankranti_detail',
+            categoryKey: 'solar_ingress',
+            rashiIndex: signIndex,
+          ));
+        }
+      }
+      cursor = next;
+      phaseAtCursor = phaseAtNext;
+      sunAtCursor = sunAtNext;
+    }
+
+    events.sort((a, b) => a.time.compareTo(b.time));
+    return events;
+  }
+
+  static double lunarIllumination(DateTime at) {
+    final phase = _phase(at) * math.pi / 180;
+    return ((1 - math.cos(phase)) / 2 * 100).clamp(0, 100);
+  }
+
+  static String lunarPhaseKey(DateTime at) {
+    final phase = _phase(at);
+    if (phase < 22.5 || phase >= 337.5) return 'lunar_phase_new';
+    if (phase < 67.5) return 'lunar_phase_waxing_crescent';
+    if (phase < 112.5) return 'lunar_phase_first_quarter';
+    if (phase < 157.5) return 'lunar_phase_waxing_gibbous';
+    if (phase < 202.5) return 'lunar_phase_full';
+    if (phase < 247.5) return 'lunar_phase_waning_gibbous';
+    if (phase < 292.5) return 'lunar_phase_last_quarter';
+    return 'lunar_phase_waning_crescent';
+  }
+
+  static DateTime _findAngularBoundary(
+    DateTime low,
+    DateTime high,
+    double startAngle,
+    double distance,
+    double Function(DateTime) angleAt,
+  ) {
+    var left = low;
+    var right = high;
+    for (var i = 0; i < 32; i++) {
+      final middle = left.add(Duration(
+        microseconds: right.difference(left).inMicroseconds ~/ 2,
+      ));
+      final travelled = _forward(startAngle, angleAt(middle));
+      if (travelled >= distance) {
+        right = middle;
+      } else {
+        left = middle;
+      }
+    }
+    return right;
+  }
+
+  static double _forward(double from, double to) =>
+      (to - from + 360) % 360;
+
 }
