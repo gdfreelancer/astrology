@@ -106,8 +106,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      context.tr('birth_chart_subtitle'),
+                    Text(context.tr('birth_chart_subtitle'),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 14,
@@ -125,8 +124,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       ),
                     ),
                     const SizedBox(height: 30),
-                    const Text(
-                      context.tr('universe_subtitle'),
+                    Text(context.tr('universe_subtitle'),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 9,
