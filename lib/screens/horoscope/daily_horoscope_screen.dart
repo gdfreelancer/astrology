@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../rashi/rashi_data.dart';
 import '../rashi/rashi_info.dart';
 import '../../theme/app_theme.dart';
+import '../../services/settings/app_preferences_service.dart';
 
 class DailyHoroscopeScreen extends StatefulWidget {
   const DailyHoroscopeScreen({super.key});
