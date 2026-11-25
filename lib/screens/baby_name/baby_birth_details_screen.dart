@@ -5,6 +5,8 @@ import 'package:geocoding/geocoding.dart';
 import 'package:timezone/data/latest.dart' as timezone_data;
 import 'package:timezone/timezone.dart' as tz;
 
+import '../../models/birth_profile.dart';
+import '../../services/birth_profile_service.dart';
 import '../../services/birth_chart_service.dart';
 import '../../services/settings/app_preferences_service.dart';
 import '../../theme/app_theme.dart';
@@ -192,6 +194,127 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
     }
   }
 
+  Future<void> _chooseSavedProfile() async {
+    final profiles = await BirthProfileService.getAll();
+    if (!mounted) return;
+    if (profiles.isEmpty) {
+      _showMessage(context.tr('no_saved_profiles'));
+      return;
+    }
+    final selected = await showModalBottomSheet<BirthProfile>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (sheet) => Container(
+        padding: const EdgeInsets.fromLTRB(16, 18, 16, 22),
+        decoration: const BoxDecoration(
+          color: Color(0xFFFFFCF8),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: SafeArea(
+          top: false,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(4, 0, 4, 10),
+                child: Text(context.tr('select_birth_profile'),
+                    style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
+              ),
+              ...profiles.map((profile) => ListTile(
+                leading: const CircleAvatar(
+                  backgroundColor: Color(0xFFF1EAF9),
+                  child: Icon(Icons.person_rounded, color: AppTheme.plum),
+                ),
+                title: Text(profile.name,
+                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+                subtitle: Text(profile.placeName,
+                    maxLines: 1, overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 10)),
+                onTap: () => Navigator.pop(sheet, profile),
+              )),
+            ],
+          ),
+        ),
+      ),
+    );
+    if (selected == null || !mounted) return;
+    setState(() {
+      _placeController.text = selected.placeName;
+      _birthDate = selected.birthDate;
+      _birthTime = TimeOfDay(hour: selected.hour, minute: selected.minute);
+      _timeZoneId = selected.timeZoneId;
+      _gender = selected.gender == 'Male'
+          ? 'Boy'
+          : selected.gender == 'Female'
+              ? 'Girl'
+              : 'Not specified';
+      _location = Location(
+        latitude: selected.latitude,
+        longitude: selected.longitude,
+        timestamp: DateTime.now(),
+      );
+      _placeError = null;
+    });
+  }
+
+  Future<void> _saveCurrentProfile() async {
+    if (_birthDate == null || _birthTime == null ||
+        _timeZoneId == null || _location == null ||
+        _placeController.text.trim().isEmpty) {
+      _showMessage(context.tr('complete_birth_profile_details'));
+      return;
+    }
+    final nameController = TextEditingController();
+    final name = await showDialog<String>(
+      context: context,
+      builder: (dialog) => AlertDialog(
+        title: Text(context.tr('save_as_profile')),
+        content: TextField(
+          controller: nameController,
+          autofocus: true,
+          textCapitalization: TextCapitalization.words,
+          decoration: InputDecoration(hintText: context.tr('profile_name_hint')),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialog),
+            child: Text(context.tr('cancel')),
+          ),
+          FilledButton(
+            onPressed: () {
+              if (nameController.text.trim().isNotEmpty) {
+                Navigator.pop(dialog, nameController.text.trim());
+              }
+            },
+            style: FilledButton.styleFrom(backgroundColor: AppTheme.plum),
+            child: Text(context.tr('save')),
+          ),
+        ],
+      ),
+    );
+    nameController.dispose();
+    if (name == null || !mounted) return;
+    final now = DateTime.now();
+    await BirthProfileService.save(BirthProfile(
+      id: now.microsecondsSinceEpoch.toString(),
+      name: name,
+      gender: _gender == 'Boy'
+          ? 'Male'
+          : _gender == 'Girl'
+              ? 'Female'
+              : 'Not specified',
+      birthDate: _birthDate!,
+      hour: _birthTime!.hour,
+      minute: _birthTime!.minute,
+      placeName: _placeController.text.trim(),
+      latitude: _location!.latitude,
+      longitude: _location!.longitude,
+      timeZoneId: _timeZoneId!,
+    ));
+    if (mounted) _showMessage(context.tr('profile_saved'));
+  }
+
   Future<void> _calculate() async {
     if (_placeController.text.trim().isEmpty) {
       setState(() => _placeError = context.tr('please_select_birth_place'));
@@ -260,6 +383,13 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
           child: const Text('‹', style: TextStyle(fontSize: 32, height: 1, color: AppTheme.plum)),
         ),
         title: Text(context.tr('baby_name_rashi'), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
+        actions: [
+          IconButton(
+            tooltip: context.tr('use_saved_profile'),
+            onPressed: _chooseSavedProfile,
+            icon: const Icon(Icons.person_search_rounded, color: AppTheme.plum),
+          ),
+        ],
       ),
       body: SafeArea(
         child: Form(
@@ -337,6 +467,19 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
               ),
               const SizedBox(height: 7),
               Text(context.tr('birth_time_zone_help'), style: TextStyle(color: AppTheme.muted, fontSize: 10, height: 1.45)),
+              if (_location != null && _birthDate != null && _birthTime != null && _timeZoneId != null) ...[
+                const SizedBox(height: 7),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton.icon(
+                    onPressed: _saveCurrentProfile,
+                    icon: const Icon(Icons.bookmark_add_outlined, size: 17),
+                    label: Text(context.tr('save_as_profile'),
+                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800)),
+                    style: TextButton.styleFrom(foregroundColor: AppTheme.plum),
+                  ),
+                ),
+              ],
               const SizedBox(height: 23),
               _SectionHeading(number: '03', title: context.tr('baby_information')),
               const SizedBox(height: 13),

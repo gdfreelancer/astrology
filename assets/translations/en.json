@@ -825,5 +825,13 @@
   "save_as_profile": "Save as profile",
   "profile_saved": "Birth profile saved",
   "no_saved_profiles": "No saved profiles yet. Add one from Birth Profiles in Settings.",
-  "select_or_manage_profiles": "Choose a saved profile or manage your profiles."
+  "select_or_manage_profiles": "Choose a saved profile or manage your profiles.",
+  "male": "Male",
+  "female": "Female",
+  "other": "Other",
+  "manage_profiles": "Manage profiles",
+  "cancel": "Cancel",
+  "save": "Save",
+  "edit": "Edit",
+  "delete": "Delete"
 }
