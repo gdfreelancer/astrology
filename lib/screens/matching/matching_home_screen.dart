@@ -142,7 +142,7 @@ class _ReportTile extends StatelessWidget {
         PopupMenuButton<String>(
           icon: const Icon(Icons.more_vert_rounded, color: AppTheme.muted, size: 19),
           onSelected: (value) { if (value == 'delete') onDelete(); },
-          itemBuilder: (_) => [PopupMenuItem(value: 'delete', child: Text(context.tr('matching_report')))],
+          itemBuilder: (_) => [PopupMenuItem(value: 'delete', child: Text(context.tr('delete_report')))],
         ),
       ]),
     ),
