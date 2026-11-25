@@ -1,8 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:astrology/models/panchang_data.dart';
 import 'package:astrology/services/panchang_service.dart';
+import 'package:timezone/data/latest.dart' as timezone_data;
 
 void main() {
+  timezone_data.initializeTimeZones();
   const location = PanchangLocation(
     name: 'Ahmedabad, Gujarat, India',
     latitude: 23.0225,
