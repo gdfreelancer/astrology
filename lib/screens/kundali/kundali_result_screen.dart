@@ -118,7 +118,7 @@ String _localizedAstroName(String value) {
                 Icon(Icons.info_outline_rounded, color: Color(0xFF9C7138), size: 18),
                 SizedBox(width: 9),
                 Expanded(child: Text(
-                  'Planet positions use GeoEngine with the app’s approximate Lahiri ayanamsha. Houses are whole-sign houses derived from the calculated Ascendant. Verify important readings against a trusted Panchang or professional ephemeris; this is not a Swiss Ephemeris-validated chart.',
+                  '${context.tr('kundali_accuracy_disclaimer')}',
                   style: TextStyle(color: Color(0xFF795D36), fontSize: 10, height: 1.5),
                 )),
               ]),
