@@ -82,7 +82,7 @@ class _MatchingHomeScreenState extends State<MatchingHomeScreen> {
               ),
               const SizedBox(height: 23),
               Row(children: [
-                const Expanded(child: Text(context.tr('matching_report'), style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppTheme.ink))),
+                Expanded(child: Text(context.tr('matching_report'), style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppTheme.ink))),
                 Text('${_reports.length}', style: const TextStyle(color: AppTheme.muted, fontSize: 10, fontWeight: FontWeight.w700)),
               ]),
               const SizedBox(height: 11),
@@ -142,7 +142,7 @@ class _ReportTile extends StatelessWidget {
         PopupMenuButton<String>(
           icon: const Icon(Icons.more_vert_rounded, color: AppTheme.muted, size: 19),
           onSelected: (value) { if (value == 'delete') onDelete(); },
-          itemBuilder: (_) => const [PopupMenuItem(value: 'delete', child: Text(context.tr('matching_report')))],
+          itemBuilder: (_) => [PopupMenuItem(value: 'delete', child: Text(context.tr('matching_report')))],
         ),
       ]),
     ),
