@@ -67,6 +67,28 @@ class BhavaChalitCard extends StatelessWidget {
             },
           ),
           const SizedBox(height: 8),
+          Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              tilePadding: EdgeInsets.zero,
+              childrenPadding: const EdgeInsets.only(bottom: 8),
+              title: Text(context.tr('view_house_cusps'),
+                style: const TextStyle(fontSize: 10, color: AppTheme.plum, fontWeight: FontWeight.w800)),
+              children: [
+                for (final house in chart.bhavas)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    child: Row(children: [
+                      SizedBox(width: 34, child: Text('${house.number}.',
+                        style: const TextStyle(fontSize: 9, color: AppTheme.ink, fontWeight: FontWeight.w800))),
+                      Expanded(child: _CuspalValue(label: context.tr('start_boundary'), value: _fullDeg(house.startLongitude))),
+                      Expanded(child: _CuspalValue(label: context.tr('bhava_madhya'), value: _fullDeg(house.middleLongitude))),
+                      Expanded(child: _CuspalValue(label: context.tr('end_boundary'), value: _fullDeg(house.endLongitude))),
+                    ]),
+                  ),
+              ],
+            ),
+          ),
           Text(context.tr('bhava_chalit_note'),
             style: const TextStyle(fontSize: 9, color: AppTheme.muted, height: 1.4)),
         ],
@@ -86,4 +108,24 @@ class BhavaChalitCard extends StatelessWidget {
     return contextText(keys[index]);
   }
   static String contextText(String key) => AppLocale.text(key);
+}
+
+class _CuspalValue extends StatelessWidget {
+  const _CuspalValue({required this.label, required this.value});
+  final String label;
+  final String value;
+  @override
+  Widget build(BuildContext context) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    Text(label, style: const TextStyle(fontSize: 7, color: AppTheme.muted)),
+    const SizedBox(height: 2),
+    Text(value, style: const TextStyle(fontSize: 8, color: AppTheme.ink, fontWeight: FontWeight.w700)),
+  ]);
+}
+
+String _fullDeg(double longitude) {
+  final degree = longitude.floor();
+  final minutesRaw = (longitude - degree) * 60;
+  final minute = minutesRaw.floor();
+  final seconds = ((minutesRaw - minute) * 60).round();
+  return '$degree°$minute′$seconds″';
 }
