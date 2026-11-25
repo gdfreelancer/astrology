@@ -140,8 +140,8 @@ class VargaChartService {
 
   static int _trimshamsa(int sign, double degree) {
     final segments = sign.isEven
-        ? const [(5.0, 1), (7.0, 5), (8.0, 11), (5.0, 9), (5.0, 7)]
-        : const [(5.0, 0), (5.0, 10), (8.0, 8), (7.0, 2), (5.0, 6)];
+        ? const [(5.0, 0), (5.0, 10), (8.0, 8), (7.0, 2), (5.0, 6)]
+        : const [(5.0, 1), (7.0, 5), (8.0, 11), (5.0, 9), (5.0, 7)];
     var edge = 0.0;
     for (final segment in segments) {
       edge += segment.$1;
