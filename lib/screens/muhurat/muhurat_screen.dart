@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_locale.dart';
+
 import '../../theme/app_theme.dart';
 
 class MuhuratScreen extends StatefulWidget {
@@ -36,13 +38,13 @@ class _MuhuratScreenState extends State<MuhuratScreen> {
   Widget build(BuildContext context) {
     final activity = _activities[_selectedActivity];
     return Scaffold(
-      appBar: AppBar(title: const Text('Muhurat', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18))),
+      appBar: AppBar(title: Text(context.tr('muhurat'), style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18))),
       body: SafeArea(child: ListView(padding: const EdgeInsets.fromLTRB(20, 8, 20, 28), children: [
         _hero(),
         const SizedBox(height: 22),
-        const Text('What are you planning?', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+        Text(context.tr('muhurat_question'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppTheme.ink)),
         const SizedBox(height: 4),
-        const Text('Choose an activity to explore its Muhurat requirements.', style: TextStyle(fontSize: 10, color: AppTheme.muted)),
+        Text(context.tr('choose_activity_help'), style: TextStyle(fontSize: 10, color: AppTheme.muted)),
         const SizedBox(height: 13),
         GridView.builder(shrinkWrap: true, physics: const NeverScrollableScrollPhysics(), itemCount: _activities.length, gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 11, mainAxisSpacing: 11, childAspectRatio: 1.42), itemBuilder: (context, index) {
           final item = _activities[index]; final selected = index == _selectedActivity;
@@ -53,13 +55,13 @@ class _MuhuratScreenState extends State<MuhuratScreen> {
           ]))));
         }),
         const SizedBox(height: 22),
-        const Text('Preferred date & place', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+        Text(context.tr('preferred_date_place'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppTheme.ink)),
         const SizedBox(height: 12),
         _dateField(),
         const SizedBox(height: 11),
-        TextField(controller: _placeController, textCapitalization: TextCapitalization.words, keyboardType: TextInputType.streetAddress, decoration: InputDecoration(prefixIcon: const Icon(Icons.location_on_outlined, color: AppTheme.plum, size: 20), hintText: 'Event location (City, State)', hintStyle: const TextStyle(fontSize: 11, color: AppTheme.muted), filled: true, fillColor: Colors.white, contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15), border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: Color(0xFFEDE7E1))), enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: Color(0xFFEDE7E1))))),
+        TextField(controller: _placeController, textCapitalization: TextCapitalization.words, keyboardType: TextInputType.streetAddress, decoration: InputDecoration(prefixIcon: const Icon(Icons.location_on_outlined, color: AppTheme.plum, size: 20), hintText: context.tr('event_location'), hintStyle: const TextStyle(fontSize: 11, color: AppTheme.muted), filled: true, fillColor: Colors.white, contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15), border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: Color(0xFFEDE7E1))), enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: Color(0xFFEDE7E1))))),
         const SizedBox(height: 16),
-        SizedBox(height: 52, child: FilledButton.icon(onPressed: () => setState(() => _showNotice = true), icon: const Icon(Icons.auto_awesome_rounded, size: 18), label: const Text('Explore Muhurat', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800)), style: FilledButton.styleFrom(backgroundColor: AppTheme.plum, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))))),
+        SizedBox(height: 52, child: FilledButton.icon(onPressed: () => setState(() => _showNotice = true), icon: const Icon(Icons.auto_awesome_rounded, size: 18), label: Text(context.tr('explore_muhurat'), style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800)), style: FilledButton.styleFrom(backgroundColor: AppTheme.plum, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))))),
         if (_showNotice) ...[const SizedBox(height: 16), _calculationNotice(activity)],
         const SizedBox(height: 18), _howItWorks(),
       ])),
@@ -68,7 +70,7 @@ class _MuhuratScreenState extends State<MuhuratScreen> {
 
   Widget _hero() => Container(padding: const EdgeInsets.all(19), decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFF526F8E), Color(0xFF344C6A)], begin: Alignment.topLeft, end: Alignment.bottomRight), borderRadius: BorderRadius.circular(23)), child: const Row(children: [
     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text('AUSPICIOUS MOMENTS', style: TextStyle(color: Color(0xFFDCE8F5), fontSize: 9, letterSpacing: 1.3, fontWeight: FontWeight.w800)),
+      Text(context.tr('auspicious_moments'), style: TextStyle(color: Color(0xFFDCE8F5), fontSize: 9, letterSpacing: 1.3, fontWeight: FontWeight.w800)),
       SizedBox(height: 8), Text('Choose a time\nwith tradition in mind', style: TextStyle(color: Colors.white, fontSize: 20, height: 1.2, fontWeight: FontWeight.w800)),
       SizedBox(height: 6), Text('Explore traditional Muhurat guidance', style: TextStyle(color: Color(0xFFDCE8F5), fontSize: 10)),
     ])), SizedBox(width: 12), Text('🕉️', style: TextStyle(fontSize: 48)),
@@ -77,13 +79,13 @@ class _MuhuratScreenState extends State<MuhuratScreen> {
   Widget _dateField() => InkWell(onTap: _pickDate, borderRadius: BorderRadius.circular(15), child: Container(padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15), decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15), border: Border.all(color: const Color(0xFFEDE7E1))), child: Row(children: [
     const Icon(Icons.calendar_month_rounded, color: AppTheme.plum, size: 20), const SizedBox(width: 11),
     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      const Text('SELECTED DATE', style: TextStyle(fontSize: 8, letterSpacing: 1, fontWeight: FontWeight.w800, color: AppTheme.muted)),
+      Text(context.tr('selected_date'), style: TextStyle(fontSize: 8, letterSpacing: 1, fontWeight: FontWeight.w800, color: AppTheme.muted)),
       const SizedBox(height: 3), Text(_dateLabel(_selectedDate), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppTheme.ink)),
     ])), const Icon(Icons.keyboard_arrow_down_rounded, color: AppTheme.muted),
   ])));
 
   Widget _calculationNotice(_MuhuratActivity activity) => Container(padding: const EdgeInsets.all(16), decoration: BoxDecoration(color: const Color(0xFFFFF5E4), borderRadius: BorderRadius.circular(17), border: Border.all(color: const Color(0xFFF0DFBE)),), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    const Row(children: [Icon(Icons.info_outline_rounded, color: Color(0xFF9B6B25), size: 19), SizedBox(width: 8), Expanded(child: Text('Muhurat calculation is being prepared', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppTheme.ink)))]),
+    const Row(children: [Icon(Icons.info_outline_rounded, color: Color(0xFF9B6B25), size: 19), SizedBox(width: 8), Expanded(child: Text(context.tr('muhurat_preparing'), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppTheme.ink)))]),
     const SizedBox(height: 8),
     Text('Your selection: ${activity.title} on ${_dateLabel(_selectedDate)}${_placeController.text.trim().isEmpty ? '' : ' at ${_placeController.text.trim()}'}', style: const TextStyle(fontSize: 10, height: 1.5, color: AppTheme.ink)),
     const SizedBox(height: 7),
