@@ -127,6 +127,6 @@ class _DailyHoroscopeScreenState extends State<DailyHoroscopeScreen> {
     ])),
   ]));
   String _dateLabel(DateTime date) => '${_month(date.month)} ${date.day}, ${date.year}';
-  String _month(int month) => const ['January','February','March','April','May','June','July','August','September','October','November','December'][month - 1];
-  String _weekday(DateTime date) => const ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'][date.weekday - 1];
+  String _month(int month) => AppLocale.text('month_$month');
+  String _weekday(DateTime date) => AppLocale.text('weekday_${date.weekday}');
 }
