@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../l10n/app_locale.dart';
 import 'package:timezone/data/latest.dart' as timezone_data;
 
 import '../../models/birth_chart_result.dart';
@@ -62,7 +64,7 @@ class _MatchingDetailsScreenState extends State<MatchingDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('New Kundali Matching', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800))),
+      appBar: AppBar(title: Text(context.tr('new_matching'), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800))),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
@@ -77,22 +79,22 @@ class _MatchingDetailsScreenState extends State<MatchingDetailsScreen> {
                 Text('💞', style: TextStyle(fontSize: 38)),
                 SizedBox(width: 13),
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text('Two charts, one comparison', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800)),
+                  Text(context.tr('two_charts_comparison'), style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800)),
                   SizedBox(height: 5),
-                  Text('Enter the exact local birth details for both people. Birthplace and time zone are required.', style: TextStyle(color: Color(0xFFF3E8F1), fontSize: 10, height: 1.5)),
+                  Text(context.tr('matching_birth_details_help'), style: TextStyle(color: Color(0xFFF3E8F1), fontSize: 10, height: 1.5)),
                 ])),
               ]),
             ),
             const SizedBox(height: 20),
             const Row(children: [
-              Expanded(child: Text('Bride details', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppTheme.ink))),
+              Expanded(child: Text(context.tr('bride_details'), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppTheme.ink))),
               Text('01 / 02', style: TextStyle(fontSize: 10, color: AppTheme.muted, fontWeight: FontWeight.w700)),
             ]),
             const SizedBox(height: 10),
             MatchingPersonForm(key: _brideKey, role: 'Bride', accent: const Color(0xFFB45D82)),
             const SizedBox(height: 19),
             const Row(children: [
-              Expanded(child: Text('Groom details', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppTheme.ink))),
+              Expanded(child: Text(context.tr('groom_details'), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppTheme.ink))),
               Text('02 / 02', style: TextStyle(fontSize: 10, color: AppTheme.muted, fontWeight: FontWeight.w700)),
             ]),
             const SizedBox(height: 10),
@@ -115,7 +117,7 @@ class _MatchingDetailsScreenState extends State<MatchingDetailsScreen> {
                 style: FilledButton.styleFrom(backgroundColor: AppTheme.plum, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
                 child: _calculating
                     ? const SizedBox(width: 21, height: 21, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                    : const Text('Calculate 36 Gunas  →', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800)),
+                    : Text(context.tr('calculate_36_gunas'), style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800)),
               ),
             ),
           ],
