@@ -6,6 +6,8 @@ import '../../services/settings/app_preferences_service.dart';
 import '../../models/kundali/kundali_chart_style.dart';
 import '../../models/kundali/kundali_graha.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/bhava_chalit_card.dart';
+import 'graha_analysis_screen.dart';
 
 
 String _localizedRashi(int index) {
@@ -97,12 +99,24 @@ class KundaliResultScreen extends StatelessWidget {
             ),
             const SizedBox(height: 11),
             _KundaliHouseGrid(chart: birthResult.kundaliChart),
+            const SizedBox(height: 16),
+            BhavaChalitCard(chart: birthResult.kundaliChart),
             const SizedBox(height: 20),
             Text(context.tr('graha_placements'), style: TextStyle(fontSize: 15, color: AppTheme.ink, fontWeight: FontWeight.w800)),
             const SizedBox(height: 5),
             Text(context.tr('graha_placements_help'), style: TextStyle(fontSize: 10, color: AppTheme.muted)),
             const SizedBox(height: 10),
             _GrahaPlacementList(chart: birthResult.kundaliChart),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton.icon(
+                onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => GrahaAnalysisScreen(chart: birthResult.kundaliChart),
+                )),
+                icon: const Icon(Icons.analytics_outlined, size: 16),
+                label: Text(context.tr('view_graha_analysis')),
+              ),
+            ),
             const SizedBox(height: 19),
             Container(
               padding: const EdgeInsets.all(16),
