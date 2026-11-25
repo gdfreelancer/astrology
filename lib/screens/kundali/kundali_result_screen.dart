@@ -10,6 +10,7 @@ import '../../widgets/bhava_chalit_card.dart';
 import 'graha_analysis_screen.dart';
 import 'rashi_bhava_analysis_screen.dart';
 import 'vimshottari_dasha_screen.dart';
+import 'divisional_charts_screen.dart';
 
 
 String _localizedRashi(int index) {
@@ -122,6 +123,15 @@ class KundaliResultScreen extends StatelessWidget {
                   siderealMoonLongitude: birthResult.siderealMoonLongitude,
                   birthDate: birthResult.birthLocal,
                 ),
+              )),
+            ),
+            const SizedBox(height: 8),
+            _AnalysisShortcut(
+              icon: Icons.grid_view_rounded,
+              title: context.tr('divisional_charts'),
+              subtitle: context.tr('divisional_charts_short'),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => DivisionalChartsScreen(chart: birthResult.kundaliChart),
               )),
             ),
             const SizedBox(height: 20),
