@@ -92,7 +92,8 @@ class VimshottariDashaScreen extends StatelessWidget {
             style: const TextStyle(color: AppTheme.ink, fontSize: 15, fontWeight: FontWeight.w800)),
           const SizedBox(height: 8),
           for (final period in timeline.antardashas.where((p) =>
-              currentMaha == null || !p.end.isBefore(currentMaha.start)).take(9))
+              currentMaha == null ||
+              (p.start.isBefore(currentMaha.end) && p.end.isAfter(currentMaha.start))).take(9))
             _PeriodTile(period: period, isCurrent: period.contains(now),
               title: _planet(context, period.planet)),
           const SizedBox(height: 10),
