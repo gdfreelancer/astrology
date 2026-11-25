@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_locale.dart';
+
 import '../../models/birth_chart_result.dart';
 import '../../models/kundali/kundali_chart_style.dart';
 import '../../models/kundali/kundali_graha.dart';
@@ -22,9 +24,9 @@ class KundaliResultScreen extends StatelessWidget {
     final local = birthResult.birthLocal;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Kundali overview', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
+        title: Text(context.tr('kundali_overview'), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
         actions: [
-          IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(Icons.edit_outlined, color: AppTheme.plum), tooltip: 'Edit birth details'),
+          IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(Icons.edit_outlined, color: AppTheme.plum), tooltip: context.tr('edit_birth_details')),
         ],
       ),
       body: SafeArea(
@@ -38,9 +40,9 @@ class KundaliResultScreen extends StatelessWidget {
                 gradient: const LinearGradient(colors: [Color(0xFF8062B5), Color(0xFF60468F)], begin: Alignment.topLeft, end: Alignment.bottomRight),
               ),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const Text('YOUR BIRTH CHART', style: TextStyle(color: Color(0xFFEDE5F8), fontSize: 9, letterSpacing: 1.5, fontWeight: FontWeight.w800)),
+                Text(context.tr('your_birth_chart'), style: TextStyle(color: Color(0xFFEDE5F8), fontSize: 9, letterSpacing: 1.5, fontWeight: FontWeight.w800)),
                 const SizedBox(height: 8),
-                Text(name.isEmpty ? 'Your Kundali' : name, style: const TextStyle(color: Colors.white, fontSize: 21, fontWeight: FontWeight.w800)),
+                Text(name.isEmpty ? context.tr('your_kundali') : name, style: const TextStyle(color: Colors.white, fontSize: 21, fontWeight: FontWeight.w800)),
                 const SizedBox(height: 5),
                 Text('${local.day.toString().padLeft(2, '0')} ${_month(local.month)} ${local.year}  ·  ${_time(local)}', style: const TextStyle(color: Color(0xFFEDE5F8), fontSize: 11)),
                 const SizedBox(height: 3),
@@ -54,16 +56,16 @@ class KundaliResultScreen extends StatelessWidget {
               ]),
             ),
             const SizedBox(height: 19),
-            const Text('Birth details calculated', style: TextStyle(fontSize: 15, color: AppTheme.ink, fontWeight: FontWeight.w800)),
+            Text(context.tr('birth_details_calculated'), style: TextStyle(fontSize: 15, color: AppTheme.ink, fontWeight: FontWeight.w800)),
             const SizedBox(height: 11),
             Row(children: [
-              Expanded(child: _InfoCard(label: 'Janma Rashi', value: birthResult.rashi, symbol: birthResult.rashiSymbol)),
+              Expanded(child: _InfoCard(label: context.tr('janma_rashi'), value: birthResult.rashi, symbol: birthResult.rashiSymbol)),
               const SizedBox(width: 10),
-              Expanded(child: _InfoCard(label: 'Nakshatra', value: birthResult.nakshatra, symbol: '✦')),
+              Expanded(child: _InfoCard(label: context.tr('nakshatra'), value: birthResult.nakshatra, symbol: '✦')),
             ]),
             const SizedBox(height: 10),
             Row(children: [
-              Expanded(child: _InfoCard(label: 'Pada', value: birthResult.pada.toString(), symbol: '◈')),
+              Expanded(child: _InfoCard(label: context.tr('pada'), value: birthResult.pada.toString(), symbol: '◈')),
               const SizedBox(width: 10),
               Expanded(child: _InfoCard(label: 'Naming syllable', value: birthResult.namingSyllable, symbol: 'ॐ')),
             ]),
