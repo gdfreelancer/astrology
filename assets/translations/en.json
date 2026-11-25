@@ -464,5 +464,21 @@
   "p_varsha": "Varsha",
   "p_sharad": "Sharad",
   "p_hemanta": "Hemanta",
-  "p_shishira": "Shishira"
+  "p_shishira": "Shishira",
+  "p_desc_tithi": "Paksha · Lunar day {n}",
+  "p_detail_tithi": "Angular separation of the Sun and Moon; each tithi spans 12 degrees.",
+  "p_desc_vara": "Weekday at local sunrise",
+  "p_detail_vara": "The Panchang weekday is determined by local sunrise.",
+  "p_desc_nakshatra": "Pada {n} · Lunar mansion",
+  "p_detail_nakshatra": "The 27 Nakshatras divide the sidereal zodiac into equal segments of 13°20′.",
+  "p_desc_yoga": "Yoga {n} of 27",
+  "p_detail_yoga": "Calculated from the sum of the sidereal longitudes of the Sun and Moon.",
+  "p_desc_karana": "Half of a lunar tithi",
+  "p_detail_karana": "A karana is half of a tithi; seven movable and four fixed karanas are used.",
+  "p_sunrise_unavailable": "Sunrise unavailable for this location and date.",
+  "p_sunset_unavailable": "Sunset unavailable for this location and date.",
+  "p_paksha_lunar_day": "{paksha} · Lunar day {n}",
+  "p_pada_lunar_mansion": "Pada {n} · Lunar mansion",
+  "p_yoga_number": "Yoga {n} of 27",
+  "p_trayodashi_sunset": "{paksha} · Trayodashi at sunset"
 }
