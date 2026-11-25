@@ -11,15 +11,15 @@ class MuhuratScreen extends StatefulWidget {
 }
 
 class _MuhuratScreenState extends State<MuhuratScreen> {
-  static final _activities = <_MuhuratActivity>[
-    _MuhuratActivity('💍', context.tr('activity_marriage'), context.tr('activity_marriage_desc')),
-    _MuhuratActivity('🏡', context.tr('activity_griha_pravesh'), context.tr('activity_griha_pravesh_desc')),
-    _MuhuratActivity('🚗', context.tr('activity_vehicle'), context.tr('activity_vehicle_desc')),
-    _MuhuratActivity('🏪', context.tr('activity_business'), context.tr('activity_business_desc')),
-    _MuhuratActivity('🍼', context.tr('activity_naming'), context.tr('activity_naming_desc')),
-    _MuhuratActivity('🏠', context.tr('activity_property'), context.tr('activity_property_desc')),
-    _MuhuratActivity('🧳', context.tr('activity_journey'), context.tr('activity_journey_desc')),
-    _MuhuratActivity('📚', context.tr('activity_learning'), context.tr('activity_learning_desc')),
+  static const _activities = <_MuhuratActivity>[
+    _MuhuratActivity('💍', 'activity_marriage', 'activity_marriage_desc'),
+    _MuhuratActivity('🏡', 'activity_griha_pravesh', 'activity_griha_pravesh_desc'),
+    _MuhuratActivity('🚗', 'activity_vehicle', 'activity_vehicle_desc'),
+    _MuhuratActivity('🏪', 'activity_business', 'activity_business_desc'),
+    _MuhuratActivity('🍼', 'activity_naming', 'activity_naming_desc'),
+    _MuhuratActivity('🏠', 'activity_property', 'activity_property_desc'),
+    _MuhuratActivity('🧳', 'activity_journey', 'activity_journey_desc'),
+    _MuhuratActivity('📚', 'activity_learning', 'activity_learning_desc'),
   ];
   int _selectedActivity = 0;
   DateTime _selectedDate = DateUtils.dateOnly(DateTime.now());
@@ -50,8 +50,8 @@ class _MuhuratScreenState extends State<MuhuratScreen> {
           final item = _activities[index]; final selected = index == _selectedActivity;
           return Material(color: selected ? const Color(0xFFF2EDF9) : Colors.white, borderRadius: BorderRadius.circular(17), child: InkWell(onTap: () => setState(() { _selectedActivity = index; _showNotice = false; }), borderRadius: BorderRadius.circular(17), child: Container(padding: const EdgeInsets.all(13), decoration: BoxDecoration(borderRadius: BorderRadius.circular(17), border: Border.all(color: selected ? AppTheme.plum : const Color(0xFFEDE7E1), width: selected ? 1.4 : 1)), child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
             Row(children: [Text(item.emoji, style: const TextStyle(fontSize: 23)), const Spacer(), if (selected) const Icon(Icons.check_circle_rounded, color: AppTheme.plum, size: 17)]),
-            const SizedBox(height: 8), Text(item.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppTheme.ink)),
-            const SizedBox(height: 3), Text(item.subtitle, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 9, height: 1.35, color: AppTheme.muted)),
+            const SizedBox(height: 8), Text(context.tr(item.title), maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+            const SizedBox(height: 3), Text(context.tr(item.subtitle), maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 9, height: 1.35, color: AppTheme.muted)),
           ]))));
         }),
         const SizedBox(height: 22),
@@ -87,7 +87,7 @@ class _MuhuratScreenState extends State<MuhuratScreen> {
   Widget _calculationNotice(_MuhuratActivity activity) => Container(padding: const EdgeInsets.all(16), decoration: BoxDecoration(color: const Color(0xFFFFF5E4), borderRadius: BorderRadius.circular(17), border: Border.all(color: const Color(0xFFF0DFBE)),), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
     Row(children: [const Icon(Icons.info_outline_rounded, color: Color(0xFF9B6B25), size: 19), const SizedBox(width: 8), Expanded(child: Text(context.tr('muhurat_preparing'), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppTheme.ink)))]),
     const SizedBox(height: 8),
-    Text('Your selection: ${activity.title} on ${_dateLabel(_selectedDate)}${_placeController.text.trim().isEmpty ? '' : ' at ${_placeController.text.trim()}'}', style: const TextStyle(fontSize: 10, height: 1.5, color: AppTheme.ink)),
+    Text('${context.tr('your_selection')}: ${context.tr(activity.title)} on ${_dateLabel(_selectedDate)}${_placeController.text.trim().isEmpty ? '' : ' at ${_placeController.text.trim()}'}', style: const TextStyle(fontSize: 10, height: 1.5, color: AppTheme.ink)),
     const SizedBox(height: 7),
     const Text('Exact auspicious time windows are not shown yet. They require a verified location-based Panchang calculation using Tithi, Nakshatra, Yoga, Karana, weekday and relevant dosha periods. No time has been assumed or generated.', style: TextStyle(fontSize: 10, height: 1.5, color: AppTheme.muted)),
   ]));
