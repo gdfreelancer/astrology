@@ -23,7 +23,7 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
   DateTime? _birthDate;
   TimeOfDay? _birthTime;
   String? _timeZoneId;
-  String _gender = context.tr('not_specified');
+  String _gender = 'Not specified';
   Location? _location;
   bool _isResolvingPlace = false;
   bool _isCalculating = false;
@@ -277,7 +277,7 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
                     end: Alignment.bottomRight,
                   ),
                 ),
-                child: const Row(
+                child: Row(
                   children: [
                     Text('🍼', style: TextStyle(fontSize: 43)),
                     SizedBox(width: 15),
