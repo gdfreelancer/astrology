@@ -175,25 +175,20 @@ class PanchangService {
               cursor, next, phaseAtCursor, distance, _phase,
             );
             final phase = (target % 360).round() % 360;
-            final event = switch (phase) {
-              0 => const PanchangLunarEvent(
-                time: DateTime.utc(2000), titleKey: 'lunar_new_moon',
-                detailKey: 'lunar_new_moon_detail', categoryKey: 'lunar_phase'),
-              90 => const PanchangLunarEvent(
-                time: DateTime.utc(2000), titleKey: 'lunar_first_quarter',
-                detailKey: 'lunar_quarter_detail', categoryKey: 'lunar_phase'),
-              180 => const PanchangLunarEvent(
-                time: DateTime.utc(2000), titleKey: 'lunar_full_moon',
-                detailKey: 'lunar_full_moon_detail', categoryKey: 'lunar_phase'),
-              _ => const PanchangLunarEvent(
-                time: DateTime.utc(2000), titleKey: 'lunar_last_quarter',
-                detailKey: 'lunar_quarter_detail', categoryKey: 'lunar_phase'),
+            final titleKey = switch (phase) {
+              0 => 'lunar_new_moon',
+              90 => 'lunar_first_quarter',
+              180 => 'lunar_full_moon',
+              _ => 'lunar_last_quarter',
             };
+            final detailKey = phase == 90 || phase == 270
+                ? 'lunar_quarter_detail'
+                : phase == 0 ? 'lunar_new_moon_detail' : 'lunar_full_moon_detail';
             events.add(PanchangLunarEvent(
               time: instant,
-              titleKey: event.titleKey,
-              detailKey: event.detailKey,
-              categoryKey: event.categoryKey,
+              titleKey: titleKey,
+              detailKey: detailKey,
+              categoryKey: 'lunar_phase',
             ));
           }
         }
