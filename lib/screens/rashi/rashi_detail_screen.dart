@@ -32,7 +32,7 @@ class RashiDetailScreen extends StatelessWidget {
       SliverPadding(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 36),
         sliver: SliverList(delegate: SliverChildListDelegate([
-          Text(rashi.summary, style: const TextStyle(fontSize: 14, height: 1.55, color: AppTheme.ink, fontWeight: FontWeight.w600)),
+          Text(_rashiText('summary', rashi.summary), style: const TextStyle(fontSize: 14, height: 1.55, color: AppTheme.ink, fontWeight: FontWeight.w600)),
           const SizedBox(height: 20),
           _sectionTitle(context.tr('traditional_rashi_details'), context.tr('core_vedic_attributes')),
           const SizedBox(height: 11),
@@ -40,7 +40,7 @@ class RashiDetailScreen extends StatelessWidget {
           const SizedBox(height: 24),
           _sectionTitle(context.tr('personality_nature'), context.tr('traditional_interpretations')),
           const SizedBox(height: 10),
-          _infoCard(rashi.personality),
+          _infoCard(_rashiText('personality', rashi.personality)),
           const SizedBox(height: 12),
           _bulletCard(context.tr('strengths'), rashi.strengths, const Color(0xFFEAF4EC)),
           const SizedBox(height: 10),
@@ -78,6 +78,12 @@ class RashiDetailScreen extends StatelessWidget {
       ),
     ]),
   );
+
+  String _rashiText(String field, String fallback) {
+    final key = 'rashi_${rashi.number}_$field';
+    final translated = AppLocale.text(key);
+    return translated == key ? fallback : translated;
+  }
 
   String _localizedRashiName(BuildContext context, RashiInfo value) => switch (AppLocale.locale.value.languageCode) { 'hi' => value.hindi, 'gu' => value.gujarati, _ => value.english };
 
