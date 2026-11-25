@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_locale.dart';
+
 import '../../models/birth_chart_result.dart';
 import '../../theme/app_theme.dart';
 import 'baby_names_screen.dart';
@@ -34,7 +36,7 @@ class RashiResultScreen extends StatelessWidget {
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('‹', style: TextStyle(fontSize: 32, height: 1, color: AppTheme.plum)),
         ),
-        title: const Text('Birth Astrology', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
+        title: Text(context.tr('birth_details'), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 30),
@@ -47,7 +49,7 @@ class RashiResultScreen extends StatelessWidget {
             ),
             child: Column(
               children: [
-                const Text('JANMA RASHI', style: TextStyle(color: Color(0xFFE9DFF8), fontSize: 10, letterSpacing: 2, fontWeight: FontWeight.w800)),
+                Text(context.tr('janma_rashi'), style: TextStyle(color: Color(0xFFE9DFF8), fontSize: 10, letterSpacing: 2, fontWeight: FontWeight.w800)),
                 const SizedBox(height: 12),
                 Text(result.rashiSymbol, style: const TextStyle(fontSize: 48, color: Colors.white)),
                 const SizedBox(height: 7),
@@ -60,9 +62,9 @@ class RashiResultScreen extends StatelessWidget {
           const SizedBox(height: 19),
           Row(
             children: [
-              Expanded(child: _HighlightCard(label: 'JANMA NAKSHATRA', value: result.nakshatra, emoji: '✨')),
+              Expanded(child: _HighlightCard(label: context.tr('nakshatra'), value: result.nakshatra, emoji: '✨')),
               const SizedBox(width: 11),
-              Expanded(child: _HighlightCard(label: 'PADA', value: 'Pada ${result.pada}', emoji: '🌙')),
+              Expanded(child: _HighlightCard(label: context.tr('pada'), value: 'Pada ${result.pada}', emoji: '🌙')),
             ],
           ),
           const SizedBox(height: 12),
@@ -72,7 +74,7 @@ class RashiResultScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('RECOMMENDED NAMING SOUND', style: TextStyle(color: AppTheme.muted, fontSize: 9, letterSpacing: 1.3, fontWeight: FontWeight.w800)),
+                Text(context.tr('recommended_naming_sound'), style: TextStyle(color: AppTheme.muted, fontSize: 9, letterSpacing: 1.3, fontWeight: FontWeight.w800)),
                 const SizedBox(height: 9),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -87,10 +89,10 @@ class RashiResultScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 21),
-          const Text('Birth chart details', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+          Text(context.tr('kundali_overview'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppTheme.ink)),
           const SizedBox(height: 11),
-          _DetailRow(label: 'Birth date & time', value: _dateTime(result.birthLocal)),
-          _DetailRow(label: 'Birth place', value: result.placeName),
+          _DetailRow(label: context.tr('birth_date_time'), value: _dateTime(result.birthLocal)),
+          _DetailRow(label: context.tr('birth_place'), value: result.placeName),
           _DetailRow(label: 'Time zone', value: result.timeZoneId),
           _DetailRow(label: 'Sidereal Moon longitude', value: _degrees(result.siderealMoonLongitude)),
           _DetailRow(label: 'Tropical Moon longitude', value: _degrees(result.tropicalMoonLongitude)),
@@ -115,7 +117,7 @@ class RashiResultScreen extends StatelessWidget {
                 MaterialPageRoute<void>(builder: (_) => BabyNamesScreen(result: result)),
               ),
               style: FilledButton.styleFrom(backgroundColor: AppTheme.plum, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(17))),
-              child: const Text('Explore Suggested Baby Names  →', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800)),
+              child: Text(context.tr('explore_suggested_baby_names'), style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800)),
             ),
           ),
           const SizedBox(height: 13),
