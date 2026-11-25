@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../l10n/app_locale.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:timezone/data/latest.dart' as timezone_data;
 import 'package:timezone/timezone.dart' as tz;
@@ -47,7 +49,7 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
       initialDate: _birthDate ?? now,
       firstDate: DateTime(1900),
       lastDate: now,
-      helpText: 'Select date of birth',
+      helpText: context.tr('select_date_of_birth'),
     );
     if (selected != null) setState(() => _birthDate = selected);
   }
@@ -56,7 +58,7 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
     final selected = await showTimePicker(
       context: context,
       initialTime: _birthTime ?? const TimeOfDay(hour: 12, minute: 0),
-      helpText: 'Select local birth time',
+      helpText: context.tr('select_local_birth_time'),
     );
     if (selected != null) setState(() => _birthTime = selected);
   }
@@ -93,9 +95,9 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
               child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Center(child: Container(width: 38, height: 4, decoration: BoxDecoration(color: const Color(0xFFD9D1C9), borderRadius: BorderRadius.circular(8)))),
                 const SizedBox(height: 22),
-                const Text('Where was the baby born?', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+                Text(context.tr('birth_location_prompt'), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: AppTheme.ink)),
                 const SizedBox(height: 6),
-                const Text('Enter a city, town or village. Add the state and country for a more accurate match.', style: TextStyle(fontSize: 11, height: 1.45, color: AppTheme.muted)),
+                Text(context.tr('birth_location_help'), style: TextStyle(fontSize: 11, height: 1.45, color: AppTheme.muted)),
                 const SizedBox(height: 18),
                 TextField(
                   controller: input,
@@ -104,7 +106,7 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
                   keyboardType: TextInputType.streetAddress,
                   textInputAction: TextInputAction.search,
                   decoration: InputDecoration(
-                    hintText: 'e.g. Junagadh, Gujarat, India',
+                    hintText: context.tr('birth_location_hint'),
                     prefixIcon: const Icon(Icons.search_rounded, color: AppTheme.plum),
                     filled: true,
                     fillColor: Colors.white,
@@ -130,7 +132,7 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
                 const SizedBox(height: 16),
                 SizedBox(width: double.infinity, height: 52, child: FilledButton(
                   onPressed: searching ? null : () async {
-                    if (input.text.trim().isEmpty) { setSheetState(() => error = 'Enter a city, town or village.'); return; }
+                    if (input.text.trim().isEmpty) { setSheetState(() => error = context.tr('enter_birth_place')); return; }
                     setSheetState(() { searching = true; error = null; });
                     _placeController.text = input.text.trim();
                     final found = await _resolvePlace();
@@ -139,7 +141,7 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
                     else { setSheetState(() { searching = false; error = _placeError; }); }
                   },
                   style: FilledButton.styleFrom(backgroundColor: AppTheme.plum, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
-                  child: searching ? const SizedBox(width: 21, height: 21, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)) : const Text('Find this place', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800)),
+                  child: searching ? const SizedBox(width: 21, height: 21, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)) : Text(context.tr('find_this_place'), style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800)),
                 )),
               ]),
             ),
@@ -153,7 +155,7 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
   Future<Location?> _resolvePlace() async {
     final query = _placeController.text.trim();
     if (query.isEmpty) {
-      setState(() => _placeError = 'Enter the city, town or village of birth.');
+      setState(() => _placeError = context.tr('enter_birth_place'));
       return null;
     }
 
@@ -165,7 +167,7 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
     try {
       final matches = await Geocoding().locationFromAddress(query);
       if (matches.isEmpty) {
-        setState(() => _placeError = 'We could not find this place. Try adding the state and country.');
+        setState(() => _placeError = context.tr('place_not_found'));
         return null;
       }
       final found = matches.first;
@@ -177,7 +179,7 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
       return found;
     } catch (_) {
       if (mounted) {
-        setState(() => _placeError = 'Could not look up this place. Check your connection and try again.');
+        setState(() => _placeError = context.tr('location_lookup_failed'));
       }
       return null;
     } finally {
@@ -187,13 +189,13 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
 
   Future<void> _calculate() async {
     if (_placeController.text.trim().isEmpty) {
-      setState(() => _placeError = 'Please select the place of birth.');
-      _showMessage('Please select the place of birth.');
+      setState(() => _placeError = context.tr('please_select_birth_place'));
+      _showMessage(context.tr('please_select_birth_place'));
       return;
     }
     if (!_formKey.currentState!.validate()) return;
     if (_birthDate == null || _birthTime == null || _timeZoneId == null) {
-      _showMessage('Please select the birth date, exact birth time and birth time zone.');
+      _showMessage(context.tr('birth_time_zone_help'));
       return;
     }
 
@@ -220,7 +222,7 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
         ),
       );
     } catch (error) {
-      if (mounted) _showMessage('Unable to calculate birth details. Check the birth time zone and try again.');
+      if (mounted) _showMessage(context.tr('birth_time_zone_help'));
     } finally {
       if (mounted) setState(() => _isCalculating = false);
     }
@@ -233,7 +235,7 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
   }
 
   String _dateLabel(DateTime? value) {
-    if (value == null) return 'Select date of birth';
+    if (value == null) return context.tr('select_date_of_birth');
     return '${value.day.toString().padLeft(2, '0')} / ${value.month.toString().padLeft(2, '0')} / ${value.year}';
   }
 
@@ -251,7 +253,7 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('‹', style: TextStyle(fontSize: 32, height: 1, color: AppTheme.plum)),
         ),
-        title: const Text('Baby Name & Rashi', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
+        title: Text(context.tr('baby_name_rashi'), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
       ),
       body: SafeArea(
         child: Form(
@@ -277,9 +279,9 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('A name written in the stars', style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w800)),
+                          Text(context.tr('birth_location_prompt'), style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w800)),
                           SizedBox(height: 5),
-                          Text('Enter the baby’s birth details to discover the Janma Rashi and naming sound.', style: TextStyle(color: Color(0xFFEDE5F8), fontSize: 11, height: 1.5)),
+                          Text(context.tr('birth_location_help'), style: TextStyle(color: Color(0xFFEDE5F8), fontSize: 11, height: 1.5)),
                         ],
                       ),
                     ),
@@ -287,9 +289,9 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
                 ),
               ),
               const SizedBox(height: 25),
-              const _SectionHeading(number: '01', title: 'Birth information'),
+              const _SectionHeading(number: '01', title: context.tr('birth_information')),
               const SizedBox(height: 13),
-              _FieldLabel('Date of birth'),
+              _FieldLabel(context.tr('date_of_birth')),
               _PickerTile(
                 iconText: '📅',
                 value: _dateLabel(_birthDate),
@@ -297,7 +299,7 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
                 onTap: _pickDate,
               ),
               const SizedBox(height: 15),
-              _FieldLabel('Exact time of birth'),
+              _FieldLabel(context.tr('exact_time_of_birth')),
               _PickerTile(
                 iconText: '🕰️',
                 value: _timeLabel(_birthTime),
@@ -305,11 +307,11 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
                 onTap: _pickTime,
               ),
               const SizedBox(height: 7),
-              const Text('Use the local time recorded at the place of birth.', style: TextStyle(color: AppTheme.muted, fontSize: 10)),
+              Text(context.tr('use_local_birth_time'), style: TextStyle(color: AppTheme.muted, fontSize: 10)),
               const SizedBox(height: 23),
-              const _SectionHeading(number: '02', title: 'Place and time zone'),
+              const _SectionHeading(number: '02', title: context.tr('place_time_zone')),
               const SizedBox(height: 13),
-              _FieldLabel('Place of birth'),
+              _FieldLabel(context.tr('place_of_birth')),
               _BirthPlaceTile(
                 placeName: _placeController.text.trim(),
                 isResolving: _isResolvingPlace,
@@ -319,20 +321,20 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
               ),
               const SizedBox(height: 15),
               const SizedBox(height: 15),
-              _FieldLabel('Birth time zone'),
+              _FieldLabel(context.tr('birth_time_zone')),
               _PickerTile(
                 iconText: '🌐',
-                value: _timeZoneId ?? 'Select birth time zone',
+                value: _timeZoneId ?? context.tr('select_birth_time_zone'),
                 isPlaceholder: _timeZoneId == null,
                 onTap: _chooseTimeZone,
-                trailing: 'Change',
+                trailing: context.tr('change'),
               ),
               const SizedBox(height: 7),
-              const Text('Select the time zone that applied at the birth place and date. This matters for historical daylight-saving changes.', style: TextStyle(color: AppTheme.muted, fontSize: 10, height: 1.45)),
+              Text(context.tr('birth_time_zone_help'), style: TextStyle(color: AppTheme.muted, fontSize: 10, height: 1.45)),
               const SizedBox(height: 23),
-              const _SectionHeading(number: '03', title: 'Baby information'),
+              const _SectionHeading(number: '03', title: context.tr('baby_information')),
               const SizedBox(height: 13),
-              _FieldLabel('Gender (optional)'),
+              _FieldLabel(context.tr('gender_optional')),
               Wrap(
                 spacing: 9,
                 children: [
@@ -353,7 +355,7 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
                   ),
                   child: _isCalculating
                       ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                      : const Text('Calculate Birth Rashi  →', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
+                      : Text(context.tr('calculate_birth_rashi'), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
                 ),
               ),
               const SizedBox(height: 12),
@@ -395,19 +397,19 @@ class _BirthPlaceTile extends StatelessWidget {
               Container(width: 45, height: 45, alignment: Alignment.center, decoration: BoxDecoration(color: const Color(0xFFF0EAFE), borderRadius: BorderRadius.circular(14)), child: const Icon(Icons.location_on_rounded, color: AppTheme.plum, size: 23)),
               const SizedBox(width: 13),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(hasPlace ? placeName : 'Choose birth location', maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12, height: 1.35, fontWeight: FontWeight.w800, color: hasPlace ? AppTheme.ink : AppTheme.muted)),
+                Text(hasPlace ? placeName : context.tr('choose_birth_location'), maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12, height: 1.35, fontWeight: FontWeight.w800, color: hasPlace ? AppTheme.ink : AppTheme.muted)),
                 const SizedBox(height: 4),
-                Text(isResolving ? 'Finding location…' : isMatched ? 'Location successfully matched' : 'City, town or village', style: TextStyle(fontSize: 10, color: isMatched ? const Color(0xFF438466) : AppTheme.muted, fontWeight: isMatched ? FontWeight.w700 : FontWeight.w400)),
+                Text(isResolving ? context.tr('finding_location') : isMatched ? context.tr('location_matched') : context.tr('city_town_village'), style: TextStyle(fontSize: 10, color: isMatched ? const Color(0xFF438466) : AppTheme.muted, fontWeight: isMatched ? FontWeight.w700 : FontWeight.w400)),
               ])),
               const SizedBox(width: 8),
               if (isResolving) const SizedBox(width: 19, height: 19, child: CircularProgressIndicator(strokeWidth: 2))
-              else Text(hasPlace ? 'Change' : 'Select', style: const TextStyle(color: AppTheme.plum, fontSize: 11, fontWeight: FontWeight.w800)),
+              else Text(hasPlace ? context.tr('change') : context.tr('select'), style: const TextStyle(color: AppTheme.plum, fontSize: 11, fontWeight: FontWeight.w800)),
             ]),
           ),
         ),
       ),
       if (error != null) ...[const SizedBox(height: 6), Text(error!, style: const TextStyle(color: Color(0xFFB94C4C), fontSize: 11))],
-      if (isMatched) ...[const SizedBox(height: 7), const Text('Coordinates verified for birth-chart calculation.', style: TextStyle(color: Color(0xFF438466), fontSize: 10))],
+      if (isMatched) ...[const SizedBox(height: 7), Text(context.tr('coordinates_verified'), style: TextStyle(color: Color(0xFF438466), fontSize: 10))],
     ]);
   }
 }
@@ -525,7 +527,7 @@ class _TimeZonePickerState extends State<_TimeZonePicker> {
           children: [
             const Padding(
               padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
-              child: Align(alignment: Alignment.centerLeft, child: Text('Select birth time zone', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppTheme.ink))),
+              child: Align(alignment: Alignment.centerLeft, child: Text(context.tr('select_birth_time_zone'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppTheme.ink))),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
