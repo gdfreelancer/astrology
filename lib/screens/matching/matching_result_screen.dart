@@ -30,32 +30,12 @@ String _matchingValue(BuildContext context, String value) {
   return key == null ? value : context.tr(key);
 }
 
-String _matchingRashi(int index) {
-  const keys = ['p_mesha','p_vrishabha','p_mithuna','p_karka','p_simha','p_kanya','p_tula','p_vrishchika','p_dhanu','p_makara','p_kumbha','p_meena'];
-  return AppLocale.text(keys[index]);
-}
-String _matchingGraha(String name) {
-  const keys = {'Sun':'planet_sun','Moon':'planet_moon','Mars':'planet_mars','Mercury':'planet_mercury','Jupiter':'planet_jupiter','Venus':'planet_venus','Saturn':'planet_saturn','Rahu':'planet_rahu','Ketu':'planet_ketu'};
-  final key = keys[name];
-  return key == null ? name : AppLocale.text(key);
-}
 String _localizedAstroName(String value) {
   final slug = value.split(' (').first.toLowerCase().replaceAll(RegExp('[^a-z0-9]+'), '_');
   final key = 'p_' + slug;
   final translated = AppLocale.text(key);
   return translated == key ? value : translated;
 }
-String _matchingValue(BuildContext context, String value) {
-  const keys = {
-    'Brahmin':'match_brahmin','Kshatriya':'match_kshatriya','Vaishya':'match_vaishya','Shudra':'match_shudra',
-    'Chatushpada':'match_chatushpada','Manava':'match_manava','Jalachara':'match_jalachara','Vanachara':'match_vanachara','Keeta':'match_keeta',
-    'Deva':'match_deva','Manushya':'match_manushya','Rakshasa':'match_rakshasa','Adi':'match_adi','Madhya':'match_madhya','Antya':'match_antya',
-    'Horse':'match_horse','Elephant':'match_elephant','Sheep':'match_sheep','Serpent':'match_serpent','Dog':'match_dog','Cat':'match_cat','Rat':'match_rat','Cow':'match_cow','Buffalo':'match_buffalo','Tiger':'match_tiger','Deer':'match_deer','Monkey':'match_monkey','Mongoose':'match_mongoose','Lion':'match_lion'
-  };
-  final key = keys[value];
-  return key == null ? value : context.tr(key);
-}
-
 class MatchingResultScreen extends StatelessWidget {
   const MatchingResultScreen({super.key, required this.report, this.reportId});
 
@@ -328,7 +308,7 @@ class _PersonBirthChart extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(context.tr('house_number').replace('{n}', '$house'), style: const TextStyle(fontSize: 7, color: AppTheme.muted, fontWeight: FontWeight.w700)),
+                        Text(context.tr('house_number').replaceAll('{n}', '$house'), style: const TextStyle(fontSize: 7, color: AppTheme.muted, fontWeight: FontWeight.w700)),
                         const SizedBox(height: 2),
                         Text('${kundaliRashiSymbols[sign]} ${_matchingRashi(sign)}', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 8, color: AppTheme.ink, fontWeight: FontWeight.w800)),
                         const Spacer(),
@@ -347,7 +327,7 @@ class _PersonBirthChart extends StatelessWidget {
                       SizedBox(width: 28, child: Text(chart.grahas[i].symbol, style: TextStyle(fontSize: 10, color: accent, fontWeight: FontWeight.w900))),
                       Expanded(child: Text(_matchingGraha(chart.grahas[i].name), style: const TextStyle(fontSize: 10, color: AppTheme.ink, fontWeight: FontWeight.w700))),
                       Expanded(child: Text(_matchingRashi(chart.grahas[i].signIndex), style: const TextStyle(fontSize: 9, color: AppTheme.muted))),
-                      Text(context.tr('house_number').replace('{n}', '${chart.grahas[i].houseNumber}'), style: TextStyle(fontSize: 9, color: accent, fontWeight: FontWeight.w800)),
+                      Text(context.tr('house_number').replaceAll('{n}', '${chart.grahas[i].houseNumber}'), style: TextStyle(fontSize: 9, color: accent, fontWeight: FontWeight.w800)),
                     ],
                   ),
                 ),
