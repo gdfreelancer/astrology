@@ -29,20 +29,6 @@ class _DailyHoroscopeScreenState extends State<DailyHoroscopeScreen> {
     final index = order.indexOf(value);
     if (mounted && index >= 0) setState(() => _selectedRashi = index);
   }
-  static const _guidance = <int, List<String>>{
-    1: ['Channel your enthusiasm into one clear priority. A measured first step can be more useful than rushing into several plans.', 'Keep conversations direct but patient. Listening fully can help avoid misunderstandings.', 'Review small expenses before making an impulse purchase.'],
-    2: ['Steady progress is worth more than quick results. Give an ongoing task the attention it deserves.', 'A thoughtful gesture can strengthen a close bond. Make space for another point of view.', 'Focus on practical choices and avoid spending only for convenience.'],
-    3: ['Curiosity can lead to a useful idea. Write down your thoughts and choose one to develop.', 'A clear message can resolve confusion. Ask questions rather than making assumptions.', 'Compare information carefully before committing to a purchase.'],
-    4: ['A calm routine can help you feel organised. Complete one pending responsibility first.', 'Warm, honest communication can make relationships feel more supportive.', 'Keep room in your budget for household or personal needs.'],
-    5: ['Let creativity support your work, while staying open to feedback.', 'Appreciation does not always need grand gestures. Give attention to the people who matter.', 'Balance generosity with a realistic spending limit.'],
-    6: ['A practical checklist can help you make progress. Avoid perfecting every detail.', 'Offer help where it is welcome, but remember to express your own needs.', 'Review details and compare options before a financial decision.'],
-    7: ['Cooperation can make a shared task easier. Decide what matters most first.', 'Fairness and honest conversation can restore balance in a relationship.', 'Think about long-term value rather than appearance when reviewing expenses.'],
-    8: ['A focused approach can help with a complicated task. Keep information organised.', 'Trust grows through consistency. Share your thoughts at a comfortable pace.', 'Understand the details before making a financial commitment.'],
-    9: ['Learning or exploring a new perspective may refresh your plans. Pair big ideas with a practical step.', 'Shared interests can bring people closer. Be considerate of different expectations.', 'Keep plans realistic and check details before committing money.'],
-    10: ['Patience and structure can support steady progress. Break large responsibilities into steps.', 'Reliability matters, but make time for warmth and appreciation.', 'A long-term view can help you prioritise saving.'],
-    11: ['An original idea may benefit from collaboration. Explain your thinking clearly.', 'Respect for each other’s independence can strengthen a connection.', 'Review unfamiliar offers carefully and avoid pressure-based decisions.'],
-    12: ['Give imagination a practical direction. Organising your thoughts can bring clarity.', 'Empathy is valuable, and clear boundaries help keep relationships balanced.', 'Keep financial plans simple and check the facts before spending.'],
-  };
   RashiInfo get _rashi => rashis[_selectedRashi];
 
   String _localizedPlanet(String ruler) {
