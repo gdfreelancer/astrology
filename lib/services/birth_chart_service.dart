@@ -103,7 +103,7 @@ class BirthChartService {
     }
 
     final positions = <({String name, String symbol, double longitude})>[
-      (name: 'Sun', symbol: 'Su', longitude: _normalize(astronomy.sunPosition(utcBirth).elon - ayanamsa)),
+      (name: 'Sun', symbol: 'Su', longitude: _normalize(astronomy.sunPosition(utcBirth).eLon - ayanamsa)),
       (name: 'Moon', symbol: 'Mo', longitude: _normalize(astronomy.eclipticGeoMoon(utcBirth).lon - ayanamsa)),
       (name: 'Mars', symbol: 'Ma', longitude: siderealPlanet(astronomy.Body.Mars)),
       (name: 'Mercury', symbol: 'Me', longitude: siderealPlanet(astronomy.Body.Mercury)),
