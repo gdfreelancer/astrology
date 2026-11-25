@@ -110,7 +110,7 @@ class MatchingResultScreen extends StatelessWidget {
             const SizedBox(height: 21),
             Row(children: [
               Expanded(child: Text(context.tr('eight_koota_breakdown'), style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppTheme.ink))),
-              Text('${report.kootas.length} categories', style: const TextStyle(fontSize: 10, color: AppTheme.muted)),
+              Text('${report.kootas.length} ${context.tr('categories')}', style: const TextStyle(fontSize: 10, color: AppTheme.muted)),
             ]),
             const SizedBox(height: 10),
             ...report.kootas.map((item) => _KootaTile(item: item)),
@@ -249,7 +249,7 @@ class _PersonBirthChart extends StatelessWidget {
             child: Icon(Icons.auto_awesome_rounded, color: accent, size: 18),
           ),
           title: Text('${person.role}: ${person.name}', style: const TextStyle(fontSize: 12, color: AppTheme.ink, fontWeight: FontWeight.w800)),
-          subtitle: Text(chart == null ? 'Birth chart unavailable in this saved report' : 'Lagna: ${kundaliRashiNames[chart.ascendantSignIndex]} · ${_matchingDegree(chart.ascendantLongitude)}', style: const TextStyle(fontSize: 9, color: AppTheme.muted)),
+          subtitle: Text(chart == null ? context.tr('birth_chart_unavailable') : '${context.tr('lagna')}: ${kundaliRashiNames[chart.ascendantSignIndex]} · ${_matchingDegree(chart.ascendantLongitude)}', style: const TextStyle(fontSize: 9, color: AppTheme.muted)),
           children: [
             if (chart == null)
               Padding(
