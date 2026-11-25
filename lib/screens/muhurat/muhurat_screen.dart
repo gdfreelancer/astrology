@@ -83,8 +83,8 @@ class _MuhuratScreenState extends State<MuhuratScreen> {
   Widget _hero(BuildContext context) => Container(padding: const EdgeInsets.all(19), decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFF526F8E), Color(0xFF344C6A)], begin: Alignment.topLeft, end: Alignment.bottomRight), borderRadius: BorderRadius.circular(23)), child: Row(children: [
     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(context.tr('auspicious_moments'), style: TextStyle(color: Color(0xFFDCE8F5), fontSize: 9, letterSpacing: 1.3, fontWeight: FontWeight.w800)),
-      SizedBox(height: 8), Text('Choose a time\nwith tradition in mind', style: TextStyle(color: Colors.white, fontSize: 20, height: 1.2, fontWeight: FontWeight.w800)),
-      SizedBox(height: 6), Text('Explore traditional Muhurat guidance', style: TextStyle(color: Color(0xFFDCE8F5), fontSize: 10)),
+      SizedBox(height: 8), Text(context.tr('choose_time_tradition'), style: TextStyle(color: Colors.white, fontSize: 20, height: 1.2, fontWeight: FontWeight.w800)),
+      SizedBox(height: 6), Text(context.tr('explore_muhurat_guidance'), style: TextStyle(color: Color(0xFFDCE8F5), fontSize: 10)),
     ])), SizedBox(width: 12), Text('🕉️', style: TextStyle(fontSize: 48)),
   ]));
 
