@@ -209,10 +209,13 @@ class _ChartPreviewPainter extends CustomPainter {
     switch (style) {
       case KundaliChartStyle.northIndian:
         _drawNorthIndian(canvas, bounds, line);
+        break;
       case KundaliChartStyle.southIndian:
         _drawSouthIndian(canvas, bounds, line);
+        break;
       case KundaliChartStyle.eastIndian:
         _drawEastIndian(canvas, bounds, line);
+        break;
     }
   }
 
