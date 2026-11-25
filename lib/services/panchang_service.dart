@@ -202,7 +202,7 @@ class PanchangService {
         final tithiDistance = _forward(phaseAtCursor, tithiStart % 360);
         if (tithiDistance <= phaseTravel + 1e-7) {
           final tithiIndex = (tithiStart.round() ~/ 12) % 30;
-          if (tithiIndex == 11 || tithiIndex == 26) {
+          if (tithiIndex == 10 || tithiIndex == 25) {
             final instant = _findAngularBoundary(
               cursor, next, phaseAtCursor, tithiDistance, _phase,
             );
