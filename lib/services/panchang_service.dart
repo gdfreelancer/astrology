@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'package:geoengine/geoengine.dart' as astro;
 import 'package:timezone/timezone.dart' as tz;
 import '../data/nakshatra_data.dart';
+import '../l10n/app_locale.dart';
 import '../models/panchang_data.dart';
 
 class PanchangService {
@@ -35,10 +36,10 @@ class PanchangService {
     final local=tz.TZDateTime(zone,date.year,date.month,date.day);
     final observer=astro.Observer(location.latitude,location.longitude,0);
     final rise=astro.searchRiseSet(astro.Body.Sun,observer,1,local.toUtc(),1.0);
-    if(rise==null) throw StateError('Sunrise unavailable for this location and date.');
+    if(rise==null) throw StateError(AppLocale.text('p_sunrise_unavailable'));
     final sunrise=rise.date;
     final set=astro.searchRiseSet(astro.Body.Sun,observer,-1,sunrise.add(const Duration(seconds:1)),1.0);
-    if(set==null) throw StateError('Sunset unavailable for this location and date.');
+    if(set==null) throw StateError(AppLocale.text('p_sunset_unavailable'));
     final sunset=set.date;
     final nextRise=astro.searchRiseSet(astro.Body.Sun,observer,1,sunset.add(const Duration(seconds:1)),1.5)?.date??sunset.add(const Duration(hours:12));
     final moonrise=astro.searchRiseSet(astro.Body.Moon,observer,1,local.toUtc(),1.0)?.date;
