@@ -243,7 +243,7 @@ class PanchangService {
 
   static double lunarIllumination(DateTime at) {
     final phase = _phase(at) * math.pi / 180;
-    return ((1 - math.cos(phase)) / 2 * 100).clamp(0, 100);
+    return ((1 - math.cos(phase)) / 2 * 100).clamp(0, 100).toDouble();
   }
 
   static String lunarPhaseKey(DateTime at) {
