@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_locale.dart';
+
 import '../../models/kundali/kundali_chart_style.dart';
 import '../../services/kundali/kundali_preferences_service.dart';
 import '../../theme/app_theme.dart';
@@ -34,7 +36,7 @@ class _KundaliChartStyleScreenState extends State<KundaliChartStyleScreen> {
       if (!mounted) return;
       setState(() => _saving = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not save your chart preference. Please try again.')),
+        const SnackBar(content: Text(context.tr('chart_style_tip'))),
       );
     }
   }
@@ -43,7 +45,7 @@ class _KundaliChartStyleScreenState extends State<KundaliChartStyleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Choose chart style', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
+        title: Text(context.tr('chart_style_heading'), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () => Navigator.of(context).maybePop(),
@@ -68,7 +70,7 @@ class _KundaliChartStyleScreenState extends State<KundaliChartStyleScreen> {
                 children: [
                   Text('🪷', style: TextStyle(fontSize: 34)),
                   SizedBox(height: 12),
-                  Text('Your Kundali, your tradition', style: TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.w800)),
+                  Text(context.tr('chart_style_tagline'), style: TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.w800)),
                   SizedBox(height: 7),
                   Text(
                     'Choose the traditional birth-chart layout you are familiar with. We will remember your choice for future Kundalis.',
@@ -98,12 +100,12 @@ class _KundaliChartStyleScreenState extends State<KundaliChartStyleScreen> {
                 ),
                 child: _saving
                     ? const SizedBox(width: 21, height: 21, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                    : const Text('Save preference & continue  →', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800)),
+                    : Text(context.tr('save_preference_continue'), style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800)),
               ),
             ),
             const SizedBox(height: 9),
             const Text(
-              'You can change this preference any time before creating a Kundali.',
+              context.tr('chart_style_tip'),
               textAlign: TextAlign.center,
               style: TextStyle(color: AppTheme.muted, fontSize: 10),
             ),
