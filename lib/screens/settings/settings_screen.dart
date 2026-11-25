@@ -40,7 +40,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _load() async {
-    final values = await Future.wait<Object>([
+    final values = await Future.wait<dynamic>([
       AppPreferencesService.use24HourTime(),
       AppPreferencesService.defaultRashi(),
       AppPreferencesService.defaultLocation(),
