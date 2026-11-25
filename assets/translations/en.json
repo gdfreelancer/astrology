@@ -854,5 +854,7 @@
   "view_house_cusps": "View all 12 house cusps",
   "start_boundary": "Start",
   "bhava_madhya": "Bhava Madhya",
-  "end_boundary": "End"
+  "end_boundary": "End",
+  "ascendant": "Ascendant",
+  "midheaven": "Midheaven (10th cusp)"
 }
