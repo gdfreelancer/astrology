@@ -211,5 +211,8 @@
   "delete_report": "Delete report",
   "no_matching_reports": "No matching reports yet",
   "reports_empty_description": "Your completed matching reports will appear here.",
-  "suggested_baby_names": "Suggested Baby Names"
+  "suggested_baby_names": "Suggested Baby Names",
+  "horoscope_intro": "A little guidance for\nthe day ahead",
+  "horoscope_choose_moon": "Choose your Moon sign to begin",
+  "horoscope_disclaimer": "These are general, sign-based reflections, not predictions calculated from live planetary transits or your personal birth chart."
 }
