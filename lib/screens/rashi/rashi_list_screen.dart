@@ -98,12 +98,12 @@ class _RashiListScreenState extends State<RashiListScreen> {
                   ),
                 ),
                 const SizedBox(height: 9),
-                Text('${visible.length} of 12 Rashis', style: const TextStyle(fontSize: 11, color: AppTheme.muted, fontWeight: FontWeight.w600)),
+                Text('${visible.length} / 12 ${context.tr('rashi_count')}', style: const TextStyle(fontSize: 11, color: AppTheme.muted, fontWeight: FontWeight.w600)),
               ]),
             ),
           ),
           if (visible.isEmpty)
-            const SliverFillRemaining(hasScrollBody: false, child: Center(child: Text('No Rashis found. Try another search.')))
+            SliverFillRemaining(hasScrollBody: false, child: Center(child: Text(context.tr('no_rashis_found'))))
           else
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 28),
