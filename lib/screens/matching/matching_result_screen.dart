@@ -42,7 +42,7 @@ class MatchingResultScreen extends StatelessWidget {
     text.writeln('\nTraditional astrology reference only; not a scientific assessment or prediction of relationship success.');
     await Clipboard.setData(ClipboardData(text: text.toString()));
     if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text(context.tr('matching_summary_copied')), behavior: SnackBarBehavior.floating));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('matching_summary_copied')), behavior: SnackBarBehavior.floating));
     }
   }
 
@@ -109,7 +109,7 @@ class MatchingResultScreen extends StatelessWidget {
             _PersonBirthChart(person: report.groom, accent: AppTheme.plum),
             const SizedBox(height: 21),
             Row(children: [
-              const Expanded(child: Text(context.tr('eight_koota_breakdown'), style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppTheme.ink))),
+              Expanded(child: Text(context.tr('eight_koota_breakdown'), style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppTheme.ink))),
               Text('${report.kootas.length} categories', style: const TextStyle(fontSize: 10, color: AppTheme.muted)),
             ]),
             const SizedBox(height: 10),
