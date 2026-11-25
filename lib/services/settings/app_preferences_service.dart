@@ -17,6 +17,12 @@ class SavedAppLocation {
 class AppPreferencesService {
   AppPreferencesService._();
 
+  static bool cachedUse24HourTime = false;
+
+  static Future<void> initialize() async {
+    cachedUse24HourTime = await use24HourTime();
+  }
+
   static const _timeFormatKey = 'app_time_format';
   static const _rashiKey = 'default_rashi';
   static const _locationNameKey = 'panchang_default_location_name';
@@ -32,6 +38,7 @@ class AppPreferencesService {
   static Future<void> setUse24HourTime(bool value) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_timeFormatKey, value);
+    cachedUse24HourTime = value;
   }
 
   static Future<String> defaultRashi() async {
