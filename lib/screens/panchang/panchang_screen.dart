@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../l10n/app_locale.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:timezone/data/latest.dart' as timezone_data;
 import 'package:timezone/timezone.dart' as tz;
@@ -45,12 +47,12 @@ class _PanchangScreenState extends State<PanchangScreen>{
     await showModalBottomSheet<void>(context:context,isScrollControlled:true,backgroundColor:Colors.transparent,builder:(sheet)=>StatefulBuilder(builder:(ctx,ss)=>Padding(
       padding:EdgeInsets.only(bottom:MediaQuery.of(ctx).viewInsets.bottom),
       child:Container(padding:const EdgeInsets.fromLTRB(20,16,20,24),decoration:const BoxDecoration(color:Color(0xFFFFFCF8),borderRadius:BorderRadius.vertical(top:Radius.circular(24))),child:SafeArea(top:false,child:Column(mainAxisSize:MainAxisSize.min,crossAxisAlignment:CrossAxisAlignment.start,children:[
-        const Text('Panchang location',style:TextStyle(fontSize:18,fontWeight:FontWeight.w800)),
-        const SizedBox(height:6),const Text('Enter a city and select its applicable time zone.',style:TextStyle(fontSize:11,color:AppTheme.muted)),
-        const SizedBox(height:14),TextField(controller:input,autofocus:true,textCapitalization:TextCapitalization.words,decoration:const InputDecoration(hintText:'City, State, Country',prefixIcon:Icon(Icons.location_on_outlined))),
+        Text(context.tr('panchang_location'),style:TextStyle(fontSize:18,fontWeight:FontWeight.w800)),
+        const SizedBox(height:6),Text(context.tr('location_timezone_help'),style:TextStyle(fontSize:11,color:AppTheme.muted)),
+        const SizedBox(height:14),TextField(controller:input,autofocus:true,textCapitalization:TextCapitalization.words,decoration:const InputDecoration(hintText:context.tr('city_state_country'),prefixIcon:Icon(Icons.location_on_outlined))),
         const SizedBox(height:10),
         DropdownButtonFormField<String>(value:zone,decoration:const InputDecoration(labelText:'Time zone'),items:const[
-          DropdownMenuItem(value:'Asia/Kolkata',child:Text('India · Asia/Kolkata')),
+          DropdownMenuItem(value:'Asia/Kolkata',child:Text(context.tr('india_timezone'))),
           DropdownMenuItem(value:'Asia/Dubai',child:Text('UAE · Asia/Dubai')),
           DropdownMenuItem(value:'Asia/Singapore',child:Text('Singapore · Asia/Singapore')),
           DropdownMenuItem(value:'Europe/London',child:Text('UK · Europe/London')),
@@ -72,7 +74,7 @@ class _PanchangScreenState extends State<PanchangScreen>{
               if(sheet.mounted)Navigator.pop(sheet);_load();
             }catch(_){ss(() { busy=false; error='Could not find this place. Add the state and country.'; });}
           },
-          style:FilledButton.styleFrom(backgroundColor:AppTheme.plum),child:busy?const SizedBox(width:18,height:18,child:CircularProgressIndicator(color:Colors.white,strokeWidth:2)):const Text('Use this location'),
+          style:FilledButton.styleFrom(backgroundColor:AppTheme.plum),child:busy?const SizedBox(width:18,height:18,child:CircularProgressIndicator(color:Colors.white,strokeWidth:2)):Text(context.tr('use_this_location')),
         )),
       ]))),
     )));
@@ -82,7 +84,7 @@ class _PanchangScreenState extends State<PanchangScreen>{
   @override
   Widget build(BuildContext context)=>Scaffold(
     appBar:AppBar(title:const Text('Panchang',style:TextStyle(fontSize:18,fontWeight:FontWeight.w800)),actions:[IconButton(onPressed:_pickDate,icon:const Icon(Icons.calendar_month_rounded))]),
-    body:SafeArea(child:_loading?const Center(child:CircularProgressIndicator(color:AppTheme.plum)): _error!=null?Center(child:Padding(padding:const EdgeInsets.all(24),child:Column(mainAxisSize:MainAxisSize.min,children:[const Icon(Icons.wb_sunny_outlined,size:40,color:AppTheme.plum),const SizedBox(height:12),const Text('Panchang could not be calculated',style:TextStyle(fontWeight:FontWeight.w800)),const SizedBox(height:8),Text(_error!,textAlign:TextAlign.center,style:const TextStyle(fontSize:10,color:AppTheme.muted)),const SizedBox(height:12),FilledButton(onPressed:_load,child:const Text('Try again'))]))):_body(_data!)),
+    body:SafeArea(child:_loading?const Center(child:CircularProgressIndicator(color:AppTheme.plum)): _error!=null?Center(child:Padding(padding:const EdgeInsets.all(24),child:Column(mainAxisSize:MainAxisSize.min,children:[const Icon(Icons.wb_sunny_outlined,size:40,color:AppTheme.plum),const SizedBox(height:12),Text(context.tr('panchang_failed'),style:TextStyle(fontWeight:FontWeight.w800)),const SizedBox(height:8),Text(_error!,textAlign:TextAlign.center,style:const TextStyle(fontSize:10,color:AppTheme.muted)),const SizedBox(height:12),FilledButton(onPressed:_load,child:Text(context.tr('try_again')))]))):_body(_data!)),
   );
   Widget _body(PanchangData d)=>ListView(padding:const EdgeInsets.fromLTRB(18,8,18,28),children:[
     Row(children:[
@@ -93,34 +95,34 @@ class _PanchangScreenState extends State<PanchangScreen>{
     ]),
     const SizedBox(height:13),
     Container(padding:const EdgeInsets.all(17),decoration:BoxDecoration(gradient:const LinearGradient(colors:[Color(0xFF7658A6),Color(0xFF4D3B78)]),borderRadius:BorderRadius.circular(22)),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-      Row(children:[const Icon(Icons.location_on_outlined,size:14,color:Color(0xFFE8DDF8)),const SizedBox(width:5),Expanded(child:Text(d.location.name,overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:10,color:Color(0xFFE8DDF8)))),TextButton(onPressed:_editLocation,child:const Text('CHANGE',style:TextStyle(fontSize:9,color:Color(0xFFFFDFA0),fontWeight:FontWeight.w800)))]),
+      Row(children:[const Icon(Icons.location_on_outlined,size:14,color:Color(0xFFE8DDF8)),const SizedBox(width:5),Expanded(child:Text(d.location.name,overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:10,color:Color(0xFFE8DDF8)))),TextButton(onPressed:_editLocation,child:Text(context.tr('change'),style:TextStyle(fontSize:9,color:Color(0xFFFFDFA0),fontWeight:FontWeight.w800)))]),
       Text(d.element('Tithi').value,style:const TextStyle(fontSize:23,color:Colors.white,fontWeight:FontWeight.w800)),
       const SizedBox(height:3),Text(d.paksha+' · '+d.element('Nakshatra').value,style:const TextStyle(fontSize:10,color:Color(0xFFE8DDF8))),
       const SizedBox(height:14),Container(height:1,color:Colors.white24),const SizedBox(height:12),
       Row(children:[
-        _heroTime('SUNRISE',_fmt(d.sunrise,d.location.timeZoneId)),
-        _heroTime('SUNSET',_fmt(d.sunset,d.location.timeZoneId)),
-        _heroTime('MOONRISE',d.moonrise==null?'—':_fmt(d.moonrise!,d.location.timeZoneId)),
+        _heroTime(context.tr('sunrise'),_fmt(d.sunrise,d.location.timeZoneId)),
+        _heroTime(context.tr('sunset'),_fmt(d.sunset,d.location.timeZoneId)),
+        _heroTime(context.tr('moonrise'),d.moonrise==null?'—':_fmt(d.moonrise!,d.location.timeZoneId)),
       ]),
     ])),
-    const SizedBox(height:19),_heading('Panchang elements','Tap an element for its timing and meaning'),
+    const SizedBox(height:19),_heading('Panchang elements',context.tr('tap_element')),
     const SizedBox(height:10),
     GridView.builder(shrinkWrap:true,physics:const NeverScrollableScrollPhysics(),itemCount:d.elements.length,gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount:2,crossAxisSpacing:9,mainAxisSpacing:9,childAspectRatio:1.55),itemBuilder:(ctx,i)=>_ElementTile(item:d.elements[i],onTap:()=>_open(PanchangDetailScreen(data:d)))),
-    const SizedBox(height:19),_heading('Sun & Moon timings','Calculated for the selected location'),
+    const SizedBox(height:19),_heading(context.tr('sun_moon_timings'),context.tr('calculated_selected_location')),
     const SizedBox(height:10),Row(children:[
-      _metric('☀️','Sunrise',_fmt(d.sunrise,d.location.timeZoneId)),
-      const SizedBox(width:7),_metric('🌇','Sunset',_fmt(d.sunset,d.location.timeZoneId)),
-      const SizedBox(width:7),_metric('🌙','Moonrise',d.moonrise==null?'—':_fmt(d.moonrise!,d.location.timeZoneId)),
-      const SizedBox(width:7),_metric('🌘','Moonset',d.moonset==null?'—':_fmt(d.moonset!,d.location.timeZoneId)),
+      _metric('☀️',context.tr('sunrise'),_fmt(d.sunrise,d.location.timeZoneId)),
+      const SizedBox(width:7),_metric('🌇',context.tr('sunset'),_fmt(d.sunset,d.location.timeZoneId)),
+      const SizedBox(width:7),_metric('🌙',context.tr('moonrise'),d.moonrise==null?'—':_fmt(d.moonrise!,d.location.timeZoneId)),
+      const SizedBox(width:7),_metric('🌘',context.tr('moonset'),d.moonset==null?'—':_fmt(d.moonset!,d.location.timeZoneId)),
     ]),
-    const SizedBox(height:19),_heading('Daily time windows','Auspicious and inauspicious periods'),
+    const SizedBox(height:19),_heading('Daily time windows',context.tr('auspicious_inauspicious_periods')),
     const SizedBox(height:9),_preview(d),
-    const SizedBox(height:19),_heading('Explore Panchang','More calendar information'),
+    const SizedBox(height:19),_heading(context.tr('explore_panchang'),context.tr('more_calendar_information')),
     const SizedBox(height:9),
-    _link('⏳','Choghadiya','Eight day and eight night periods',()=>_open(ChoghadiyaScreen(data:d))),
-    _link('🕉️','Daily timings','Rahu Kaal, Yamaganda and Muhurat',()=>_open(DailyTimingsScreen(data:d))),
-    _link('🗓️','Hindu calendar','Monthly Tithi calendar',()=>_open(PanchangCalendarScreen(date:_date,location:_location,onDateSelected:(v){Navigator.pop(context);setState(()=>_date=v);_load();}))),
-    _link('🌼','Vrat & observances','Upcoming Tithi-based days',()=>_open(FestivalsScreen(date:_date,location:_location))),
+    _link('⏳',context.tr('choghadiya'),context.tr('day_night_periods'),()=>_open(ChoghadiyaScreen(data:d))),
+    _link('🕉️',context.tr('daily_timings'),context.tr('rahu_yamaganda_muhurat'),()=>_open(DailyTimingsScreen(data:d))),
+    _link('🗓️',context.tr('hindu_calendar'),'Monthly Tithi calendar',()=>_open(PanchangCalendarScreen(date:_date,location:_location,onDateSelected:(v){Navigator.pop(context);setState(()=>_date=v);_load();}))),
+    _link('🌼',context.tr('vrat_observances'),'Upcoming Tithi-based days',()=>_open(FestivalsScreen(date:_date,location:_location))),
     const SizedBox(height:10),
     Container(padding:const EdgeInsets.all(14),decoration:BoxDecoration(color:const Color(0xFFFFF5E7),borderRadius:BorderRadius.circular(15)),child:Text(d.sunRashi+' · '+d.ritu+' · '+d.ayana+'\nAyanamsha: '+d.ayanamsha.toStringAsFixed(2)+'°',style:const TextStyle(fontSize:10,height:1.6,fontWeight:FontWeight.w700,color:AppTheme.ink))),
     const SizedBox(height:12),const Text('Traditional Panchang conventions can vary by region. This version uses Lahiri-style sidereal positions and local sunrise as the daily reference.',style:TextStyle(fontSize:9,height:1.5,color:AppTheme.muted)),
@@ -164,7 +166,7 @@ class _ChoghadiyaScreenState extends State<ChoghadiyaScreen>{
   bool day=true;
   @override Widget build(BuildContext context){
     final periods=day?widget.data.choghadiyaDay:widget.data.choghadiyaNight;
-    return Scaffold(appBar:AppBar(title:const Text('Choghadiya')),body:ListView(padding:const EdgeInsets.all(17),children:[
+    return Scaffold(appBar:AppBar(title:Text(context.tr('choghadiya'))),body:ListView(padding:const EdgeInsets.all(17),children:[
       Container(padding:const EdgeInsets.all(16),decoration:BoxDecoration(gradient:const LinearGradient(colors:[Color(0xFF8062B5),Color(0xFF60468F)]),borderRadius:BorderRadius.circular(18)),child:const Text('Eight daytime and eight nighttime periods calculated from local sunrise and sunset.',style:TextStyle(color:Colors.white,fontSize:12,height:1.5))),
       const SizedBox(height:14),
       SegmentedButton<bool>(segments:const[ButtonSegment(value:true,label:Text('Day · 8')),ButtonSegment(value:false,label:Text('Night · 8'))],selected:{day},onSelectionChanged:(v)=>setState(()=>day=v.first)),
@@ -179,7 +181,7 @@ class DailyTimingsScreen extends StatelessWidget{
   const DailyTimingsScreen({super.key,required this.data});final PanchangData data;
   @override Widget build(BuildContext context){
     final items=[data.brahma,data.rahuKaal,data.yamaganda,data.gulika,data.abhijit];
-    return Scaffold(appBar:AppBar(title:const Text('Daily timings')),body:ListView(padding:const EdgeInsets.all(17),children:[
+    return Scaffold(appBar:AppBar(title:Text(context.tr('daily_timings'))),body:ListView(padding:const EdgeInsets.all(17),children:[
       ...items.map((p){final good=p.category=='Auspicious';final color=good?const Color(0xFF438466):const Color(0xFFB75B54);return Container(margin:const EdgeInsets.only(bottom:9),padding:const EdgeInsets.all(14),decoration:BoxDecoration(color:Colors.white,borderRadius:BorderRadius.circular(14),border:Border.all(color:const Color(0xFFF0EBE5))),child:Row(children:[Icon(good?Icons.auto_awesome:Icons.schedule,color:color),const SizedBox(width:10),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(p.name,style:const TextStyle(fontSize:12,fontWeight:FontWeight.w800)),Text(p.category,style:TextStyle(fontSize:9,color:color))])),Text(_fmt(p.start,data.location.timeZoneId)+'\n'+_fmt(p.end,data.location.timeZoneId),textAlign:TextAlign.right,style:const TextStyle(fontSize:10,height:1.5,fontWeight:FontWeight.w800))]));}),
       const Text('Rahu Kaal, Yamaganda and Gulika are divided from local daylight. Brahma Muhurat is shown as 96–48 minutes before sunrise. Abhijit is an eighth-daytime-muhurta approximation.',style:TextStyle(fontSize:9,height:1.5,color:AppTheme.muted)),
     ]));
@@ -195,7 +197,7 @@ class _PanchangCalendarScreenState extends State<PanchangCalendarScreen>{
   late DateTime month;late List<PanchangCalendarDay> days;DateTime? selected;
   @override void initState(){super.initState();month=DateTime(widget.date.year,widget.date.month);selected=widget.date;days=PanchangService.monthDays(month:month,location:widget.location);}
   void move(int n){setState(()=>month=DateTime(month.year,month.month+n));days=PanchangService.monthDays(month:month,location:widget.location);}
-  @override Widget build(BuildContext context)=>Scaffold(appBar:AppBar(title:const Text('Hindu calendar')),body:ListView(padding:const EdgeInsets.all(15),children:[
+  @override Widget build(BuildContext context)=>Scaffold(appBar:AppBar(title:Text(context.tr('hindu_calendar'))),body:ListView(padding:const EdgeInsets.all(15),children:[
     Row(children:[IconButton(onPressed:()=>move(-1),icon:const Icon(Icons.chevron_left)),Expanded(child:Text(_monthName(month.month)+' '+month.year.toString(),textAlign:TextAlign.center,style:const TextStyle(fontSize:16,fontWeight:FontWeight.w800))),IconButton(onPressed:()=>move(1),icon:const Icon(Icons.chevron_right))]),
     Row(children:['S','M','T','W','T','F','S'].map((s)=>Expanded(child:Center(child:Text(s,style:const TextStyle(fontSize:10,color:AppTheme.muted,fontWeight:FontWeight.w800)) ))).toList()),
     const SizedBox(height:8),
@@ -215,15 +217,15 @@ class FestivalsScreen extends StatefulWidget{
 class _FestivalsScreenState extends State<FestivalsScreen>{
   late List<PanchangObservance> items;
   @override void initState(){super.initState();items=PanchangService.upcomingObservances(from:widget.date,location:widget.location,days:60);}
-  @override Widget build(BuildContext context)=>Scaffold(appBar:AppBar(title:const Text('Vrat & observances')),body:ListView(padding:const EdgeInsets.all(17),children:[
+  @override Widget build(BuildContext context)=>Scaffold(appBar:AppBar(title:Text(context.tr('vrat_observances'))),body:ListView(padding:const EdgeInsets.all(17),children:[
     Container(padding:const EdgeInsets.all(16),decoration:BoxDecoration(gradient:const LinearGradient(colors:[Color(0xFF9A7044),Color(0xFF76512F)]),borderRadius:BorderRadius.circular(18)),child:const Text('Upcoming lunar observances\nDates identified from Tithi active at local sunrise.',style:TextStyle(fontSize:15,height:1.5,color:Colors.white,fontWeight:FontWeight.w800))),
     const SizedBox(height:14),
-    if(items.isEmpty)const Text('No matching observances found in this period.',style:TextStyle(fontSize:11,color:AppTheme.muted)),
+    if(items.isEmpty)Text(context.tr('no_observances'),style:TextStyle(fontSize:11,color:AppTheme.muted)),
     ...items.map((e)=>Container(margin:const EdgeInsets.only(bottom:8),padding:const EdgeInsets.all(12),decoration:BoxDecoration(color:Colors.white,borderRadius:BorderRadius.circular(14),border:Border.all(color:const Color(0xFFF0EBE5))),child:Row(children:[
       Container(width:43,height:45,alignment:Alignment.center,decoration:BoxDecoration(color:const Color(0xFFFFF3E1),borderRadius:BorderRadius.circular(10)),child:Column(mainAxisAlignment:MainAxisAlignment.center,children:[Text(e.date.day.toString(),style:const TextStyle(fontSize:17,fontWeight:FontWeight.w800)),Text(_monthName(e.date.month).substring(0,3).toUpperCase(),style:const TextStyle(fontSize:7,color:AppTheme.muted,fontWeight:FontWeight.w800))])),
       const SizedBox(width:10),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(e.title,style:const TextStyle(fontSize:11,fontWeight:FontWeight.w800)),Text(e.subtitle,style:const TextStyle(fontSize:9,color:AppTheme.muted))])),Text(e.category.toUpperCase(),style:const TextStyle(fontSize:8,color:AppTheme.plum,fontWeight:FontWeight.w800)),
     ]))),
-    const SizedBox(height:8),const Text('This is a Tithi-based observance finder, not a complete festival calendar. Festival and vrata dates can require additional regional rules, moonrise checks and local traditions.',style:TextStyle(fontSize:9,height:1.5,color:AppTheme.muted)),
+    const SizedBox(height:8),Text(context.tr('observance_disclaimer'),style:TextStyle(fontSize:9,height:1.5,color:AppTheme.muted)),
   ]));
 }
 
