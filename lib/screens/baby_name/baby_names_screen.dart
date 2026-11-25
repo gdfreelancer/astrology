@@ -97,7 +97,7 @@ class _BabyNamesScreenState extends State<BabyNamesScreen> {
           const SizedBox(height: 17),
           Row(
             children: [
-              const Expanded(child: Text(context.tr('baby_name_rashi'), style: TextStyle(color: AppTheme.ink, fontSize: 16, fontWeight: FontWeight.w800))),
+              Expanded(child: Text(context.tr('baby_name_rashi'), style: TextStyle(color: AppTheme.ink, fontSize: 16, fontWeight: FontWeight.w800))),
               Text('${filtered.length} names', style: const TextStyle(color: AppTheme.muted, fontSize: 10, fontWeight: FontWeight.w700)),
             ],
           ),
