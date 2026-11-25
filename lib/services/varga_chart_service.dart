@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import '../models/kundali/kundali_graha.dart';
 
 class VargaDefinition {
@@ -108,7 +106,7 @@ class VargaChartService {
       30 => _trimshamsa(sign, within),
       40 => _sequential(sign, (within / .75).floor(), odd ? 0 : 6),
       45 => _sequential(sign, (within / (30 / 45)).floor(), _modalityStart(sign, 0, 4, 8)),
-      60 => (sign + (within / .5).floor()) % 12,
+      60 => _sequential(sign, (within / .5).floor(), odd ? 0 : 6),
       _ => throw ArgumentError.value(division, 'division', 'Unsupported Varga division'),
     };
     return part.clamp(0, 11).toInt();
@@ -142,7 +140,7 @@ class VargaChartService {
 
   static int _trimshamsa(int sign, double degree) {
     final segments = sign.isEven
-        ? const [(5.0, 0), (7.0, 5), (8.0, 11), (5.0, 9), (5.0, 7)]
+        ? const [(5.0, 1), (7.0, 5), (8.0, 11), (5.0, 9), (5.0, 7)]
         : const [(5.0, 0), (5.0, 10), (8.0, 8), (7.0, 2), (5.0, 6)];
     var edge = 0.0;
     for (final segment in segments) {
