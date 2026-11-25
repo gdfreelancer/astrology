@@ -51,7 +51,7 @@ class _RashiListScreenState extends State<RashiListScreen> {
                     gradient: const LinearGradient(colors: [Color(0xFF35264F), Color(0xFF7255A5)], begin: Alignment.topLeft, end: Alignment.bottomRight),
                   ),
                   child: Row(children: [
-                    const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Text(context.tr('explore_astrology'), style: TextStyle(color: Color(0xFFFFDCA0), fontSize: 9, letterSpacing: 1.8, fontWeight: FontWeight.w800)),
                       SizedBox(height: 8),
                       Text(context.tr('all_rashis'), style: TextStyle(color: Colors.white, fontSize: 24, height: 1.12, fontWeight: FontWeight.w800)),
