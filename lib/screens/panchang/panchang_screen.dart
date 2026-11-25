@@ -51,7 +51,7 @@ class _PanchangScreenState extends State<PanchangScreen>{
         const SizedBox(height:6),Text(context.tr('location_timezone_help'),style:TextStyle(fontSize:11,color:AppTheme.muted)),
         const SizedBox(height:14),TextField(controller:input,autofocus:true,textCapitalization:TextCapitalization.words,decoration:InputDecoration(hintText:context.tr('city_state_country'),prefixIcon:const Icon(Icons.location_on_outlined))),
         const SizedBox(height:10),
-        DropdownButtonFormField<String>(value:zone,decoration:const InputDecoration(labelText:'Time zone'),items:[
+        DropdownButtonFormField<String>(value:zone,decoration:InputDecoration(labelText:context.tr('time_zone')),items:[
           DropdownMenuItem(value:'Asia/Kolkata',child:Text(context.tr('india_timezone'))),
           DropdownMenuItem(value:'Asia/Dubai',child:Text('UAE · Asia/Dubai')),
           DropdownMenuItem(value:'Asia/Singapore',child:Text('Singapore · Asia/Singapore')),
@@ -83,7 +83,7 @@ class _PanchangScreenState extends State<PanchangScreen>{
   Future<void> _open(Widget page)async{await Navigator.push(context,MaterialPageRoute<void>(builder:(_)=>page));}
   @override
   Widget build(BuildContext context)=>Scaffold(
-    appBar:AppBar(title:const Text('Panchang',style:TextStyle(fontSize:18,fontWeight:FontWeight.w800)),actions:[IconButton(onPressed:_pickDate,icon:const Icon(Icons.calendar_month_rounded))]),
+    appBar:AppBar(title:Text(context.tr('panchang'),style:const TextStyle(fontSize:18,fontWeight:FontWeight.w800)),actions:[IconButton(onPressed:_pickDate,icon:const Icon(Icons.calendar_month_rounded))]),
     body:SafeArea(child:_loading?const Center(child:CircularProgressIndicator(color:AppTheme.plum)): _error!=null?Center(child:Padding(padding:const EdgeInsets.all(24),child:Column(mainAxisSize:MainAxisSize.min,children:[const Icon(Icons.wb_sunny_outlined,size:40,color:AppTheme.plum),const SizedBox(height:12),Text(context.tr('panchang_failed'),style:TextStyle(fontWeight:FontWeight.w800)),const SizedBox(height:8),Text(_error!,textAlign:TextAlign.center,style:const TextStyle(fontSize:10,color:AppTheme.muted)),const SizedBox(height:12),FilledButton(onPressed:_load,child:Text(context.tr('try_again')))]))):_body(_data!)),
   );
   Widget _body(PanchangData d)=>ListView(padding:const EdgeInsets.fromLTRB(18,8,18,28),children:[
