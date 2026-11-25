@@ -51,7 +51,7 @@ class _PanchangScreenState extends State<PanchangScreen>{
         const SizedBox(height:6),Text(context.tr('location_timezone_help'),style:TextStyle(fontSize:11,color:AppTheme.muted)),
         const SizedBox(height:14),TextField(controller:input,autofocus:true,textCapitalization:TextCapitalization.words,decoration:InputDecoration(hintText:context.tr('city_state_country'),prefixIcon:const Icon(Icons.location_on_outlined))),
         const SizedBox(height:10),
-        DropdownButtonFormField<String>(value:zone,decoration:const InputDecoration(labelText:'Time zone'),items:const[
+        DropdownButtonFormField<String>(value:zone,decoration:const InputDecoration(labelText:'Time zone'),items:[
           DropdownMenuItem(value:'Asia/Kolkata',child:Text(context.tr('india_timezone'))),
           DropdownMenuItem(value:'Asia/Dubai',child:Text('UAE · Asia/Dubai')),
           DropdownMenuItem(value:'Asia/Singapore',child:Text('Singapore · Asia/Singapore')),
