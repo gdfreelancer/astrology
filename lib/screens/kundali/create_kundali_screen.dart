@@ -27,7 +27,7 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
   DateTime? _birthDate;
   TimeOfDay? _birthTime;
   String? _timeZoneId;
-  String _gender = 'Not specified';
+  String _gender = context.tr('not_specified');
   Location? _location;
   KundaliChartStyle? _chartStyle;
   bool _loadingPreference = true;
@@ -180,7 +180,7 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
         ),
       ));
     } catch (_) {
-      if (mounted) _showMessage('Unable to calculate this chart. Verify the birth time zone and details.');
+      if (mounted) _showMessage(context.tr('unable_to_calculate_chart'));
     } finally {
       if (mounted) setState(() => _calculating = false);
     }
@@ -204,7 +204,7 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
         title: Text(context.tr('create_kundali'), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
         actions: [
           IconButton(
-            tooltip: 'Change chart style',
+            tooltip: context.tr('change_chart_style'),
             onPressed: _changeChartStyle,
             icon: const Icon(Icons.tune_rounded, color: AppTheme.plum),
           ),
@@ -326,7 +326,7 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
                 onTap: _pickTimeZone,
               ),
               const SizedBox(height: 7),
-              const Text('Choose the time zone that applied at the birth place and date. Historical daylight-saving changes matter.', style: TextStyle(color: AppTheme.muted, fontSize: 10, height: 1.45)),
+              Text(context.tr('timezone_historical_help'), style: TextStyle(color: AppTheme.muted, fontSize: 10, height: 1.45)),
               const SizedBox(height: 25),
               SizedBox(
                 height: 55,
@@ -379,8 +379,8 @@ class _TimeZoneDialogState extends State<_TimeZoneDialog> {
       child: SizedBox(
         height: MediaQuery.of(context).size.height * .72,
         child: Column(children: [
-          const Padding(padding: EdgeInsets.fromLTRB(18, 19, 18, 8), child: Align(alignment: Alignment.centerLeft, child: Text('Select birth time zone', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800)))),
-          Padding(padding: const EdgeInsets.symmetric(horizontal: 15), child: TextField(onChanged: (v) => setState(() => query = v), decoration: const InputDecoration(hintText: 'Search city or time zone', prefixIcon: Icon(Icons.search_rounded)))),
+          const Padding(padding: EdgeInsets.fromLTRB(18, 19, 18, 8), child: Align(alignment: Alignment.centerLeft, child: Text(context.tr('select_birth_timezone'), style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800)))),
+          Padding(padding: const EdgeInsets.symmetric(horizontal: 15), child: TextField(onChanged: (v) => setState(() => query = v), decoration: const InputDecoration(hintText: context.tr('search_city_or_timezone'), prefixIcon: Icon(Icons.search_rounded)))),
           Expanded(child: ListView.builder(
             itemCount: filtered.length,
             itemBuilder: (_, index) {
