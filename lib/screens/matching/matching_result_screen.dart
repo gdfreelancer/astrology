@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../l10n/app_locale.dart';
 import 'package:flutter/services.dart';
 
 import '../../models/matching/koota_result.dart';
@@ -40,7 +42,7 @@ class MatchingResultScreen extends StatelessWidget {
     text.writeln('\nTraditional astrology reference only; not a scientific assessment or prediction of relationship success.');
     await Clipboard.setData(ClipboardData(text: text.toString()));
     if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Matching summary copied.'), behavior: SnackBarBehavior.floating));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text(context.tr('matching_summary_copied')), behavior: SnackBarBehavior.floating));
     }
   }
 
@@ -49,9 +51,9 @@ class MatchingResultScreen extends StatelessWidget {
     final score = report.totalPoints;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Matching report', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
+        title: Text(context.tr('matching_report'), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
         actions: [
-          IconButton(onPressed: () => _copySummary(context), tooltip: 'Copy summary', icon: const Icon(Icons.copy_rounded, color: AppTheme.plum)),
+          IconButton(onPressed: () => _copySummary(context), tooltip: context.tr('copy_summary'), icon: const Icon(Icons.copy_rounded, color: AppTheme.plum)),
         ],
       ),
       body: SafeArea(
@@ -65,7 +67,7 @@ class MatchingResultScreen extends StatelessWidget {
                 gradient: const LinearGradient(colors: [Color(0xFF9A648E), Color(0xFF7255A5)], begin: Alignment.topLeft, end: Alignment.bottomRight),
               ),
               child: Column(children: [
-                const Text('ASHTAKOOTA GUNA MILAN', style: TextStyle(color: Color(0xFFF3E8F1), fontSize: 9, letterSpacing: 1.6, fontWeight: FontWeight.w800)),
+                Text(context.tr('ashtakoota_guna_milan'), style: TextStyle(color: Color(0xFFF3E8F1), fontSize: 9, letterSpacing: 1.6, fontWeight: FontWeight.w800)),
                 const SizedBox(height: 14),
                 SizedBox(
                   width: 148,
@@ -81,33 +83,33 @@ class MatchingResultScreen extends StatelessWidget {
                     Column(mainAxisSize: MainAxisSize.min, children: [
                       Text(score.toStringAsFixed(score % 1 == 0 ? 0 : 1), style: const TextStyle(color: Colors.white, fontSize: 35, fontWeight: FontWeight.w800, height: 1)),
                       const SizedBox(height: 4),
-                      const Text('OUT OF 36', style: TextStyle(color: Color(0xFFEDE5F8), fontSize: 9, letterSpacing: 1.2, fontWeight: FontWeight.w700)),
+                      Text(context.tr('out_of_36'), style: TextStyle(color: Color(0xFFEDE5F8), fontSize: 9, letterSpacing: 1.2, fontWeight: FontWeight.w700)),
                     ]),
                   ]),
                 ),
                 const SizedBox(height: 13),
                 Text(_interpretation, textAlign: TextAlign.center, style: TextStyle(color: _scoreColor == const Color(0xFF438466) ? const Color(0xFFDDF4E7) : const Color(0xFFFFE3A8), fontSize: 12, fontWeight: FontWeight.w800)),
                 const SizedBox(height: 5),
-                const Text('Traditional score band, not a prediction of relationship success', textAlign: TextAlign.center, style: TextStyle(color: Color(0xFFEDE5F8), fontSize: 9)),
+                Text(context.tr('traditional_score_note'), textAlign: TextAlign.center, style: TextStyle(color: Color(0xFFEDE5F8), fontSize: 9)),
               ]),
             ),
             const SizedBox(height: 16),
             Row(children: [
-              Expanded(child: _PersonCard(role: 'Bride', person: report.bride, accent: const Color(0xFFB45D82))),
+              Expanded(child: _PersonCard(role: context.tr('bride_details'), person: report.bride, accent: const Color(0xFFB45D82))),
               const SizedBox(width: 10),
-              Expanded(child: _PersonCard(role: 'Groom', person: report.groom, accent: AppTheme.plum)),
+              Expanded(child: _PersonCard(role: context.tr('groom_details'), person: report.groom, accent: AppTheme.plum)),
             ]),
             const SizedBox(height: 20),
-            const Text('Birth charts & planetary placements', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+            Text(context.tr('birth_charts_planetary_placements'), style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppTheme.ink)),
             const SizedBox(height: 5),
-            const Text('Review each person’s D1 chart and the house occupied by every graha.', style: TextStyle(fontSize: 10, color: AppTheme.muted)),
+            Text(context.tr('review_d1_charts'), style: TextStyle(fontSize: 10, color: AppTheme.muted)),
             const SizedBox(height: 10),
             _PersonBirthChart(person: report.bride, accent: const Color(0xFFB45D82)),
             const SizedBox(height: 9),
             _PersonBirthChart(person: report.groom, accent: AppTheme.plum),
             const SizedBox(height: 21),
             Row(children: [
-              const Expanded(child: Text('Eight Koota breakdown', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppTheme.ink))),
+              const Expanded(child: Text(context.tr('eight_koota_breakdown'), style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppTheme.ink))),
               Text('${report.kootas.length} categories', style: const TextStyle(fontSize: 10, color: AppTheme.muted)),
             ]),
             const SizedBox(height: 10),
@@ -117,7 +119,7 @@ class MatchingResultScreen extends StatelessWidget {
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(color: const Color(0xFFFFF6E8), borderRadius: BorderRadius.circular(17), border: Border.all(color: const Color(0xFFF1E2C9))),
               child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Row(children: [Icon(Icons.info_outline_rounded, color: Color(0xFF9C7138), size: 17), SizedBox(width: 7), Text('What this report covers', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Color(0xFF795D36)))]),
+                Row(children: [Icon(Icons.info_outline_rounded, color: Color(0xFF9C7138), size: 17), SizedBox(width: 7), Text(context.tr('what_report_covers'), style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Color(0xFF795D36)))]),
                 SizedBox(height: 8),
                 Text('This report calculates the eight Ashtakoota categories using Moon sign and Nakshatra data. Individual D1 placements are displayed for reference, but they are not yet used to calculate Manglik Dosha, planetary aspects, Lagna compatibility or Dosha cancellation. The scoring uses a documented baseline table; regional traditions can differ.', style: TextStyle(fontSize: 10, height: 1.55, color: Color(0xFF795D36))),
               ]),
@@ -190,9 +192,9 @@ class _KootaTile extends StatelessWidget {
           ),
           children: [
             Row(children: [
-              Expanded(child: _ValueBox(label: 'Bride', value: item.brideValue)),
+              Expanded(child: _ValueBox(label: context.tr('bride_details'), value: item.brideValue)),
               const SizedBox(width: 8),
-              Expanded(child: _ValueBox(label: 'Groom', value: item.groomValue)),
+              Expanded(child: _ValueBox(label: context.tr('groom_details'), value: item.groomValue)),
             ]),
             const SizedBox(height: 10),
             Align(alignment: Alignment.centerLeft, child: Text(item.explanation, style: const TextStyle(color: AppTheme.muted, fontSize: 10, height: 1.5))),
@@ -252,7 +254,7 @@ class _PersonBirthChart extends StatelessWidget {
             if (chart == null)
               const Padding(
                 padding: EdgeInsets.all(10),
-                child: Text('This is an older saved report. Recalculate matching to include planetary placements.', style: TextStyle(fontSize: 10, color: AppTheme.muted)),
+                child: Text(context.tr('old_report_chart_notice'), style: TextStyle(fontSize: 10, color: AppTheme.muted)),
               )
             else ...[
               GridView.builder(
