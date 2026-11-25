@@ -105,12 +105,12 @@ class _MuhuratScreenState extends State<MuhuratScreen> {
   ]));
 
   Widget _howItWorks() => Container(padding: const EdgeInsets.all(16), decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18), border: Border.all(color: const Color(0xFFF0EBE5))), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    const Text('What is considered?', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+    Text(context.tr('what_is_considered'), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppTheme.ink)),
     const SizedBox(height: 10),
-    _factor('🌙', 'Tithi & Paksha', 'Lunar day and waxing / waning phase'),
-    _factor('⭐', 'Nakshatra & Yoga', 'Lunar mansion and daily combination'),
-    _factor('☀️', 'Local sunrise & weekday', 'Calculated for the selected location'),
-    _factor('⏳', 'Rahu Kaal & other periods', 'Periods traditionally avoided for certain activities'),
+    _factor('🌙', context.tr('tithi_paksha'), 'Lunar day and waxing / waning phase'),
+    _factor('⭐', context.tr('nakshatra_yoga'), context.tr('lunar_mansion_daily_combination')),
+    _factor('☀️', context.tr('local_sunrise_weekday'), context.tr('calculated_selected_location')),
+    _factor('⏳', context.tr('rahu_other_periods'), context.tr('periods_avoided')),
   ]));
 
   Widget _factor(String emoji, String title, String subtitle) => Padding(padding: const EdgeInsets.only(top: 8), child: Row(children: [
