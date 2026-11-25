@@ -8,6 +8,7 @@ import '../../models/matching/matching_report.dart';
 import '../../models/matching/matching_person.dart';
 import '../../models/kundali/kundali_graha.dart';
 import '../../theme/app_theme.dart';
+import '../../services/matching/advanced_matching_service.dart';
 
 
 String _matchingRashi(int index) {
@@ -141,6 +142,8 @@ class MatchingResultScreen extends StatelessWidget {
             ]),
             const SizedBox(height: 10),
             ...report.kootas.map((item) => _KootaTile(item: item)),
+            const SizedBox(height: 18),
+            _AdvancedCompatibilitySection(report: report),
             const SizedBox(height: 15),
             Container(
               padding: const EdgeInsets.all(15),
@@ -344,4 +347,52 @@ String _matchingDegree(double longitude) {
   final degrees = value.floor();
   final minutes = ((value - degrees) * 60).round();
   return '${degrees}° ${minutes.toString().padLeft(2, '0')}′';
+}
+
+
+class _AdvancedCompatibilitySection extends StatelessWidget {
+  const _AdvancedCompatibilitySection({required this.report});
+  final MatchingReport report;
+  @override Widget build(BuildContext context) {
+    final a=AdvancedMatchingService.calculate(bride:report.bride.kundaliChart,groom:report.groom.kundaliChart);
+    return Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+      Text(context.tr('advanced_compatibility'),style:const TextStyle(fontSize:15,fontWeight:FontWeight.w800,color:AppTheme.ink)),
+      const SizedBox(height:5),Text(context.tr('advanced_compatibility_help'),style:const TextStyle(fontSize:10,color:AppTheme.muted,height:1.45)),
+      const SizedBox(height:10),
+      _AdvancedPersonCard(name:report.bride.name,assessment:a.brideManglik,profile:a.brideSeventhHouse),
+      const SizedBox(height:8),
+      _AdvancedPersonCard(name:report.groom.name,assessment:a.groomManglik,profile:a.groomSeventhHouse),
+      const SizedBox(height:9),
+      Container(padding:const EdgeInsets.all(12),decoration:BoxDecoration(color:const Color(0xFFFFF6E8),borderRadius:BorderRadius.circular(14)),child:Text(context.tr('advanced_compatibility_note'),style:const TextStyle(fontSize:9.5,height:1.5,color:Color(0xFF795D36))))
+    ]);
+  }
+}
+class _AdvancedPersonCard extends StatelessWidget {
+  const _AdvancedPersonCard({required this.name,required this.assessment,required this.profile});
+  final String name; final ManglikAssessment assessment; final HouseCompatibilityProfile profile;
+  @override Widget build(BuildContext context){
+    String status(bool? v)=>v==null?context.tr('not_available'):v?context.tr('indicator_present'):context.tr('indicator_not_present');
+    String sign(int? v)=>v==null?'—':_matchingRashi(v);
+    return Container(padding:const EdgeInsets.all(13),decoration:BoxDecoration(color:Colors.white,borderRadius:BorderRadius.circular(15),border:Border.all(color:const Color(0xFFEAE5EF))),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+      Text(name,style:const TextStyle(fontSize:12,fontWeight:FontWeight.w800,color:AppTheme.ink)),
+      const SizedBox(height:9),Text(context.tr('manglik_dosha'),style:const TextStyle(fontSize:11,fontWeight:FontWeight.w800,color:AppTheme.plum)),
+      _AnalysisLine(label:context.tr('from_lagna'),value:status(assessment.fromLagna)),
+      _AnalysisLine(label:context.tr('from_moon'),value:status(assessment.fromMoon)),
+      _AnalysisLine(label:context.tr('from_venus'),value:status(assessment.fromVenus)),
+      if(assessment.marsHouseFromLagna!=null)_AnalysisLine(label:context.tr('mars_position'),value:'${context.tr('house')} ${assessment.marsHouseFromLagna} · ${sign(assessment.marsSignIndex)}'),
+      const Divider(height:17,color:Color(0xFFF0ECF3)),
+      Text(context.tr('seventh_house_profile'),style:const TextStyle(fontSize:11,fontWeight:FontWeight.w800,color:AppTheme.plum)),
+      _AnalysisLine(label:context.tr('seventh_house_sign'),value:sign(profile.seventhHouseSign)),
+      _AnalysisLine(label:context.tr('seventh_house_occupants'),value:profile.seventhHouseOccupants.isEmpty?context.tr('none_listed'):profile.seventhHouseOccupants.map(_matchingGraha).join(', ')),
+      _AnalysisLine(label:context.tr('seventh_lord'),value:profile.seventhLord==null?'—':'${_matchingGraha(profile.seventhLord!)} · ${context.tr('house')} ${profile.seventhLordHouse??'—'}')
+    ]));
+  }
+}
+class _AnalysisLine extends StatelessWidget{
+  const _AnalysisLine({required this.label,required this.value});
+  final String label,value;
+  @override Widget build(BuildContext context)=>Padding(padding:const EdgeInsets.symmetric(vertical:3),child:Row(crossAxisAlignment:CrossAxisAlignment.start,children:[
+    Expanded(child:Text(label,style:const TextStyle(fontSize:9.5,color:AppTheme.muted))),const SizedBox(width:10),
+    Flexible(child:Text(value,textAlign:TextAlign.end,style:const TextStyle(fontSize:9.5,fontWeight:FontWeight.w700,color:AppTheme.ink)))
+  ]));
 }
