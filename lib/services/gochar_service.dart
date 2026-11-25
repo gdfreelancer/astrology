@@ -96,11 +96,11 @@ class GocharService {
   }
 
   static List<DetectedYoga> detectYogas(KundaliChart chart) {
-    final sun = chart.grahas.where((g)=>g.name=='Sun').firstOrNull;
-    final moon = chart.grahas.where((g)=>g.name=='Moon').firstOrNull;
-    final mars = chart.grahas.where((g)=>g.name=='Mars').firstOrNull;
-    final mercury = chart.grahas.where((g)=>g.name=='Mercury').firstOrNull;
-    final jupiter = chart.grahas.where((g)=>g.name=='Jupiter').firstOrNull;
+    final sun = _findGraha(chart,'Sun');
+    final moon = _findGraha(chart,'Moon');
+    final mars = _findGraha(chart,'Mars');
+    final mercury = _findGraha(chart,'Mercury');
+    final jupiter = _findGraha(chart,'Jupiter');
     final results=<DetectedYoga>[];
     if (moon!=null && jupiter!=null && _isKendra((jupiter.signIndex-moon.signIndex+12)%12)) {
       results.add(const DetectedYoga(key:'gajakesari',descriptionKey:'yoga_gajakesari_desc',planetNames:['Moon','Jupiter']));
@@ -111,7 +111,7 @@ class GocharService {
     if (moon!=null && mars!=null && moon.signIndex==mars.signIndex) {
       results.add(const DetectedYoga(key:'chandra_mangal',descriptionKey:'yoga_chandra_mangal_desc',planetNames:['Moon','Mars']));
     }
-    for (final pair in <(KundaliGraha?,String)>[(mars,'ruchaka'),(mercury,'bhadra'),(jupiter,'hamsa'),(venus(chart),'malavya'),(chart.grahas.where((g)=>g.name=='Saturn').firstOrNull,'shasha')]) {
+    for (final pair in <(KundaliGraha?,String)>[(mars,'ruchaka'),(mercury,'bhadra'),(jupiter,'hamsa'),(venus(chart),'malavya'),(_findGraha(chart,'Saturn'),'shasha')]) {
       final g=pair.$1;
       if(g!=null && _isKendra(g.houseNumber-1) && _isOwnOrExalted(g.name,g.signIndex)) {
         results.add(DetectedYoga(key:'pancha_mahapurusha_${pair.$2}',descriptionKey:'yoga_pancha_desc',planetNames:[g.name]));
@@ -119,7 +119,7 @@ class GocharService {
     }
     return results;
   }
-  static KundaliGraha? venus(KundaliChart chart)=>chart.grahas.where((g)=>g.name=='Venus').firstOrNull;
+  static KundaliGraha? _findGraha(KundaliChart chart,String name) { for(final graha in chart.grahas){if(graha.name==name)return graha;} return null; }
   static bool _isKendra(int offset)=>offset==0||offset==3||offset==6||offset==9;
   static bool _isOwnOrExalted(String name,int sign)=>switch(name){
     'Mars'=>sign==0||sign==7, 'Mercury'=>sign==2||sign==5,
