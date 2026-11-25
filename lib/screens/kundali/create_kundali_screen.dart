@@ -105,7 +105,7 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
       }
       return;
     }
-    final selected = await showModalBottomSheet<BirthProfile>(
+    final selectedId = await showModalBottomSheet<String>(
       context: context,
       backgroundColor: Colors.transparent,
       builder: (sheet) => Container(
@@ -135,27 +135,28 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
                 subtitle: Text(profile.placeName,
                     maxLines: 1, overflow: TextOverflow.ellipsis,
                     style: const TextStyle(fontSize: 10)),
-                onTap: () => Navigator.pop(sheet, profile),
+                onTap: () => Navigator.pop(sheet, profile.id),
               )),
               const Divider(),
               ListTile(
                 leading: const Icon(Icons.manage_accounts_outlined, color: AppTheme.plum),
                 title: Text(context.tr('manage_profiles')),
-                onTap: () => Navigator.pop(sheet),
+                onTap: () => Navigator.pop(sheet, '__manage_profiles__'),
               ),
             ],
           ),
         ),
       ),
     );
-    if (selected == null) {
+    if (selectedId == '__manage_profiles__') {
       if (!mounted) return;
       await Navigator.of(context).push(MaterialPageRoute<void>(
         builder: (_) => const BirthProfilesScreen(),
       ));
       return;
     }
-    if (!mounted) return;
+    if (selectedId == null || !mounted) return;
+    final selected = profiles.firstWhere((profile) => profile.id == selectedId);
     setState(() {
       _nameController.text = selected.name;
       _placeController.text = selected.placeName;
