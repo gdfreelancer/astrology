@@ -6,6 +6,13 @@ import '../../models/birth_chart_result.dart';
 import '../../theme/app_theme.dart';
 import 'baby_names_screen.dart';
 
+String _localizedAstroName(String value) {
+  final slug = value.split(' (').first.toLowerCase().replaceAll(RegExp('[^a-z0-9]+'), '_');
+  final key = 'p_' + slug;
+  final translated = AppLocale.text(key);
+  return translated == key ? value : translated;
+}
+
 class RashiResultScreen extends StatelessWidget {
   const RashiResultScreen({super.key, required this.result});
 
@@ -53,7 +60,7 @@ class RashiResultScreen extends StatelessWidget {
                 const SizedBox(height: 12),
                 Text(result.rashiSymbol, style: const TextStyle(fontSize: 48, color: Colors.white)),
                 const SizedBox(height: 7),
-                Text(result.rashi, textAlign: TextAlign.center, style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w800)),
+                Text(_localizedAstroName(result.rashi), textAlign: TextAlign.center, style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w800)),
                 const SizedBox(height: 6),
                 Text(context.tr('your_moon_sign'), style: TextStyle(color: Color(0xFFE9DFF8), fontSize: 11)),
               ],
@@ -62,7 +69,7 @@ class RashiResultScreen extends StatelessWidget {
           const SizedBox(height: 19),
           Row(
             children: [
-              Expanded(child: _HighlightCard(label: context.tr('nakshatra'), value: result.nakshatra, emoji: '✨')),
+              Expanded(child: _HighlightCard(label: context.tr('nakshatra'), value: _localizedAstroName(result.nakshatra), emoji: '✨')),
               const SizedBox(width: 11),
               Expanded(child: _HighlightCard(label: context.tr('pada'), value: '${context.tr('pada')} ${result.pada}', emoji: '🌙')),
             ],
@@ -104,8 +111,7 @@ class RashiResultScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(color: const Color(0xFFFFF0E8), borderRadius: BorderRadius.circular(15)),
-              child: const Text(
-                'This birth time is very close to a Nakshatra/Pada boundary. Small differences in ephemeris or recorded birth time may change the result. Please verify with a professional Panchang or ephemeris.',
+              child: Text(context.tr('birth_boundary_disclaimer'),
                 style: TextStyle(color: Color(0xFF9A5C35), fontSize: 11, height: 1.5),
               ),
             ),
@@ -121,8 +127,7 @@ class RashiResultScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 13),
-          const Text(
-            'Astrology is a traditional belief system. The calculation uses a geocentric lunar model and an approximate Lahiri ayanamsha; boundary cases should be cross-checked.',
+          Text(context.tr('birth_calculation_disclaimer'),
             textAlign: TextAlign.center,
             style: TextStyle(color: AppTheme.muted, fontSize: 10, height: 1.5),
           ),
