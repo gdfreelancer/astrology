@@ -21,6 +21,8 @@ class _GocharYogasScreenState extends State<GocharYogasScreen> {
     final report=_report;
     final saturn=report.transits.firstWhere((p)=>p.name=='Saturn');
     final phase=report.sadeSati.phase;
+    final natalMoonSign=report.sadeSati.moonSignIndex;
+    final natalLagnaSign=widget.chart.ascendantSignIndex;
     return Scaffold(
       appBar:AppBar(title:Text(context.tr('gochar_yogas'))),
       body:SafeArea(child:ListView(padding:const EdgeInsets.fromLTRB(18,8,18,28),children:[
@@ -38,7 +40,10 @@ class _GocharYogasScreenState extends State<GocharYogasScreen> {
             Padding(padding:const EdgeInsets.symmetric(horizontal:14,vertical:11),child:Row(children:[
               SizedBox(width:34,child:Text(report.transits[i].symbol,style:const TextStyle(fontWeight:FontWeight.w900,color:AppTheme.plum))),
               Expanded(child:Text(context.tr('planet_${report.transits[i].name.toLowerCase()}'),style:const TextStyle(fontSize:12,fontWeight:FontWeight.w700,color:AppTheme.ink))),
-              Text('${context.tr(_rashiKey(report.transits[i].signIndex))} · ${report.transits[i].degreeInSign.toStringAsFixed(1)}°',style:const TextStyle(fontSize:10,color:AppTheme.muted)),
+              Column(crossAxisAlignment:CrossAxisAlignment.end,children:[
+                Text('${context.tr(_rashiKey(report.transits[i].signIndex))} · ${report.transits[i].degreeInSign.toStringAsFixed(1)}°',style:const TextStyle(fontSize:10,color:AppTheme.muted)),
+                Text('${context.tr('moon_house_short')} ${(report.transits[i].signIndex-natalMoonSign+12)%12+1}  ·  ${context.tr('lagna_house_short')} ${(report.transits[i].signIndex-natalLagnaSign+12)%12+1}',style:const TextStyle(fontSize:8,color:AppTheme.muted)),
+              ]),
               if(report.transits[i].isRetrograde)const Padding(padding:EdgeInsets.only(left:5),child:Text('℞',style:TextStyle(color:Color(0xFFB56A32),fontWeight:FontWeight.w900)))
             ]))
           ]
