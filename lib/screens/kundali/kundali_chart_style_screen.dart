@@ -307,21 +307,21 @@ class _ChartPreviewPainter extends CustomPainter {
     canvas.drawLine(r.bottomRight, Offset(x2, y2), line);
     canvas.drawLine(r.bottomLeft, Offset(x1, y2), line);
 
-    // Aries is placed at the top in this preview; remaining sign numbers
-    // follow the fixed East Indian sequence around the central square.
+    // Twelve fixed-sign compartments: four side boxes and two triangles
+    // in each corner. Aries starts at the top; signs continue anticlockwise.
     final labels = <_PreviewLabel>[
       _PreviewLabel('1', Offset(r.center.dx, r.top + r.height * .17)),
-      _PreviewLabel('2', Offset(r.left + r.width * .17, r.top + r.height * .17)),
-      _PreviewLabel('3', Offset(r.left + r.width * .17, r.center.dy)),
-      _PreviewLabel('4', Offset(r.left + r.width * .17, r.bottom - r.height * .17)),
-      _PreviewLabel('5', Offset(r.center.dx, r.bottom - r.height * .17)),
-      _PreviewLabel('6', Offset(r.right - r.width * .17, r.bottom - r.height * .17)),
-      _PreviewLabel('7', Offset(r.right - r.width * .17, r.center.dy)),
-      _PreviewLabel('8', Offset(r.right - r.width * .17, r.top + r.height * .83)),
-      _PreviewLabel('9', Offset(r.center.dx, r.top + r.height * .83)),
-      _PreviewLabel('10', Offset(r.right - r.width * .17, r.top + r.height * .17)),
-      _PreviewLabel('11', Offset(r.left + r.width * .83, r.center.dy)),
-      _PreviewLabel('12', Offset(r.left + r.width * .83, r.bottom - r.height * .17)),
+      _PreviewLabel('2', Offset(r.left + r.width * .17, r.top + r.height * .08)),
+      _PreviewLabel('3', Offset(r.left + r.width * .08, r.top + r.height * .17)),
+      _PreviewLabel('4', Offset(r.left + r.width * .17, r.center.dy)),
+      _PreviewLabel('5', Offset(r.left + r.width * .08, r.bottom - r.height * .17)),
+      _PreviewLabel('6', Offset(r.left + r.width * .17, r.bottom - r.height * .08)),
+      _PreviewLabel('7', Offset(r.center.dx, r.bottom - r.height * .17)),
+      _PreviewLabel('8', Offset(r.right - r.width * .17, r.bottom - r.height * .08)),
+      _PreviewLabel('9', Offset(r.right - r.width * .08, r.bottom - r.height * .17)),
+      _PreviewLabel('10', Offset(r.right - r.width * .17, r.center.dy)),
+      _PreviewLabel('11', Offset(r.right - r.width * .08, r.top + r.height * .17)),
+      _PreviewLabel('12', Offset(r.right - r.width * .17, r.top + r.height * .08)),
     ];
     for (final label in labels) {
       _drawText(canvas, label.text, label.center, fontSize: 7.5);
