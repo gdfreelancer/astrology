@@ -129,7 +129,7 @@ class MatchingResultScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(13),
                 decoration: BoxDecoration(color: const Color(0xFFFFEEEE), borderRadius: BorderRadius.circular(14)),
-                child: const Text(context.tr('matching_boundary_warning'), style: TextStyle(color: Color(0xFF9C4545), fontSize: 10, height: 1.5)),
+                child: Text(context.tr('matching_boundary_warning'), style: TextStyle(color: Color(0xFF9C4545), fontSize: 10, height: 1.5)),
               ),
             ],
             const SizedBox(height: 13),
