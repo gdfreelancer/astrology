@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../l10n/app_locale.dart';
 
+import '../../l10n/app_locale.dart';
 import '../../models/birth_chart_result.dart';
+import '../../services/settings/app_preferences_service.dart';
 import '../../models/kundali/kundali_chart_style.dart';
 import '../../models/kundali/kundali_graha.dart';
 import '../../theme/app_theme.dart';
@@ -123,8 +125,10 @@ class KundaliResultScreen extends StatelessWidget {
 
   static String _month(int month) => const ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][month - 1];
   static String _time(DateTime value) {
+    final minute = value.minute.toString().padLeft(2, '0');
+    if (AppPreferencesService.cachedUse24HourTime) return '${value.hour.toString().padLeft(2, '0')}:$minute';
     final h = value.hour % 12 == 0 ? 12 : value.hour % 12;
-    return '$h:${value.minute.toString().padLeft(2, '0')} ${value.hour >= 12 ? 'PM' : 'AM'}';
+    return '$h:$minute ${value.hour >= 12 ? 'PM' : 'AM'}';
   }
 }
 
