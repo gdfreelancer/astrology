@@ -150,9 +150,9 @@ class _ChartStyleCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(style.label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+                    Text(context.tr(switch (style) { KundaliChartStyle.northIndian => 'north_indian', KundaliChartStyle.southIndian => 'south_indian', KundaliChartStyle.eastIndian => 'east_indian' }), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppTheme.ink)),
                     const SizedBox(height: 5),
-                    Text(style.description, style: const TextStyle(fontSize: 10, height: 1.4, color: AppTheme.muted)),
+                    Text(context.tr(switch (style) { KundaliChartStyle.northIndian => 'north_indian_desc', KundaliChartStyle.southIndian => 'south_indian_desc', KundaliChartStyle.eastIndian => 'east_indian_desc' }), style: const TextStyle(fontSize: 10, height: 1.4, color: AppTheme.muted)),
                   ],
                 ),
               ),
