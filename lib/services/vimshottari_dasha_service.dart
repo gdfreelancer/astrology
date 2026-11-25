@@ -47,26 +47,36 @@ class VimshottariDashaService {
     }
 
     final antardashas = <VimshottariPeriod>[];
-    for (final maha in mahadashas) {
+    for (var mahaIndex = 0; mahaIndex < mahadashas.length; mahaIndex++) {
+      final maha = mahadashas[mahaIndex];
       final mahaStartIndex = sequence.indexOf(maha.planet);
-      var antarCursor = maha.start;
+      // The first Mahadasha began before birth. Reconstruct its full start so
+      // the running Antardasha and its remaining balance are correct.
+      final elapsedYears = mahaIndex == 0
+          ? (lordYears - balanceYears)
+          : 0.0;
+      final fullMahaStart = _addYears(maha.start, -elapsedYears);
+      final fullMahaEnd = _addYears(fullMahaStart, years[maha.planet]!.toDouble());
+      var antarCursor = fullMahaStart;
       for (var i = 0; i < sequence.length; i++) {
         final antarLord = sequence[(mahaStartIndex + i) % sequence.length];
         final fraction = years[antarLord]! / cycleYears;
-        final duration = maha.end.difference(maha.start).inMicroseconds *
-            fraction;
-        final antarEnd = antarCursor.add(
-          Duration(microseconds: duration.round()),
-        );
-        antardashas.add(VimshottariPeriod(
-          planet: '$antarLord',
-          years: years[antarLord]!,
-          start: antarCursor,
-          end: antarEnd,
-        ));
+        final antarEnd = i == sequence.length - 1
+            ? fullMahaEnd
+            : antarCursor.add(Duration(
+                microseconds: (fullMahaEnd.difference(fullMahaStart)
+                    .inMicroseconds * fraction).round(),
+              ));
+        if (antarEnd.isAfter(birthDate)) {
+          antardashas.add(VimshottariPeriod(
+            planet: antarLord,
+            years: years[antarLord]!,
+            start: antarCursor,
+            end: antarEnd,
+          ));
+        }
         antarCursor = antarEnd;
       }
-      // Keep adjacent sub-periods contiguous despite microsecond rounding.
     }
 
     return VimshottariTimeline(
