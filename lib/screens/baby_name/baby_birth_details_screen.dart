@@ -527,8 +527,8 @@ class _TimeZonePickerState extends State<_TimeZonePicker> {
         height: MediaQuery.of(context).size.height * 0.72,
         child: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
               child: Align(alignment: Alignment.centerLeft, child: Text(context.tr('select_birth_time_zone'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppTheme.ink))),
             ),
             Padding(
