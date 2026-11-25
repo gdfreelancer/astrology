@@ -27,7 +27,7 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
   DateTime? _birthDate;
   TimeOfDay? _birthTime;
   String? _timeZoneId;
-  String _gender = context.tr('not_specified');
+  String _gender = 'Not specified';
   Location? _location;
   KundaliChartStyle? _chartStyle;
   bool _loadingPreference = true;
@@ -258,11 +258,11 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
               Wrap(spacing: 8, children: [
                 for (final option in [('Not specified', context.tr('not_specified')), ('Male', context.tr('boy')), ('Female', context.tr('girl'))])
                   ChoiceChip(
-                    label: Text(value),
+                    label: Text(option.$2),
                     selected: _gender == option.$1,
                     onSelected: (_) => setState(() => _gender = option.$1),
                     selectedColor: const Color(0xFFEDE5F8),
-                    side: BorderSide(color: _gender == value ? AppTheme.plum : const Color(0xFFEAE5EF)),
+                    side: BorderSide(color: _gender == option.$1 ? AppTheme.plum : const Color(0xFFEAE5EF)),
                     labelStyle: TextStyle(fontSize: 11, color: _gender == value ? AppTheme.plum : AppTheme.muted, fontWeight: FontWeight.w700),
                     showCheckmark: false,
                   ),
