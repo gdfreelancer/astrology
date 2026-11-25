@@ -5,6 +5,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:timezone/data/latest.dart' as timezone_data;
 import 'package:timezone/timezone.dart' as tz;
 import '../../models/panchang_data.dart';
+import 'lunar_events_screen.dart';
 import '../../services/panchang_service.dart';
 import '../../services/settings/app_preferences_service.dart';
 import '../../theme/app_theme.dart';
@@ -177,6 +178,7 @@ class _PanchangScreenState extends State<PanchangScreen>{
     _link('🕉️',context.tr('daily_timings'),context.tr('rahu_yamaganda_muhurat'),()=>_open(DailyTimingsScreen(data:d))),
     _link('🗓️',context.tr('hindu_calendar'),'Monthly Tithi calendar',()=>_open(PanchangCalendarScreen(date:_date,location:_location,onDateSelected:(v){Navigator.pop(context);setState(()=>_date=v);_load();}))),
     _link('🌼',context.tr('vrat_observances'),'Upcoming Tithi-based days',()=>_open(FestivalsScreen(date:_date,location:_location))),
+    _link('🌙',context.tr('lunar_events'),context.tr('lunar_events_short'),()=>_open(LunarEventsScreen(date:_date,location:_location))),
     const SizedBox(height:10),
     Container(padding:const EdgeInsets.all(14),decoration:BoxDecoration(color:const Color(0xFFFFF5E7),borderRadius:BorderRadius.circular(15)),child:Text(d.sunRashi+' · '+d.ritu+' · '+d.ayana+'\nAyanamsha: '+d.ayanamsha.toStringAsFixed(2)+'°',style:const TextStyle(fontSize:10,height:1.6,fontWeight:FontWeight.w700,color:AppTheme.ink))),
     const SizedBox(height:12),Text(context.tr('panchang_disclaimer'),style:TextStyle(fontSize:9,height:1.5,color:AppTheme.muted)),
