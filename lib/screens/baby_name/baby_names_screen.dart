@@ -6,6 +6,13 @@ import '../../data/baby_names_data.dart';
 import '../../models/birth_chart_result.dart';
 import '../../theme/app_theme.dart';
 
+String _localizedAstroName(String value) {
+  final slug = value.split(' (').first.toLowerCase().replaceAll(RegExp('[^a-z0-9]+'), '_');
+  final key = 'p_' + slug;
+  final translated = AppLocale.text(key);
+  return translated == key ? value : translated;
+}
+
 class BabyNamesScreen extends StatefulWidget {
   const BabyNamesScreen({super.key, required this.result});
 
@@ -68,7 +75,7 @@ class _BabyNamesScreenState extends State<BabyNamesScreen> {
                       Text(context.tr('names_inspired'), style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w800)),
                       const SizedBox(height: 5),
                       Text('${context.tr('starting_sound')}: ${widget.result.namingSyllable}', style: const TextStyle(color: Color(0xFFFFE3A8), fontSize: 13, fontWeight: FontWeight.w800)),
-                      Text('${widget.result.nakshatra} · Pada ${widget.result.pada}', style: const TextStyle(color: Color(0xFFE9DFF8), fontSize: 10)),
+                      Text('${_localizedAstroName(widget.result.nakshatra)} · ${context.tr('pada')} ${widget.result.pada}', style: const TextStyle(color: Color(0xFFE9DFF8), fontSize: 10)),
                     ],
                   ),
                 ),
