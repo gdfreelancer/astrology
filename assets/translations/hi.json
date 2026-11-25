@@ -166,5 +166,11 @@
   "auspicious_moments": "शुभ मुहूर्त",
   "selected_date": "चुनी हुई तारीख",
   "muhurat_preparing": "मुहूर्त की गणना तैयार की जा रही है",
-  "language_switch_saved": "भाषा की पसंद सहेज ली गई है।"
+  "language_switch_saved": "भाषा की पसंद सहेज ली गई है।",
+  "india_timezone": "भारत · Asia/Kolkata",
+  "tap_element": "समय और अर्थ देखने के लिए किसी तत्व पर टैप करें",
+  "upcoming_observances": "आगामी चंद्र तिथियाँ",
+  "tithi_based_observances": "स्थानीय सूर्योदय पर सक्रिय तिथि के आधार पर दिनांक।",
+  "no_observances": "इस अवधि में कोई संबंधित व्रत नहीं मिला।",
+  "observance_disclaimer": "यह तिथि-आधारित सूची है, संपूर्ण त्योहार कैलेंडर नहीं। त्योहारों के लिए क्षेत्रीय नियम और चंद्रोदय की जाँच आवश्यक हो सकती है।"
 }
