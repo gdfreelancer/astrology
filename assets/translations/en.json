@@ -797,5 +797,13 @@
   "birth_boundary_disclaimer": "This birth time is very close to a Nakshatra/Pada boundary. Small differences in ephemeris or recorded birth time may change the result. Please verify with a professional Panchang or ephemeris.",
   "birth_calculation_disclaimer": "Astrology is a traditional belief system. The calculation uses a geocentric lunar model and an approximate Lahiri ayanamsha; boundary cases should be cross-checked.",
   "kundali_accuracy_disclaimer": "Planet positions use GeoEngine with the app’s approximate Lahiri ayanamsha. Houses are whole-sign houses derived from the calculated Ascendant. Verify important readings against a trusted Panchang or professional ephemeris; this is not a Swiss Ephemeris-validated chart.",
-  "muhurat_not_ready": "Exact auspicious time windows are not shown yet. They require a verified location-based Panchang calculation using Tithi, Nakshatra, Yoga, Karana, weekday and relevant dosha periods. No time has been assumed or generated."
+  "muhurat_not_ready": "Exact auspicious time windows are not shown yet. They require a verified location-based Panchang calculation using Tithi, Nakshatra, Yoga, Karana, weekday and relevant dosha periods. No time has been assumed or generated.",
+  "today_panchang": "Today's Panchang",
+  "view_full_panchang": "View full Panchang",
+  "todays_sky": "Today's Panchang",
+  "tithi": "Tithi",
+  "yoga": "Yoga",
+  "rahu_kaal": "Rahu Kaal",
+  "panchang_unavailable": "Today's Panchang could not be loaded. Check the selected location and try again.",
+  "retry": "Retry"
 }
