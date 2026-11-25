@@ -60,6 +60,10 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
       context: context,
       initialTime: _birthTime ?? const TimeOfDay(hour: 12, minute: 0),
       helpText: context.tr('select_local_birth_time'),
+      builder: (dialogContext, child) => MediaQuery(
+        data: MediaQuery.of(dialogContext).copyWith(alwaysUse24HourFormat: AppPreferencesService.cachedUse24HourTime),
+        child: child!,
+      ),
     );
     if (selected != null) setState(() => _birthTime = selected);
   }
