@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_locale.dart';
+
 import '../../data/baby_names_data.dart';
 import '../../models/birth_chart_result.dart';
 import '../../theme/app_theme.dart';
@@ -44,7 +46,7 @@ class _BabyNamesScreenState extends State<BabyNamesScreen> {
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('‹', style: TextStyle(fontSize: 32, height: 1, color: AppTheme.plum)),
         ),
-        title: const Text('Suggested Baby Names', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
+        title: Text(context.tr('explore_suggested_baby_names'), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
@@ -95,7 +97,7 @@ class _BabyNamesScreenState extends State<BabyNamesScreen> {
           const SizedBox(height: 17),
           Row(
             children: [
-              const Expanded(child: Text('Name ideas', style: TextStyle(color: AppTheme.ink, fontSize: 16, fontWeight: FontWeight.w800))),
+              const Expanded(child: Text(context.tr('baby_name_rashi'), style: TextStyle(color: AppTheme.ink, fontSize: 16, fontWeight: FontWeight.w800))),
               Text('${filtered.length} names', style: const TextStyle(color: AppTheme.muted, fontSize: 10, fontWeight: FontWeight.w700)),
             ],
           ),
