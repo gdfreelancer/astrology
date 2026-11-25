@@ -207,5 +207,9 @@
   "family_home": "Family & home",
   "body_symbolism": "Body symbolism",
   "nakshatra_portions": "These are the Nakshatra portions that fall within this Rashi. A Nakshatra can extend across two adjacent Rashis.",
-  "astrology_education_disclaimer": "Astrology content is presented for cultural and educational interest. Individual birth-chart results depend on exact planetary positions, birth time, location and the tradition used."
+  "astrology_education_disclaimer": "Astrology content is presented for cultural and educational interest. Individual birth-chart results depend on exact planetary positions, birth time, location and the tradition used.",
+  "delete_report": "Delete report",
+  "no_matching_reports": "No matching reports yet",
+  "reports_empty_description": "Your completed matching reports will appear here.",
+  "suggested_baby_names": "Suggested Baby Names"
 }
