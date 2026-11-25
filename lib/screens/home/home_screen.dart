@@ -76,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  String _time(BuildContext context, DateTime value) {
+  String _time(DateTime value) {
     final zoneId = _today?.location.timeZoneId;
     final localTime = zoneId == null
         ? value.toLocal()
@@ -430,14 +430,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: _TimeInfo(
                   icon: Icons.wb_twilight_rounded,
                   label: context.tr('sunrise'),
-                  value: _time(context, data.sunrise),
+                  value: _time(data.sunrise),
                 ),
               ),
               Expanded(
                 child: _TimeInfo(
                   icon: Icons.wb_sunny_outlined,
                   label: context.tr('sunset'),
-                  value: _time(context, data.sunset),
+                  value: _time(data.sunset),
                 ),
               ),
               Expanded(
@@ -445,7 +445,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: Icons.schedule_rounded,
                   label: context.tr('rahu_kaal'),
                   value:
-                      '${_time(context, data.rahuKaal.start)} – ${_time(context, data.rahuKaal.end)}',
+                      '${_time(data.rahuKaal.start)} – ${_time(data.rahuKaal.end)}',
                 ),
               ),
             ],
