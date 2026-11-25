@@ -1,3 +1,5 @@
+import '../kundali/kundali_graha.dart';
+
 class MatchingPerson {
   const MatchingPerson({
     required this.name,
@@ -15,6 +17,7 @@ class MatchingPerson {
     required this.siderealMoonLongitude,
     required this.ayanamsa,
     required this.nearBoundary,
+    this.kundaliChart,
   });
 
   final String name;
@@ -32,6 +35,7 @@ class MatchingPerson {
   final double siderealMoonLongitude;
   final double ayanamsa;
   final bool nearBoundary;
+  final KundaliChart? kundaliChart;
 
   Map<String, dynamic> toJson() => {
     'name': name,
@@ -49,6 +53,15 @@ class MatchingPerson {
     'siderealMoonLongitude': siderealMoonLongitude,
     'ayanamsa': ayanamsa,
     'nearBoundary': nearBoundary,
+    if (kundaliChart != null) 'kundaliChart': {
+      'ascendantLongitude': kundaliChart!.ascendantLongitude,
+      'ascendantSignIndex': kundaliChart!.ascendantSignIndex,
+      'grahas': kundaliChart!.grahas.map((g) => {
+        'name': g.name, 'symbol': g.symbol, 'longitude': g.longitude,
+        'signIndex': g.signIndex, 'houseNumber': g.houseNumber,
+        'isRetrograde': g.isRetrograde,
+      }).toList(),
+    },
   };
 
   factory MatchingPerson.fromJson(Map<String, dynamic> json) => MatchingPerson(
@@ -67,5 +80,17 @@ class MatchingPerson {
     siderealMoonLongitude: (json['siderealMoonLongitude'] as num).toDouble(),
     ayanamsa: (json['ayanamsa'] as num).toDouble(),
     nearBoundary: json['nearBoundary'] as bool? ?? false,
+    kundaliChart: json['kundaliChart'] == null ? null : KundaliChart(
+      ascendantLongitude: (json['kundaliChart']['ascendantLongitude'] as num).toDouble(),
+      ascendantSignIndex: json['kundaliChart']['ascendantSignIndex'] as int,
+      grahas: (json['kundaliChart']['grahas'] as List<dynamic>).map((item) => KundaliGraha(
+        name: item['name'] as String,
+        symbol: item['symbol'] as String,
+        longitude: (item['longitude'] as num).toDouble(),
+        signIndex: item['signIndex'] as int,
+        houseNumber: item['houseNumber'] as int,
+        isRetrograde: item['isRetrograde'] as bool? ?? false,
+      )).toList(),
+    ),
   );
 }
