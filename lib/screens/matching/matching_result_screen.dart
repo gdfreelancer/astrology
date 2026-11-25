@@ -30,6 +30,32 @@ String _matchingValue(BuildContext context, String value) {
   return key == null ? value : context.tr(key);
 }
 
+String _matchingRashi(int index) {
+  const keys = ['p_mesha','p_vrishabha','p_mithuna','p_karka','p_simha','p_kanya','p_tula','p_vrishchika','p_dhanu','p_makara','p_kumbha','p_meena'];
+  return AppLocale.text(keys[index]);
+}
+String _matchingGraha(String name) {
+  const keys = {'Sun':'planet_sun','Moon':'planet_moon','Mars':'planet_mars','Mercury':'planet_mercury','Jupiter':'planet_jupiter','Venus':'planet_venus','Saturn':'planet_saturn','Rahu':'planet_rahu','Ketu':'planet_ketu'};
+  final key = keys[name];
+  return key == null ? name : AppLocale.text(key);
+}
+String _localizedAstroName(String value) {
+  final slug = value.split(' (').first.toLowerCase().replaceAll(RegExp('[^a-z0-9]+'), '_');
+  final key = 'p_' + slug;
+  final translated = AppLocale.text(key);
+  return translated == key ? value : translated;
+}
+String _matchingValue(BuildContext context, String value) {
+  const keys = {
+    'Brahmin':'match_brahmin','Kshatriya':'match_kshatriya','Vaishya':'match_vaishya','Shudra':'match_shudra',
+    'Chatushpada':'match_chatushpada','Manava':'match_manava','Jalachara':'match_jalachara','Vanachara':'match_vanachara','Keeta':'match_keeta',
+    'Deva':'match_deva','Manushya':'match_manushya','Rakshasa':'match_rakshasa','Adi':'match_adi','Madhya':'match_madhya','Antya':'match_antya',
+    'Horse':'match_horse','Elephant':'match_elephant','Sheep':'match_sheep','Serpent':'match_serpent','Dog':'match_dog','Cat':'match_cat','Rat':'match_rat','Cow':'match_cow','Buffalo':'match_buffalo','Tiger':'match_tiger','Deer':'match_deer','Monkey':'match_monkey','Mongoose':'match_mongoose','Lion':'match_lion'
+  };
+  final key = keys[value];
+  return key == null ? value : context.tr(key);
+}
+
 class MatchingResultScreen extends StatelessWidget {
   const MatchingResultScreen({super.key, required this.report, this.reportId});
 
@@ -177,9 +203,9 @@ class _PersonCard extends StatelessWidget {
       const SizedBox(height: 5),
       Text(person.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: AppTheme.ink, fontSize: 12, fontWeight: FontWeight.w800)),
       const SizedBox(height: 8),
-      Text('${person.rashiSymbol}  ${person.rashi}', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: AppTheme.ink, fontSize: 10, fontWeight: FontWeight.w700)),
+      Text('${person.rashiSymbol}  ${_localizedAstroName(person.rashi)}', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: AppTheme.ink, fontSize: 10, fontWeight: FontWeight.w700)),
       const SizedBox(height: 4),
-      Text('${person.nakshatra} · Pada ${person.pada}', maxLines: 2, style: const TextStyle(color: AppTheme.muted, fontSize: 9)),
+      Text('${_localizedAstroName(person.nakshatra)} · ${context.tr('pada')} ${person.pada}', maxLines: 2, style: const TextStyle(color: AppTheme.muted, fontSize: 9)),
     ]),
   );
 }
