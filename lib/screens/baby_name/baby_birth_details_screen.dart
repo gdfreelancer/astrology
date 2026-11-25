@@ -23,7 +23,7 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
   DateTime? _birthDate;
   TimeOfDay? _birthTime;
   String? _timeZoneId;
-  String _gender = 'Not specified';
+  String _gender = context.tr('not_specified');
   Location? _location;
   bool _isResolvingPlace = false;
   bool _isCalculating = false;
@@ -245,7 +245,7 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
   }
 
   String _timeLabel(TimeOfDay? value) {
-    if (value == null) return 'Select exact birth time';
+    if (value == null) return context.tr('select_exact_birth_time');
     if (AppPreferencesService.cachedUse24HourTime) return '${value.hour.toString().padLeft(2, '0')}:${value.minute.toString().padLeft(2, '0')}';
     return value.format(context);
   }
@@ -365,8 +365,7 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
                 ),
               ),
               const SizedBox(height: 12),
-              const Text(
-                'Calculation uses the selected time zone and Lahiri sidereal convention. Results close to a Nakshatra or Pada boundary should be independently verified.',
+              Text(context.tr('birth_chart_calculation_note'),
                 textAlign: TextAlign.center,
                 style: TextStyle(color: AppTheme.muted, fontSize: 10, height: 1.5),
               ),
@@ -540,7 +539,7 @@ class _TimeZonePickerState extends State<_TimeZonePicker> {
               child: TextField(
                 autofocus: true,
                 onChanged: (value) => setState(() => query = value),
-                decoration: const InputDecoration(hintText: 'Search city or time zone', prefixText: '⌕  '),
+                decoration: const InputDecoration(hintText: context.tr('search_city_or_timezone'), prefixText: '⌕  '),
               ),
             ),
             const SizedBox(height: 8),
