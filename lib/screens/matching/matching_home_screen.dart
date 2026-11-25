@@ -92,7 +92,7 @@ class _MatchingHomeScreenState extends State<MatchingHomeScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 26),
                   decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18), border: Border.all(color: const Color(0xFFEAE5EF))),
-                  child: const Column(children: [
+                  child: Column(children: [
                     Text('🪷', style: TextStyle(fontSize: 31)),
                     SizedBox(height: 8),
                     Text(context.tr('new_matching'), style: TextStyle(color: AppTheme.ink, fontSize: 12, fontWeight: FontWeight.w800)),
