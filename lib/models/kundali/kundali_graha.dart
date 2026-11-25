@@ -25,7 +25,7 @@ class KundaliGraha {
 
   double get signDegree => longitude % 30;
   int get nakshatraIndex => (longitude / (360 / 27)).floor().clamp(0, 26);
-  int get pada => (((longitude % (360 / 27)) / (360 / 108)).floor() + 1).clamp(1, 4);
+  int get pada => (((longitude % (360 / 27)) / (360 / 108)).floor() + 1).clamp(1, 4).toInt();
 }
 
 class BhavaHouse {
