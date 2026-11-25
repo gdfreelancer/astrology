@@ -4,6 +4,7 @@ import 'package:timezone/data/latest.dart' as timezone_data;
 import 'package:timezone/timezone.dart' as tz;
 import '../../models/panchang_data.dart';
 import '../../services/panchang_service.dart';
+import '../../services/settings/app_preferences_service.dart';
 import '../../theme/app_theme.dart';
 
 class PanchangScreen extends StatefulWidget {
@@ -18,7 +19,13 @@ class _PanchangScreenState extends State<PanchangScreen>{
   bool _loading=true;
   String? _error;
   @override
-  void initState(){super.initState();timezone_data.initializeTimeZones();_load();}
+  void initState(){super.initState();timezone_data.initializeTimeZones();_loadSavedLocation();}
+  Future<void> _loadSavedLocation() async {
+    final saved = await AppPreferencesService.defaultLocation();
+    if (!mounted) return;
+    setState(() => _location = PanchangLocation(name: saved.name, latitude: saved.latitude, longitude: saved.longitude, timeZoneId: saved.timeZoneId));
+    await _load();
+  }
   Future<void> _load() async{
     setState(() { _loading=true; _error=null; });
     try{
@@ -220,5 +227,5 @@ class _FestivalsScreenState extends State<FestivalsScreen>{
   ]));
 }
 
-String _fmt(DateTime utc,String zone){final d=tz.TZDateTime.from(utc,tz.getLocation(zone));final h=d.hour%12==0?12:d.hour%12;return h.toString()+':'+d.minute.toString().padLeft(2,'0')+' '+(d.hour>=12?'PM':'AM');}
+String _fmt(DateTime utc,String zone){final d=tz.TZDateTime.from(utc,tz.getLocation(zone));final minute=d.minute.toString().padLeft(2,'0');if(AppPreferencesService.cachedUse24HourTime){return d.hour.toString().padLeft(2,'0')+':'+minute;}final h=d.hour%12==0?12:d.hour%12;return h.toString()+':'+minute+' '+(d.hour>=12?'PM':'AM');}
 String _monthName(int m)=>const ['January','February','March','April','May','June','July','August','September','October','November','December'][m-1];
