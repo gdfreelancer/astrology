@@ -289,7 +289,7 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
                 ),
               ),
               const SizedBox(height: 25),
-              const _SectionHeading(number: '01', title: context.tr('birth_information')),
+              _SectionHeading(number: '01', title: context.tr('birth_information')),
               const SizedBox(height: 13),
               _FieldLabel(context.tr('date_of_birth')),
               _PickerTile(
@@ -309,7 +309,7 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
               const SizedBox(height: 7),
               Text(context.tr('use_local_birth_time'), style: TextStyle(color: AppTheme.muted, fontSize: 10)),
               const SizedBox(height: 23),
-              const _SectionHeading(number: '02', title: context.tr('place_time_zone')),
+              _SectionHeading(number: '02', title: context.tr('place_time_zone')),
               const SizedBox(height: 13),
               _FieldLabel(context.tr('place_of_birth')),
               _BirthPlaceTile(
@@ -332,7 +332,7 @@ class _BabyBirthDetailsScreenState extends State<BabyBirthDetailsScreen> {
               const SizedBox(height: 7),
               Text(context.tr('birth_time_zone_help'), style: TextStyle(color: AppTheme.muted, fontSize: 10, height: 1.45)),
               const SizedBox(height: 23),
-              const _SectionHeading(number: '03', title: context.tr('baby_information')),
+              _SectionHeading(number: '03', title: context.tr('baby_information')),
               const SizedBox(height: 13),
               _FieldLabel(context.tr('gender_optional')),
               Wrap(
