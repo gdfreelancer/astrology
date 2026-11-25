@@ -14,8 +14,8 @@ void main() {
       expect(timeline.birthNakshatraLord, 'Ketu');
       expect(timeline.balanceAtBirthYears, closeTo(3.5, 1e-9));
       expect(timeline.mahadashas.first.planet, 'Ketu');
-      expect(timeline.mahadashas.first.end.difference(birth).inDays,
-          closeTo(3.5 * 365.2425, 1));
+      expect(timeline.mahadashas.first.end.difference(birth).inHours / 24,
+          closeTo(3.5 * 365.2425, 0.01));
     });
 
     test('follows the nine-lord Vimshottari order', () {
