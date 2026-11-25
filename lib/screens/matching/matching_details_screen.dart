@@ -51,7 +51,7 @@ class _MatchingDetailsScreenState extends State<MatchingDetailsScreen> {
       ));
     } catch (_) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(context.tr('matching_calculation_error')),
           behavior: SnackBarBehavior.floating,
         ));
