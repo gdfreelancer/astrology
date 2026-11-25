@@ -231,7 +231,7 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
                         Row(children: [
                           const Icon(Icons.dashboard_customize_rounded, color: Color(0xFFFFE3A8), size: 14),
                           const SizedBox(width: 5),
-                          Text('${_chartStyle?.label ?? 'Chart style'} chart', style: const TextStyle(color: Color(0xFFFFE3A8), fontSize: 10, fontWeight: FontWeight.w800)),
+                          Text('${context.tr(switch (_chartStyle) { KundaliChartStyle.northIndian => 'north_indian', KundaliChartStyle.southIndian => 'south_indian', KundaliChartStyle.eastIndian => 'east_indian', null => 'chart_style' })} ${context.tr('chart')}', style: const TextStyle(color: Color(0xFFFFE3A8), fontSize: 10, fontWeight: FontWeight.w800)),
                           const SizedBox(width: 7),
                           GestureDetector(onTap: _changeChartStyle, child: Text(context.tr('change'), style: TextStyle(color: Colors.white, fontSize: 10, decoration: TextDecoration.underline))),
                         ]),
