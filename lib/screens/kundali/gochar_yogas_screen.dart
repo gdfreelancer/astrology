@@ -11,11 +11,11 @@ class GocharYogasScreen extends StatefulWidget {
 }
 class _GocharYogasScreenState extends State<GocharYogasScreen> {
   late DateTime _date;
-  @override void initState(){super.initState();_date=DateTime.now();}
+  @override void initState(){super.initState();final now=DateTime.now();_date=DateTime(now.year,now.month,now.day,12);}
   GocharReport get _report=>GocharService.calculate(natalChart:widget.chart,date:_date);
   Future<void> _chooseDate() async {
     final picked=await showDatePicker(context:context,initialDate:_date,firstDate:DateTime(1900),lastDate:DateTime(2100));
-    if(picked!=null)setState(()=>_date=picked);
+    if(picked!=null)setState(()=>_date=DateTime(picked.year,picked.month,picked.day,12));
   }
   @override Widget build(BuildContext context) {
     final report=_report;
