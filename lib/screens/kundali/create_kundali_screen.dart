@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../l10n/app_locale.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:timezone/data/latest.dart' as timezone_data;
 import 'package:timezone/timezone.dart' as tz;
@@ -66,7 +68,7 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
     } catch (_) {
       if (!mounted) return;
       setState(() => _loadingPreference = false);
-      _showMessage('Could not load your chart preference. Please try again.');
+      _showMessage(context.tr('chart_style_tip'));
     }
   }
 
@@ -84,7 +86,7 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
       initialDate: _birthDate ?? now,
       firstDate: DateTime(1900),
       lastDate: now,
-      helpText: 'Select date of birth',
+      helpText: context.tr('select_date_of_birth'),
     );
     if (value != null) setState(() => _birthDate = value);
   }
@@ -93,7 +95,7 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
     final value = await showTimePicker(
       context: context,
       initialTime: _birthTime ?? const TimeOfDay(hour: 12, minute: 0),
-      helpText: 'Select exact local birth time',
+      helpText: context.tr('select_local_birth_time'),
     );
     if (value != null) setState(() => _birthTime = value);
   }
@@ -110,7 +112,7 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
   Future<void> _findPlace() async {
     final query = _placeController.text.trim();
     if (query.isEmpty) {
-      setState(() => _placeError = 'Enter the city, state and country.');
+      setState(() => _placeError = context.tr('enter_birth_place'));
       return;
     }
     setState(() {
@@ -122,7 +124,7 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
       final matches = await Geocoding().locationFromAddress(query);
       if (!mounted) return;
       if (matches.isEmpty) {
-        setState(() => _placeError = 'Place not found. Add the state and country and try again.');
+        setState(() => _placeError = context.tr('place_not_found'));
       } else {
         setState(() {
           _location = matches.first;
@@ -130,7 +132,7 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
         });
       }
     } catch (_) {
-      if (mounted) setState(() => _placeError = 'Could not find this place. Check your connection and retry.');
+      if (mounted) setState(() => _placeError = context.tr('location_lookup_failed'));
     } finally {
       if (mounted) setState(() => _findingPlace = false);
     }
@@ -139,16 +141,16 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
   Future<void> _create() async {
     if (!_formKey.currentState!.validate()) return;
     if (_birthDate == null || _birthTime == null || _timeZoneId == null) {
-      _showMessage('Select the birth date, exact time and time zone.');
+      _showMessage(context.tr('birth_time_zone_help'));
       return;
     }
     if (_location == null) {
-      _showMessage('Find and confirm the birth place before continuing.');
+      _showMessage(context.tr('birth_location_help'));
       return;
     }
     final style = _chartStyle;
     if (style == null) {
-      _showMessage('Choose a Kundali chart style first.');
+      _showMessage(context.tr('chart_style_heading'));
       return;
     }
 
@@ -184,7 +186,7 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
   }
 
   String _dateText() => _birthDate == null
-      ? 'Select date of birth'
+      ? context.tr('select_date_of_birth')
       : '${_birthDate!.day.toString().padLeft(2, '0')} / ${_birthDate!.month.toString().padLeft(2, '0')} / ${_birthDate!.year}';
 
   @override
@@ -194,7 +196,7 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Kundali', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
+        title: Text(context.tr('create_kundali'), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
         actions: [
           IconButton(
             tooltip: 'Change chart style',
@@ -221,16 +223,16 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
                     const SizedBox(width: 13),
                     Expanded(
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        const Text('Birth details', style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w800)),
+                        Text(context.tr('birth_details'), style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w800)),
                         const SizedBox(height: 4),
-                        const Text('Enter accurate birth information to prepare your chart.', style: TextStyle(color: Color(0xFFEDE5F8), fontSize: 10, height: 1.45)),
+                        Text(context.tr('birth_location_help'), style: TextStyle(color: Color(0xFFEDE5F8), fontSize: 10, height: 1.45)),
                         const SizedBox(height: 9),
                         Row(children: [
                           const Icon(Icons.dashboard_customize_rounded, color: Color(0xFFFFE3A8), size: 14),
                           const SizedBox(width: 5),
                           Text('${_chartStyle?.label ?? 'Chart style'} chart', style: const TextStyle(color: Color(0xFFFFE3A8), fontSize: 10, fontWeight: FontWeight.w800)),
                           const SizedBox(width: 7),
-                          GestureDetector(onTap: _changeChartStyle, child: const Text('Change', style: TextStyle(color: Colors.white, fontSize: 10, decoration: TextDecoration.underline))),
+                          GestureDetector(onTap: _changeChartStyle, child: Text(context.tr('change'), style: TextStyle(color: Colors.white, fontSize: 10, decoration: TextDecoration.underline))),
                         ]),
                       ]),
                     ),
@@ -238,18 +240,18 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
                 ),
               ),
               const SizedBox(height: 22),
-              const _SectionTitle('Personal information'),
+              const _SectionTitle(context.tr('baby_information')),
               const SizedBox(height: 12),
-              _Label('Full name (optional)'),
+              _Label(context.tr('gender_optional')),
               TextFormField(
                 controller: _nameController,
                 textCapitalization: TextCapitalization.words,
-                decoration: _decoration('Enter name', Icons.person_outline_rounded),
+                decoration: _decoration(context.tr('enter_birth_place'), Icons.person_outline_rounded),
               ),
               const SizedBox(height: 14),
-              _Label('Gender'),
+              _Label(context.tr('gender_optional')),
               Wrap(spacing: 8, children: [
-                for (final value in ['Not specified', 'Male', 'Female'])
+                for (final value in ['Not specified', context.tr('boy'), context.tr('girl')])
                   ChoiceChip(
                     label: Text(value),
                     selected: _gender == value,
@@ -263,27 +265,27 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
               const SizedBox(height: 22),
               const _SectionTitle('Birth date and time'),
               const SizedBox(height: 12),
-              _Label('Date of birth'),
+              _Label(context.tr('date_of_birth')),
               _TapField(value: _dateText(), placeholder: _birthDate == null, icon: Icons.calendar_month_rounded, onTap: _pickDate),
               const SizedBox(height: 13),
-              _Label('Exact local birth time'),
+              _Label(context.tr('exact_time_of_birth')),
               _TapField(
-                value: _birthTime?.format(context) ?? 'Select exact birth time',
+                value: _birthTime?.format(context) ?? context.tr('select_local_birth_time'),
                 placeholder: _birthTime == null,
                 icon: Icons.schedule_rounded,
                 onTap: _pickTime,
               ),
               const SizedBox(height: 7),
-              const Text('Use the time recorded at the place of birth, not your current location.', style: TextStyle(color: AppTheme.muted, fontSize: 10)),
+              Text(context.tr('use_local_birth_time'), style: TextStyle(color: AppTheme.muted, fontSize: 10)),
               const SizedBox(height: 22),
-              const _SectionTitle('Birth location'),
+              const _SectionTitle(context.tr('place_of_birth')),
               const SizedBox(height: 12),
-              _Label('City, state and country'),
+              _Label(context.tr('city_state_country')),
               TextFormField(
                 controller: _placeController,
                 textCapitalization: TextCapitalization.words,
-                validator: (value) => (value == null || value.trim().isEmpty) ? 'Enter the birth place.' : null,
-                decoration: _decoration('e.g. Junagadh, Gujarat, India', Icons.location_on_outlined),
+                validator: (value) => (value == null || value.trim().isEmpty) ? context.tr('enter_birth_place') : null,
+                decoration: _decoration(context.tr('birth_location_hint'), Icons.location_on_outlined),
                 onChanged: (_) => setState(() { _location = null; _placeError = null; }),
               ),
               const SizedBox(height: 9),
@@ -294,7 +296,7 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
                   icon: _findingPlace
                       ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
                       : const Icon(Icons.my_location_rounded, size: 17),
-                  label: Text(_findingPlace ? 'Finding place…' : 'Find and confirm place', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800)),
+                  label: Text(_findingPlace ? context.tr('finding_location') : context.tr('find_this_place'), style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800)),
                   style: OutlinedButton.styleFrom(foregroundColor: AppTheme.plum, side: const BorderSide(color: Color(0xFFD9CDEB)), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13))),
                 ),
               ),
@@ -311,9 +313,9 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
                 ]),
               ],
               const SizedBox(height: 14),
-              _Label('Birth time zone'),
+              _Label(context.tr('birth_time_zone')),
               _TapField(
-                value: _timeZoneId ?? 'Select time zone',
+                value: _timeZoneId ?? context.tr('select_time_zone'),
                 placeholder: _timeZoneId == null,
                 icon: Icons.public_rounded,
                 onTap: _pickTimeZone,
@@ -328,7 +330,7 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
                   style: FilledButton.styleFrom(backgroundColor: AppTheme.plum, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
                   child: _calculating
                       ? const SizedBox(width: 21, height: 21, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                      : const Text('Generate Kundali  →', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800)),
+                      : Text(context.tr('create_kundali'), style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800)),
                 ),
               ),
               const SizedBox(height: 12),
