@@ -108,7 +108,7 @@ class _MatchingHomeScreenState extends State<MatchingHomeScreen> {
               Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(color: const Color(0xFFFFF6E8), borderRadius: BorderRadius.circular(15), border: Border.all(color: const Color(0xFFF1E2C9))),
-                child: const Text('Traditional astrology is a cultural belief system. Guna Milan scores are not scientific measures and should not replace conversations, mutual respect or personal judgment when making relationship decisions.', style: TextStyle(color: Color(0xFF795D36), fontSize: 10, height: 1.5)),
+                child: Text(context.tr('traditional_matching_disclaimer'), style: TextStyle(color: Color(0xFF795D36), fontSize: 10, height: 1.5)),
               ),
             ],
           ),
