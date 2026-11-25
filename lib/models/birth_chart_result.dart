@@ -1,3 +1,5 @@
+import 'kundali/kundali_graha.dart';
+
 class BirthChartResult {
   const BirthChartResult({
     required this.birthLocal,
@@ -19,6 +21,7 @@ class BirthChartResult {
     required this.namingSyllable,
     required this.nakshatraProgress,
     required this.nearBoundary,
+    required this.kundaliChart,
   });
 
   final DateTime birthLocal;
@@ -40,4 +43,5 @@ class BirthChartResult {
   final String namingSyllable;
   final double nakshatraProgress;
   final bool nearBoundary;
+  final KundaliChart kundaliChart;
 }
