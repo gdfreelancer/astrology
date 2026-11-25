@@ -132,14 +132,34 @@ class BirthChartService {
       ));
     }
 
-    addPlanet('Sun', 'Su', astronomy.Body.Sun);
+    final sunNow = _normalize(astronomy.sunPosition(utcBirth).eLon - ayanamsa);
+    final sunBefore = _normalize(astronomy.sunPosition(
+      utcBirth.subtract(const Duration(hours: 12)),
+    ).eLon - AyanamshaService.lahiri(utcBirth.subtract(const Duration(hours: 12))));
+    final sunAfter = _normalize(astronomy.sunPosition(
+      utcBirth.add(const Duration(hours: 12)),
+    ).eLon - AyanamshaService.lahiri(utcBirth.add(const Duration(hours: 12))));
+    final sunDelta = _normalize(sunAfter - sunBefore);
+    final sunMotion = sunDelta > 180 ? sunDelta - 360 : sunDelta;
+    positions.add((
+      name: 'Sun', symbol: 'Su', longitude: sunNow,
+      motion: sunMotion, retrograde: false,
+    ));
     // GeoEngine's geocentric Moon routine is used consistently for Janma Rashi.
-    final moonLongitude = _normalize(
-      astronomy.eclipticGeoMoon(utcBirth).lon - ayanamsa,
+    final moonLongitude = _normalize(astronomy.eclipticGeoMoon(utcBirth).lon - ayanamsa);
+    final moonBeforeDate = utcBirth.subtract(const Duration(hours: 12));
+    final moonAfterDate = utcBirth.add(const Duration(hours: 12));
+    final moonBefore = _normalize(
+      astronomy.eclipticGeoMoon(moonBeforeDate).lon - AyanamshaService.lahiri(moonBeforeDate),
     );
+    final moonAfter = _normalize(
+      astronomy.eclipticGeoMoon(moonAfterDate).lon - AyanamshaService.lahiri(moonAfterDate),
+    );
+    final moonDelta = _normalize(moonAfter - moonBefore);
+    final moonMotion = moonDelta > 180 ? moonDelta - 360 : moonDelta;
     positions.add((
       name: 'Moon', symbol: 'Mo', longitude: moonLongitude,
-      motion: 0, retrograde: false,
+      motion: moonMotion, retrograde: false,
     ));
     addPlanet('Mars', 'Ma', astronomy.Body.Mars);
     addPlanet('Mercury', 'Me', astronomy.Body.Mercury);
