@@ -850,5 +850,9 @@
   "motion": "Motion",
   "retrograde": "Retrograde",
   "direct": "Direct",
-  "view_graha_analysis": "View detailed Graha analysis"
+  "view_graha_analysis": "View detailed Graha analysis",
+  "view_house_cusps": "View all 12 house cusps",
+  "start_boundary": "Start",
+  "bhava_madhya": "Bhava Madhya",
+  "end_boundary": "End"
 }
