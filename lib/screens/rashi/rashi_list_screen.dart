@@ -146,9 +146,9 @@ class _RashiCard extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(12, 9, 12, 8),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(rashi.gujarati, style: const TextStyle(fontSize: 10, color: AppTheme.plum, fontWeight: FontWeight.w800)),
+              Text(switch (AppLocale.locale.value.languageCode) { 'hi' => rashi.hindi, 'gu' => rashi.gujarati, _ => rashi.english }, style: const TextStyle(fontSize: 10, color: AppTheme.plum, fontWeight: FontWeight.w800)),
               const SizedBox(height: 2),
-              Text(rashi.sanskrit, style: const TextStyle(fontSize: 15, color: AppTheme.ink, fontWeight: FontWeight.w800)),
+              Text(switch (AppLocale.locale.value.languageCode) { 'hi' => rashi.hindi, 'gu' => rashi.gujarati, _ => rashi.english }, style: const TextStyle(fontSize: 15, color: AppTheme.ink, fontWeight: FontWeight.w800)),
               const Spacer(),
               Row(children: [
                 Expanded(child: Text(rashi.english, style: const TextStyle(fontSize: 10, color: AppTheme.muted, fontWeight: FontWeight.w600))),
