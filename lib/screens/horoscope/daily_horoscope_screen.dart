@@ -57,7 +57,7 @@ class _DailyHoroscopeScreenState extends State<DailyHoroscopeScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(context.tr('daily_horoscope'), style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18))),
       body: SafeArea(child: ListView(padding: const EdgeInsets.fromLTRB(20, 8, 20, 28), children: [
-        _introCard(),
+        _introCard(context),
         const SizedBox(height: 22),
         Text(context.tr('choose_your_rashi'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppTheme.ink)),
         const SizedBox(height: 4),
@@ -93,7 +93,7 @@ class _DailyHoroscopeScreenState extends State<DailyHoroscopeScreen> {
         const SizedBox(height: 10),
         _readingCard('💰', context.tr('money_finance'), _guidance[_rashi.number]![2], const Color(0xFFEAF5ED)),
         const SizedBox(height: 18),
-        Container(padding: const EdgeInsets.all(15), decoration: BoxDecoration(color: const Color(0xFFF2EDF9), borderRadius: BorderRadius.circular(18)), child: const Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Container(padding: const EdgeInsets.all(15), decoration: BoxDecoration(color: const Color(0xFFF2EDF9), borderRadius: BorderRadius.circular(18)), child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('ⓘ', style: TextStyle(fontSize: 18, color: AppTheme.plum)), SizedBox(width: 10),
           Expanded(child: Text('These are general, sign-based reflections, not predictions calculated from live planetary transits or your personal birth chart.', style: TextStyle(fontSize: 11, height: 1.5, color: AppTheme.ink))),
         ])),
@@ -101,7 +101,7 @@ class _DailyHoroscopeScreenState extends State<DailyHoroscopeScreen> {
     );
   }
 
-  Widget _introCard() => Container(padding: const EdgeInsets.all(19), decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFF8062B5), Color(0xFF60468F)], begin: Alignment.topLeft, end: Alignment.bottomRight), borderRadius: BorderRadius.circular(23)), child: const Row(children: [
+  Widget _introCard(BuildContext context) => Container(padding: const EdgeInsets.all(19), decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFF8062B5), Color(0xFF60468F)], begin: Alignment.topLeft, end: Alignment.bottomRight), borderRadius: BorderRadius.circular(23)), child: Row(children: [
     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(context.tr('your_daily_cosmic_note'), style: TextStyle(color: Color(0xFFE9DFF8), fontSize: 9, letterSpacing: 1.3, fontWeight: FontWeight.w800)),
       SizedBox(height: 8), Text('A little guidance for\nthe day ahead', style: TextStyle(color: Colors.white, fontSize: 21, height: 1.2, fontWeight: FontWeight.w800)),
