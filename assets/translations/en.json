@@ -833,5 +833,22 @@
   "cancel": "Cancel",
   "save": "Save",
   "edit": "Edit",
-  "delete": "Delete"
+  "delete": "Delete",
+  "bhava_chalit_chart": "Bhava Chalit Chart",
+  "house_cusps": "House cusps",
+  "bhava_chalit_description": "Planet positions by the span of each house, using calculated Bhava Madhya and Sandhi boundaries.",
+  "bhava_chalit_note": "Rashi chart houses are sign-based. Bhava Chalit assigns planets to the house whose calculated boundary span contains their longitude.",
+  "graha_analysis": "Graha Analysis",
+  "nine_grahas": "Nine Grahas",
+  "graha_analysis_intro": "Sidereal planetary positions at birth, with sign, nakshatra, house placement and estimated daily motion.",
+  "graha_motion_note": "Daily motion is estimated from positions around the birth time. Rahu and Ketu use the mean-node model. The underlying planetary and ayanamsha model is approximate and should be checked against a trusted ephemeris for precision work.",
+  "retrograde_short": "R",
+  "sidereal_longitude": "Sidereal longitude",
+  "nakshatra_pada": "Nakshatra / Pada",
+  "d1_bhava": "D1 house / Chalit house",
+  "daily_motion": "Daily motion",
+  "motion": "Motion",
+  "retrograde": "Retrograde",
+  "direct": "Direct",
+  "view_graha_analysis": "View detailed Graha analysis"
 }
