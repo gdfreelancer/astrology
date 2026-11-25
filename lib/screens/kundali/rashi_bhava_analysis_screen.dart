@@ -98,6 +98,12 @@ class _RashiBhavaAnalysisScreenState extends State<RashiBhavaAnalysisScreen> {
               planets: _useChalit
                   ? chart.inBhava(index + 1)
                   : chart.inHouse(index + 1),
+              lordPlacement: chart.grahas.where((g) => g.name == _lords[
+                _useChalit ? chart.bhava(index + 1).signIndex :
+                (chart.ascendantSignIndex + index) % 12
+              ]).isEmpty ? null : (_useChalit
+                ? chart.grahas.firstWhere((g) => g.name == _lords[chart.bhava(index + 1).signIndex]).bhavaNumber
+                : chart.grahas.firstWhere((g) => g.name == _lords[(chart.ascendantSignIndex + index) % 12]).houseNumber),
               topic: context.tr(_topics[index]),
               degree: _useChalit
                   ? _degree(chart.bhava(index + 1).middleLongitude)
@@ -150,6 +156,7 @@ class _HouseCard extends StatelessWidget {
     required this.lord,
     required this.planets,
     required this.topic,
+    required this.lordPlacement,
     required this.rashiKey,
     required this.planetKeys,
     this.degree,
@@ -159,6 +166,7 @@ class _HouseCard extends StatelessWidget {
   final String lord;
   final List<KundaliGraha> planets;
   final String topic;
+  final int? lordPlacement;
   final String? degree;
   final List<String> rashiKey;
   final Map<String, String> planetKeys;
@@ -195,6 +203,15 @@ class _HouseCard extends StatelessWidget {
         const SizedBox(height: 10),
         Text(topic, style: const TextStyle(color: AppTheme.ink, fontSize: 10, height: 1.4)),
         const SizedBox(height: 8),
+        Row(children: [
+          Text('${context.tr('lord_placed_in')}: ',
+            style: const TextStyle(color: AppTheme.muted, fontSize: 9)),
+          Text(lordPlacement == null
+              ? context.tr('placement_unavailable')
+              : context.tr('house_number').replaceAll('{n}', '$lordPlacement'),
+            style: const TextStyle(color: AppTheme.ink, fontSize: 9, fontWeight: FontWeight.w700)),
+        ]),
+        const SizedBox(height: 6),
         Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('${context.tr('occupants')}: ',
             style: const TextStyle(color: AppTheme.muted, fontSize: 9)),
