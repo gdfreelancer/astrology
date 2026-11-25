@@ -4,6 +4,8 @@ import 'package:timezone/timezone.dart' as tz;
 import '../data/nakshatra_data.dart';
 import '../l10n/app_locale.dart';
 import '../models/panchang_data.dart';
+import '../services/astrology/ayanamsha_service.dart';
+import '../utils/astrology_math.dart';
 
 class PanchangService {
   static const tithis=['Pratipada','Dwitiya','Tritiya','Chaturthi','Panchami','Shashthi','Saptami','Ashtami','Navami','Dashami','Ekadashi','Dwadashi','Trayodashi','Chaturdashi','Purnima'];
@@ -46,12 +48,12 @@ class PanchangService {
     final moonset=astro.searchRiseSet(astro.Body.Moon,observer,-1,local.toUtc(),1.0)?.date;
     final wd=tz.TZDateTime.from(sunrise,zone).weekday%7;
     final phase=_phase(sunrise);
-    final ti=(phase/12).floor().clamp(0,29);
-    final ni=(_moon(sunrise)/(360/27)).floor()%27;
-    final yi=(((_sun(sunrise)+_moon(sunrise))%360)/(360/27)).floor()%27;
-    final ki=(phase/6).floor()%60;
+    final ti=AstrologyMath.tithiIndex(_sun(sunrise),_moon(sunrise));
+    final ni=AstrologyMath.nakshatraIndex(_moon(sunrise));
+    final yi=AstrologyMath.yogaIndex(_sun(sunrise),_moon(sunrise));
+    final ki=(phase/6).floor().clamp(0,59);
     final sign=(_sun(sunrise)/30).floor().clamp(0,11);
-    final pada=(((_moon(sunrise)%(360/27))/(360/108)).floor()+1).clamp(1,4);
+    final pada=AstrologyMath.padaNumber(_moon(sunrise));
     final paksha=ti<15?'Shukla Paksha':'Krishna Paksha';
     final lunarDay=(ti%15)+1;
     final yogaNumber=yi+1;
@@ -69,7 +71,7 @@ class PanchangService {
     final abStart=sunrise.add(Duration(microseconds:(day.inMicroseconds*7/15).round()));
     final abhijit=PanchangPeriod(name:'Abhijit Muhurat',start:abStart,end:abStart.add(Duration(microseconds:(day.inMicroseconds/15).round())),category:'Auspicious');
     final brahma=PanchangPeriod(name:'Brahma Muhurat',start:sunrise.subtract(const Duration(minutes:96)),end:sunrise.subtract(const Duration(minutes:48)),category:'Auspicious');
-    return PanchangData(date:DateTime(date.year,date.month,date.day),location:location,sunrise:sunrise,sunset:sunset,nextSunrise:nextRise,moonrise:moonrise,moonset:moonset,elements:elements,weekday:weekdays[wd],paksha:paksha,lunarDay:lunarDay,sunRashi:rashis[sign],ritu:ritus[sign],ayana:sign>=9||sign<=2?'Uttarayana':'Dakshinayana',rahuKaal:rahu,yamaganda:yama,gulika:gulika,abhijit:abhijit,brahma:brahma,choghadiyaDay:_choghadiya(sunrise,sunset,dayChoghadiya[wd]),choghadiyaNight:_choghadiya(sunset,nextRise,nightChoghadiya[wd]),ayanamsha:_ayanamsha(sunrise));
+    return PanchangData(date:DateTime(date.year,date.month,date.day),location:location,sunrise:sunrise,sunset:sunset,nextSunrise:nextRise,moonrise:moonrise,moonset:moonset,elements:elements,weekday:weekdays[wd],paksha:paksha,lunarDay:lunarDay,sunRashi:rashis[sign],ritu:ritus[sign],ayana:sign>=9||sign<=2?'Uttarayana':'Dakshinayana',rahuKaal:rahu,yamaganda:yama,gulika:gulika,abhijit:abhijit,brahma:brahma,choghadiyaDay:_choghadiya(sunrise,sunset,dayChoghadiya[wd]),choghadiyaNight:_choghadiya(sunset,nextRise,nightChoghadiya[wd]),ayanamsha:AyanamshaService.lahiri(sunrise));
   }
 
   static PanchangElement _element(String name,String value,DateTime at,double Function(DateTime) fn,double span,String description,String detail) {
@@ -140,9 +142,8 @@ class PanchangService {
   }
   static String? _observance(int i){final d=i%15;if(d==10)return 'Ekadashi';if(d==14)return i<15?'Purnima':'Amavasya';if(d==3)return 'Chaturthi Tithi';return null;}
   static String _tithi(int i)=>i==29?'Amavasya':tithis[i%15];
-  static String _karana(int i){if(i==0)return karanas[0];if(i>=57)return karanas[i-56];return karanas[1+((i-1)%7)];}
-  static double _phase(DateTime d)=>(_moon(d)-_sun(d)+360)%360;
-  static double _moon(DateTime d)=>(astro.eclipticGeoMoon(d).lon-_ayanamsha(d)+360)%360;
-  static double _sun(DateTime d)=>(astro.sunPosition(d).eLon-_ayanamsha(d)+360)%360;
-  static double _ayanamsha(DateTime d){final j=DateTime.utc(2000,1,1,12);final t=d.difference(j).inMicroseconds/Duration.microsecondsPerDay/36525;return ((23*3600+51*60+25.532)+5029.0966*t+1.11161*t*t)/3600;}
+  static String _karana(int i)=>AstrologyMath.karanaName(i);
+  static double _phase(DateTime d)=>AstrologyMath.angularSeparation(_sun(d),_moon(d));
+  static double _moon(DateTime d)=>AstrologyMath.toSiderealLongitude(tropicalLongitude:astro.eclipticGeoMoon(d).lon,ayanamsha:AyanamshaService.lahiri(d));
+  static double _sun(DateTime d)=>AstrologyMath.toSiderealLongitude(tropicalLongitude:astro.sunPosition(d).eLon,ayanamsha:AyanamshaService.lahiri(d));
 }
