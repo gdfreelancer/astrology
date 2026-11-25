@@ -53,13 +53,13 @@ class _PanchangScreenState extends State<PanchangScreen>{
         const SizedBox(height:10),
         DropdownButtonFormField<String>(value:zone,decoration:InputDecoration(labelText:context.tr('time_zone')),items:[
           DropdownMenuItem(value:'Asia/Kolkata',child:Text(context.tr('india_timezone'))),
-          DropdownMenuItem(value:'Asia/Dubai',child:Text('UAE · Asia/Dubai')),
-          DropdownMenuItem(value:'Asia/Singapore',child:Text('Singapore · Asia/Singapore')),
-          DropdownMenuItem(value:'Europe/London',child:Text('UK · Europe/London')),
-          DropdownMenuItem(value:'Europe/Paris',child:Text('Central Europe · Europe/Paris')),
-          DropdownMenuItem(value:'America/New_York',child:Text('US Eastern · America/New_York')),
-          DropdownMenuItem(value:'America/Los_Angeles',child:Text('US Pacific · America/Los_Angeles')),
-          DropdownMenuItem(value:'Australia/Sydney',child:Text('Australia · Sydney')),
+          DropdownMenuItem(value:'Asia/Dubai',child:Text(context.tr('uae_timezone'))),
+          DropdownMenuItem(value:'Asia/Singapore',child:Text(context.tr('singapore_timezone'))),
+          DropdownMenuItem(value:'Europe/London',child:Text(context.tr('uk_timezone'))),
+          DropdownMenuItem(value:'Europe/Paris',child:Text(context.tr('central_europe_timezone'))),
+          DropdownMenuItem(value:'America/New_York',child:Text(context.tr('us_eastern_timezone'))),
+          DropdownMenuItem(value:'America/Los_Angeles',child:Text(context.tr('us_pacific_timezone'))),
+          DropdownMenuItem(value:'Australia/Sydney',child:Text(context.tr('australia_timezone'))),
         ],onChanged:(v){if(v!=null)ss(()=>zone=v);}),
         if(error!=null)Padding(padding:const EdgeInsets.only(top:8),child:Text(error!,style:const TextStyle(color:Colors.red,fontSize:11))),
         const SizedBox(height:14),SizedBox(width:double.infinity,height:48,child:FilledButton(
@@ -125,7 +125,7 @@ class _PanchangScreenState extends State<PanchangScreen>{
     _link('🌼',context.tr('vrat_observances'),'Upcoming Tithi-based days',()=>_open(FestivalsScreen(date:_date,location:_location))),
     const SizedBox(height:10),
     Container(padding:const EdgeInsets.all(14),decoration:BoxDecoration(color:const Color(0xFFFFF5E7),borderRadius:BorderRadius.circular(15)),child:Text(d.sunRashi+' · '+d.ritu+' · '+d.ayana+'\nAyanamsha: '+d.ayanamsha.toStringAsFixed(2)+'°',style:const TextStyle(fontSize:10,height:1.6,fontWeight:FontWeight.w700,color:AppTheme.ink))),
-    const SizedBox(height:12),const Text('Traditional Panchang conventions can vary by region. This version uses Lahiri-style sidereal positions and local sunrise as the daily reference.',style:TextStyle(fontSize:9,height:1.5,color:AppTheme.muted)),
+    const SizedBox(height:12),Text(context.tr('panchang_disclaimer'),style:TextStyle(fontSize:9,height:1.5,color:AppTheme.muted)),
   ]);
   Widget _iconButton(IconData icon,VoidCallback tap)=>IconButton(onPressed:tap,icon:Icon(icon,size:19,color:AppTheme.plum),style:IconButton.styleFrom(backgroundColor:Colors.white,shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(12))));
   Widget _heroTime(String title,String value)=>Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(title,style:const TextStyle(fontSize:8,color:Color(0xFFD7C9EB),fontWeight:FontWeight.w700)),const SizedBox(height:4),Text(value,style:const TextStyle(fontSize:11,color:Colors.white,fontWeight:FontWeight.w800))]));
@@ -142,12 +142,12 @@ class _PanchangScreenState extends State<PanchangScreen>{
 class _ElementTile extends StatelessWidget{
   const _ElementTile({required this.item,required this.onTap});
   final PanchangElement item;final VoidCallback onTap;
-  @override Widget build(BuildContext context)=>Material(color:Colors.white,borderRadius:BorderRadius.circular(15),child:InkWell(onTap:onTap,borderRadius:BorderRadius.circular(15),child:Container(padding:const EdgeInsets.all(12),decoration:BoxDecoration(borderRadius:BorderRadius.circular(15),border:Border.all(color:const Color(0xFFF0EBE5))),child:Column(crossAxisAlignment:CrossAxisAlignment.start,mainAxisAlignment:MainAxisAlignment.center,children:[Text(item.name.toUpperCase(),style:const TextStyle(fontSize:8,letterSpacing:1,color:AppTheme.muted,fontWeight:FontWeight.w800)),const SizedBox(height:6),Text(item.value,maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:14,fontWeight:FontWeight.w800)),const SizedBox(height:4),Text(item.description,maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:8,color:AppTheme.muted)),const SizedBox(height:5),const Text('VIEW DETAILS →',style:TextStyle(fontSize:8,color:AppTheme.plum,fontWeight:FontWeight.w800))]))));
+  @override Widget build(BuildContext context)=>Material(color:Colors.white,borderRadius:BorderRadius.circular(15),child:InkWell(onTap:onTap,borderRadius:BorderRadius.circular(15),child:Container(padding:const EdgeInsets.all(12),decoration:BoxDecoration(borderRadius:BorderRadius.circular(15),border:Border.all(color:const Color(0xFFF0EBE5))),child:Column(crossAxisAlignment:CrossAxisAlignment.start,mainAxisAlignment:MainAxisAlignment.center,children:[Text(item.name.toUpperCase(),style:const TextStyle(fontSize:8,letterSpacing:1,color:AppTheme.muted,fontWeight:FontWeight.w800)),const SizedBox(height:6),Text(item.value,maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:14,fontWeight:FontWeight.w800)),const SizedBox(height:4),Text(item.description,maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:8,color:AppTheme.muted)),const SizedBox(height:5),Text(context.tr('view_details'),style:TextStyle(fontSize:8,color:AppTheme.plum,fontWeight:FontWeight.w800))]))));
 }
 
 class PanchangDetailScreen extends StatelessWidget{
   const PanchangDetailScreen({super.key,required this.data});final PanchangData data;
-  @override Widget build(BuildContext context)=>Scaffold(appBar:AppBar(title:const Text('Panchang details')),body:ListView(padding:const EdgeInsets.all(17),children:[
+  @override Widget build(BuildContext context)=>Scaffold(appBar:AppBar(title:Text(context.tr('panchang_details'))),body:ListView(padding:const EdgeInsets.all(17),children:[
     ...data.elements.map((e)=>Container(margin:const EdgeInsets.only(bottom:10),padding:const EdgeInsets.all(15),decoration:BoxDecoration(color:Colors.white,borderRadius:BorderRadius.circular(15),border:Border.all(color:const Color(0xFFF0EBE5))),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
       Text(e.name.toUpperCase(),style:const TextStyle(fontSize:8,letterSpacing:1,color:AppTheme.plum,fontWeight:FontWeight.w800)),const SizedBox(height:5),Text(e.value,style:const TextStyle(fontSize:16,fontWeight:FontWeight.w800)),Text(e.description,style:const TextStyle(fontSize:10,color:AppTheme.muted)),const SizedBox(height:10),
       Row(children:[Expanded(child:_timeBox('STARTS',e.start,data.location.timeZoneId)),Expanded(child:_timeBox('ENDS',e.end,data.location.timeZoneId))]),
@@ -205,8 +205,8 @@ class _PanchangCalendarScreenState extends State<PanchangCalendarScreen>{
       final d=days[i];final same=d.date.month==month.month;final active=selected!=null&&DateUtils.isSameDay(selected,d.date);
       return InkWell(onTap:()=>setState(()=>selected=d.date),borderRadius:BorderRadius.circular(10),child:Container(decoration:BoxDecoration(color:active?AppTheme.plum:Colors.white,borderRadius:BorderRadius.circular(10),border:Border.all(color:active?AppTheme.plum:const Color(0xFFF0EBE5))),child:Column(mainAxisAlignment:MainAxisAlignment.center,children:[Text(d.date.day.toString(),style:TextStyle(fontSize:12,fontWeight:FontWeight.w800,color:active?Colors.white:same?AppTheme.ink:const Color(0xFFBDB7C4))),const SizedBox(height:3),Text(d.paksha+' '+d.tithi,style:TextStyle(fontSize:7,color:active?Colors.white70:AppTheme.muted)),if(d.isObservance)Container(width:4,height:4,margin:const EdgeInsets.only(top:3),decoration:BoxDecoration(color:active?const Color(0xFFFFDFA0):AppTheme.saffron,shape:BoxShape.circle))])));
     }),
-    const SizedBox(height:12),const Text('The calendar shows Tithi active at local sunrise. A dot marks a recurring Tithi observance.',style:TextStyle(fontSize:9,color:AppTheme.muted)),
-    if(selected!=null)Padding(padding:const EdgeInsets.only(top:14),child:FilledButton(onPressed:()=>widget.onDateSelected(selected!),style:FilledButton.styleFrom(backgroundColor:AppTheme.plum),child:Text('View Panchang · '+selected!.day.toString()+' '+_monthName(selected!.month)))),
+    const SizedBox(height:12),Text(context.tr('calendar_disclaimer'),style:TextStyle(fontSize:9,color:AppTheme.muted)),
+    if(selected!=null)Padding(padding:const EdgeInsets.only(top:14),child:FilledButton(onPressed:()=>widget.onDateSelected(selected!),style:FilledButton.styleFrom(backgroundColor:AppTheme.plum),child:Text(context.tr('view_panchang')+' · '+selected!.day.toString()+' '+_monthName(selected!.month)))),
   ]));
 }
 
