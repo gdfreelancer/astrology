@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_locale.dart';
+
 import '../../models/matching/matching_report.dart';
 import '../../services/matching/matching_database_service.dart';
 import '../../theme/app_theme.dart';
@@ -46,7 +48,7 @@ class _MatchingHomeScreenState extends State<MatchingHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Kundali Matching', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800))),
+      appBar: AppBar(title: Text(context.tr('kundali_matching'), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800))),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: _load,
@@ -63,16 +65,16 @@ class _MatchingHomeScreenState extends State<MatchingHomeScreen> {
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   const Text('💞', style: TextStyle(fontSize: 34)),
                   const SizedBox(height: 10),
-                  const Text('Find your Guna Milan', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800)),
+                  Text(context.tr('new_matching'), style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800)),
                   const SizedBox(height: 6),
-                  const Text('Compare two birth Nakshatras and Moon signs using the traditional Ashtakoota system of 36 Gunas.', style: TextStyle(color: Color(0xFFF3E8F1), fontSize: 11, height: 1.5)),
+                  Text(context.tr('matching_birth_details_help'), style: TextStyle(color: Color(0xFFF3E8F1), fontSize: 11, height: 1.5)),
                   const SizedBox(height: 16),
                   SizedBox(
                     height: 47,
                     child: FilledButton.icon(
                       onPressed: _newMatching,
                       icon: const Icon(Icons.favorite_rounded, size: 17),
-                      label: const Text('Start new matching', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
+                      label: Text(context.tr('new_matching'), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
                       style: FilledButton.styleFrom(backgroundColor: const Color(0xFFFFE3A8), foregroundColor: AppTheme.plum, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))),
                     ),
                   ),
@@ -80,7 +82,7 @@ class _MatchingHomeScreenState extends State<MatchingHomeScreen> {
               ),
               const SizedBox(height: 23),
               Row(children: [
-                const Expanded(child: Text('Recent matching reports', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppTheme.ink))),
+                const Expanded(child: Text(context.tr('matching_report'), style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppTheme.ink))),
                 Text('${_reports.length}', style: const TextStyle(color: AppTheme.muted, fontSize: 10, fontWeight: FontWeight.w700)),
               ]),
               const SizedBox(height: 11),
@@ -93,9 +95,9 @@ class _MatchingHomeScreenState extends State<MatchingHomeScreen> {
                   child: const Column(children: [
                     Text('🪷', style: TextStyle(fontSize: 31)),
                     SizedBox(height: 8),
-                    Text('No matching reports yet', style: TextStyle(color: AppTheme.ink, fontSize: 12, fontWeight: FontWeight.w800)),
+                    Text(context.tr('new_matching'), style: TextStyle(color: AppTheme.ink, fontSize: 12, fontWeight: FontWeight.w800)),
                     SizedBox(height: 4),
-                    Text('Your completed matching reports will appear here.', textAlign: TextAlign.center, style: TextStyle(color: AppTheme.muted, fontSize: 10)),
+                    Text(context.tr('matching_birth_details_help'), textAlign: TextAlign.center, style: TextStyle(color: AppTheme.muted, fontSize: 10)),
                   ]),
                 )
               else
@@ -140,7 +142,7 @@ class _ReportTile extends StatelessWidget {
         PopupMenuButton<String>(
           icon: const Icon(Icons.more_vert_rounded, color: AppTheme.muted, size: 19),
           onSelected: (value) { if (value == 'delete') onDelete(); },
-          itemBuilder: (_) => const [PopupMenuItem(value: 'delete', child: Text('Delete report'))],
+          itemBuilder: (_) => const [PopupMenuItem(value: 'delete', child: Text(context.tr('matching_report')))],
         ),
       ]),
     ),
