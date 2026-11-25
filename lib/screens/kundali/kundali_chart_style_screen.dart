@@ -71,7 +71,7 @@ class _KundaliChartStyleScreenState extends State<KundaliChartStyleScreen> {
                   Text('Your Kundali, your tradition', style: TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.w800)),
                   SizedBox(height: 7),
                   Text(
-                    'Choose how you want your birth chart to look. We will remember this choice and use it automatically for your future Kundalis.',
+                    'Choose the traditional birth-chart layout you are familiar with. We will remember your choice for future Kundalis.',
                     style: TextStyle(color: Color(0xFFEDE5F8), fontSize: 12, height: 1.5),
                   ),
                 ],
@@ -142,7 +142,7 @@ class _ChartStyleCard extends StatelessWidget {
           ),
           child: Row(
             children: [
-              SizedBox(width: 88, height: 88, child: _ChartStylePreview(style: style)),
+              SizedBox(width: 104, height: 104, child: _ChartStylePreview(style: style)),
               const SizedBox(width: 15),
               Expanded(
                 child: Column(
@@ -181,51 +181,182 @@ class _ChartStylePreview extends StatelessWidget {
   }
 }
 
+/// Draws the traditional geometry used by the three regional Rasi-chart styles.
+/// The numbers are sign numbers in the fixed-sign layouts and house positions
+/// in the North Indian house-fixed preview.
 class _ChartPreviewPainter extends CustomPainter {
   _ChartPreviewPainter(this.style);
   final KundaliChartStyle style;
 
+  static const _paper = Color(0xFFFFF8EC);
+  static const _ink = Color(0xFF9E7138);
+  static const _accent = Color(0xFF704C9B);
+
   @override
   void paint(Canvas canvas, Size size) {
     final rect = Offset.zero & size;
-    final fill = Paint()..color = const Color(0xFFFFF8EC);
+    final bounds = rect.deflate(1.5);
+    final fill = Paint()..color = _paper;
     final line = Paint()
-      ..color = const Color(0xFFB98B4C)
+      ..color = _ink
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.2;
-    canvas.drawRRect(RRect.fromRectAndRadius(rect.deflate(1), const Radius.circular(7)), fill);
-    canvas.drawRRect(RRect.fromRectAndRadius(rect.deflate(1), const Radius.circular(7)), line);
-    final w = size.width;
-    final h = size.height;
-    if (style == KundaliChartStyle.northIndian) {
-      final path = Path()
-        ..moveTo(w / 2, 2)..lineTo(w - 2, h / 2)..lineTo(w / 2, h - 2)..lineTo(2, h / 2)..close()
-        ..moveTo(2, 2)..lineTo(w - 2, h - 2)
-        ..moveTo(w - 2, 2)..lineTo(2, h - 2)
-        ..moveTo(w / 2, 2)..lineTo(2, h / 2)
-        ..moveTo(w / 2, 2)..lineTo(w - 2, h / 2)
-        ..moveTo(2, h / 2)..lineTo(w / 2, h - 2)
-        ..moveTo(w - 2, h / 2)..lineTo(w / 2, h - 2);
-      canvas.drawPath(path, line);
-    } else {
-      final cellW = w / 4;
-      final cellH = h / 4;
-      for (var i = 1; i < 4; i++) {
-        canvas.drawLine(Offset(cellW * i, 0), Offset(cellW * i, h), line);
-        canvas.drawLine(Offset(0, cellH * i), Offset(w, cellH * i), line);
-      }
-      if (style == KundaliChartStyle.eastIndian) {
-        canvas.drawLine(Offset.zero, Offset(w, h), line);
-        canvas.drawLine(Offset(w, 0), Offset(0, h), line);
-      }
+      ..strokeWidth = 1.15
+      ..strokeJoin = StrokeJoin.round;
+
+    canvas.drawRect(bounds, fill);
+    canvas.drawRect(bounds, line);
+
+    switch (style) {
+      case KundaliChartStyle.northIndian:
+        _drawNorthIndian(canvas, bounds, line);
+      case KundaliChartStyle.southIndian:
+        _drawSouthIndian(canvas, bounds, line);
+      case KundaliChartStyle.eastIndian:
+        _drawEastIndian(canvas, bounds, line);
     }
-    final text = TextPainter(
-      text: TextSpan(text: style == KundaliChartStyle.northIndian ? 'L' : 'R', style: const TextStyle(fontSize: 12, color: AppTheme.plum, fontWeight: FontWeight.w800)),
+  }
+
+  void _drawNorthIndian(Canvas canvas, Rect r, Paint line) {
+    final c = r.center;
+    final top = Offset(c.dx, r.top);
+    final right = Offset(r.right, c.dy);
+    final bottom = Offset(c.dx, r.bottom);
+    final left = Offset(r.left, c.dy);
+
+    // The diamond joins the midpoints of the four outer sides. The four
+    // corner-to-centre lines create the twelve traditional house compartments.
+    final diamond = Path()
+      ..moveTo(top.dx, top.dy)
+      ..lineTo(right.dx, right.dy)
+      ..lineTo(bottom.dx, bottom.dy)
+      ..lineTo(left.dx, left.dy)
+      ..close();
+    canvas.drawPath(diamond, line);
+    canvas.drawLine(r.topLeft, c, line);
+    canvas.drawLine(r.topRight, c, line);
+    canvas.drawLine(r.bottomRight, c, line);
+    canvas.drawLine(r.bottomLeft, c, line);
+
+    final w = r.width;
+    final h = r.height;
+    final labels = <_PreviewLabel>[
+      _PreviewLabel('1', Offset(c.dx, r.top + h * .245)),
+      _PreviewLabel('2', Offset(r.left + w * .245, r.top + h * .125)),
+      _PreviewLabel('3', Offset(r.left + w * .125, r.top + h * .245)),
+      _PreviewLabel('4', Offset(r.left + w * .245, c.dy)),
+      _PreviewLabel('5', Offset(r.left + w * .125, r.top + h * .755)),
+      _PreviewLabel('6', Offset(r.left + w * .245, r.top + h * .875)),
+      _PreviewLabel('7', Offset(c.dx, r.top + h * .755)),
+      _PreviewLabel('8', Offset(r.left + w * .755, r.top + h * .875)),
+      _PreviewLabel('9', Offset(r.left + w * .875, r.top + h * .755)),
+      _PreviewLabel('10', Offset(r.left + w * .755, c.dy)),
+      _PreviewLabel('11', Offset(r.left + w * .875, r.top + h * .245)),
+      _PreviewLabel('12', Offset(r.left + w * .755, r.top + h * .125)),
+    ];
+    for (final label in labels) {
+      _drawText(canvas, label.text, label.center, fontSize: 8.5);
+    }
+    _drawText(canvas, 'Lagna', c, fontSize: 6.5, color: _accent);
+  }
+
+  void _drawSouthIndian(Canvas canvas, Rect r, Paint line) {
+    final cellW = r.width / 4;
+    final cellH = r.height / 4;
+
+    // A 4x4 square ring: the central 2x2 area remains open.
+    for (var i = 1; i < 4; i++) {
+      canvas.drawLine(Offset(r.left + cellW * i, r.top), Offset(r.left + cellW * i, r.bottom), line);
+      canvas.drawLine(Offset(r.left, r.top + cellH * i), Offset(r.right, r.top + cellH * i), line);
+    }
+
+    // Fixed zodiac signs, clockwise: Pisces is top-left and Aries is the
+    // second cell of the top row in the common South Indian convention.
+    const positions = <int, List<int>>{
+      12: [0, 0], 1: [0, 1], 2: [0, 2], 3: [0, 3],
+      4: [1, 3], 5: [2, 3], 6: [3, 3], 7: [3, 2],
+      8: [3, 1], 9: [3, 0], 10: [2, 0], 11: [1, 0],
+    };
+    for (final entry in positions.entries) {
+      final row = entry.value[0];
+      final col = entry.value[1];
+      final center = Offset(
+        r.left + cellW * (col + .5),
+        r.top + cellH * (row + .5),
+      );
+      _drawText(canvas, entry.key.toString(), center, fontSize: 8.5);
+    }
+    _drawText(canvas, 'RASI', r.center, fontSize: 8, color: _accent);
+    _drawText(canvas, 'CHART', Offset(r.center.dx, r.center.dy + 9), fontSize: 5.5, color: _accent);
+  }
+
+  void _drawEastIndian(Canvas canvas, Rect r, Paint line) {
+    final x1 = r.left + r.width / 3;
+    final x2 = r.left + 2 * r.width / 3;
+    final y1 = r.top + r.height / 3;
+    final y2 = r.top + 2 * r.height / 3;
+
+    // Bengali/East Indian presentation: a central open square, four side
+    // compartments and diagonally divided corner compartments.
+    canvas.drawLine(Offset(x1, r.top), Offset(x1, r.bottom), line);
+    canvas.drawLine(Offset(x2, r.top), Offset(x2, r.bottom), line);
+    canvas.drawLine(Offset(r.left, y1), Offset(r.right, y1), line);
+    canvas.drawLine(Offset(r.left, y2), Offset(r.right, y2), line);
+
+    canvas.drawLine(r.topLeft, Offset(x1, y1), line);
+    canvas.drawLine(r.topRight, Offset(x2, y1), line);
+    canvas.drawLine(r.bottomRight, Offset(x2, y2), line);
+    canvas.drawLine(r.bottomLeft, Offset(x1, y2), line);
+
+    // Aries is placed at the top in this preview; remaining sign numbers
+    // follow the fixed East Indian sequence around the central square.
+    final labels = <_PreviewLabel>[
+      _PreviewLabel('1', Offset(r.center.dx, r.top + r.height * .17)),
+      _PreviewLabel('2', Offset(r.left + r.width * .17, r.top + r.height * .17)),
+      _PreviewLabel('3', Offset(r.left + r.width * .17, r.center.dy)),
+      _PreviewLabel('4', Offset(r.left + r.width * .17, r.bottom - r.height * .17)),
+      _PreviewLabel('5', Offset(r.center.dx, r.bottom - r.height * .17)),
+      _PreviewLabel('6', Offset(r.right - r.width * .17, r.bottom - r.height * .17)),
+      _PreviewLabel('7', Offset(r.right - r.width * .17, r.center.dy)),
+      _PreviewLabel('8', Offset(r.right - r.width * .17, r.top + r.height * .83)),
+      _PreviewLabel('9', Offset(r.center.dx, r.top + r.height * .83)),
+      _PreviewLabel('10', Offset(r.right - r.width * .17, r.top + r.height * .17)),
+      _PreviewLabel('11', Offset(r.left + r.width * .83, r.center.dy)),
+      _PreviewLabel('12', Offset(r.left + r.width * .83, r.bottom - r.height * .17)),
+    ];
+    for (final label in labels) {
+      _drawText(canvas, label.text, label.center, fontSize: 7.5);
+    }
+    _drawText(canvas, 'RASI', r.center, fontSize: 7.5, color: _accent);
+  }
+
+  void _drawText(
+    Canvas canvas,
+    String value,
+    Offset center, {
+    double fontSize = 8,
+    Color color = _ink,
+  }) {
+    final painter = TextPainter(
+      text: TextSpan(
+        text: value,
+        style: TextStyle(
+          fontSize: fontSize,
+          color: color,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
       textDirection: TextDirection.ltr,
+      textAlign: TextAlign.center,
     )..layout();
-    text.paint(canvas, Offset((w - text.width) / 2, (h - text.height) / 2));
+    painter.paint(canvas, center - Offset(painter.width / 2, painter.height / 2));
   }
 
   @override
   bool shouldRepaint(covariant _ChartPreviewPainter oldDelegate) => oldDelegate.style != style;
+}
+
+class _PreviewLabel {
+  const _PreviewLabel(this.text, this.center);
+  final String text;
+  final Offset center;
 }
