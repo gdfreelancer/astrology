@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../../models/matching/koota_result.dart';
 import '../../models/matching/matching_report.dart';
 import '../../models/matching/matching_person.dart';
+import '../../models/kundali/kundali_graha.dart';
 import '../../theme/app_theme.dart';
 
 class MatchingResultScreen extends StatelessWidget {
@@ -96,6 +97,14 @@ class MatchingResultScreen extends StatelessWidget {
               const SizedBox(width: 10),
               Expanded(child: _PersonCard(role: 'Groom', person: report.groom, accent: AppTheme.plum)),
             ]),
+            const SizedBox(height: 20),
+            const Text('Birth charts & planetary placements', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+            const SizedBox(height: 5),
+            const Text('Review each person’s D1 chart and the house occupied by every graha.', style: TextStyle(fontSize: 10, color: AppTheme.muted)),
+            const SizedBox(height: 10),
+            _PersonBirthChart(person: report.bride, accent: const Color(0xFFB45D82)),
+            const SizedBox(height: 9),
+            _PersonBirthChart(person: report.groom, accent: AppTheme.plum),
             const SizedBox(height: 21),
             Row(children: [
               const Expanded(child: Text('Eight Koota breakdown', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppTheme.ink))),
@@ -110,7 +119,7 @@ class MatchingResultScreen extends StatelessWidget {
               child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Row(children: [Icon(Icons.info_outline_rounded, color: Color(0xFF9C7138), size: 17), SizedBox(width: 7), Text('What this report covers', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Color(0xFF795D36)))]),
                 SizedBox(height: 8),
-                Text('This report calculates the eight Ashtakoota categories using Moon sign and Nakshatra data. The scoring uses a documented baseline table; regional traditions can differ. It does not calculate Manglik Dosha, planetary aspects, Lagna compatibility or Dosha cancellation because a validated full planetary chart engine is not yet available.', style: TextStyle(fontSize: 10, height: 1.55, color: Color(0xFF795D36))),
+                Text('This report calculates the eight Ashtakoota categories using Moon sign and Nakshatra data. Individual D1 placements are displayed for reference, but they are not yet used to calculate Manglik Dosha, planetary aspects, Lagna compatibility or Dosha cancellation. The scoring uses a documented baseline table; regional traditions can differ.', style: TextStyle(fontSize: 10, height: 1.55, color: Color(0xFF795D36))),
               ]),
             ),
             if (report.bride.nearBoundary || report.groom.nearBoundary) ...[
@@ -208,4 +217,102 @@ class _ValueBox extends StatelessWidget {
       Text(value, style: const TextStyle(color: AppTheme.ink, fontSize: 10, fontWeight: FontWeight.w700)),
     ]),
   );
+}
+
+class _PersonBirthChart extends StatelessWidget {
+  const _PersonBirthChart({required this.person, required this.accent});
+  final MatchingPerson person;
+  final Color accent;
+
+  @override
+  Widget build(BuildContext context) {
+    final chart = person.kundaliChart;
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: accent.withValues(alpha: .24)),
+      ),
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          initiallyExpanded: false,
+          tilePadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 2),
+          childrenPadding: const EdgeInsets.fromLTRB(12, 0, 12, 13),
+          leading: Container(
+            width: 34,
+            height: 34,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(color: accent.withValues(alpha: .1), borderRadius: BorderRadius.circular(10)),
+            child: Icon(Icons.auto_awesome_rounded, color: accent, size: 18),
+          ),
+          title: Text('${person.role}: ${person.name}', style: const TextStyle(fontSize: 12, color: AppTheme.ink, fontWeight: FontWeight.w800)),
+          subtitle: Text(chart == null ? 'Birth chart unavailable in this saved report' : 'Lagna: ${kundaliRashiNames[chart.ascendantSignIndex]} · ${_matchingDegree(chart.ascendantLongitude)}', style: const TextStyle(fontSize: 9, color: AppTheme.muted)),
+          children: [
+            if (chart == null)
+              const Padding(
+                padding: EdgeInsets.all(10),
+                child: Text('This is an older saved report. Recalculate matching to include planetary placements.', style: TextStyle(fontSize: 10, color: AppTheme.muted)),
+              )
+            else ...[
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: 12,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 5,
+                  childAspectRatio: 1.15,
+                ),
+                itemBuilder: (context, index) {
+                  final house = index + 1;
+                  final sign = (chart.ascendantSignIndex + index) % 12;
+                  final occupants = chart.inHouse(house);
+                  return Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: house == 1 ? accent.withValues(alpha: .09) : const Color(0xFFFFF9F0),
+                      borderRadius: BorderRadius.circular(9),
+                      border: Border.all(color: house == 1 ? accent.withValues(alpha: .65) : const Color(0xFFECE3D7)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('House $house', style: const TextStyle(fontSize: 7, color: AppTheme.muted, fontWeight: FontWeight.w700)),
+                        const SizedBox(height: 2),
+                        Text('${kundaliRashiSymbols[sign]} ${kundaliRashiNames[sign]}', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 8, color: AppTheme.ink, fontWeight: FontWeight.w800)),
+                        const Spacer(),
+                        Text(occupants.isEmpty ? '—' : occupants.map((g) => g.symbol).join(' · '), maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 9, color: accent, fontWeight: FontWeight.w900)),
+                      ],
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 10),
+              for (var i = 0; i < chart.grahas.length; i++)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: Row(
+                    children: [
+                      SizedBox(width: 28, child: Text(chart.grahas[i].symbol, style: TextStyle(fontSize: 10, color: accent, fontWeight: FontWeight.w900))),
+                      Expanded(child: Text(chart.grahas[i].name, style: const TextStyle(fontSize: 10, color: AppTheme.ink, fontWeight: FontWeight.w700))),
+                      Expanded(child: Text(kundaliRashiNames[chart.grahas[i].signIndex], style: const TextStyle(fontSize: 9, color: AppTheme.muted))),
+                      Text('House ${chart.grahas[i].houseNumber}', style: TextStyle(fontSize: 9, color: accent, fontWeight: FontWeight.w800)),
+                    ],
+                  ),
+                ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+String _matchingDegree(double longitude) {
+  final value = longitude % 30;
+  final degrees = value.floor();
+  final minutes = ((value - degrees) * 60).round();
+  return '${degrees}° ${minutes.toString().padLeft(2, '0')}′';
 }
