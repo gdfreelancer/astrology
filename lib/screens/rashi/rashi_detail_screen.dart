@@ -18,11 +18,11 @@ class RashiDetailScreen extends StatelessWidget {
         expandedHeight: 300,
         backgroundColor: const Color(0xFF35264F),
         foregroundColor: Colors.white,
-        title: Text(rashi.sanskrit, style: const TextStyle(fontWeight: FontWeight.w800)),
+        title: Text(_localizedRashiName(context, rashi), style: const TextStyle(fontWeight: FontWeight.w800)),
         flexibleSpace: FlexibleSpaceBar(background: Stack(fit: StackFit.expand, children: [
           RashiArtwork(rashi: rashi, borderRadius: BorderRadius.zero),
           Positioned(left: 22, right: 22, bottom: 22, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(rashi.gujarati, style: const TextStyle(color: Color(0xFFFFDCA0), fontSize: 15, fontWeight: FontWeight.w800)),
+            Text(_localizedRashiName(context, rashi), style: const TextStyle(color: Color(0xFFFFDCA0), fontSize: 15, fontWeight: FontWeight.w800)),
             const SizedBox(height: 3),
             Text(rashi.english, style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.w800)),
             Text(' ${context.tr('rashi_number')} ${rashi.number}  •  ${rashi.symbol}', style: const TextStyle(color: Color(0xFFE8DFF3), fontSize: 11)),
@@ -78,6 +78,8 @@ class RashiDetailScreen extends StatelessWidget {
       ),
     ]),
   );
+
+  String _localizedRashiName(BuildContext context, RashiInfo value) => switch (AppLocale.locale.value.languageCode) { 'hi' => value.hindi, 'gu' => value.gujarati, _ => value.english };
 
   Widget _attributeGrid(BuildContext context) {
     final items = [
