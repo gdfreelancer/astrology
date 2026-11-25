@@ -539,7 +539,7 @@ class _TimeZonePickerState extends State<_TimeZonePicker> {
               child: TextField(
                 autofocus: true,
                 onChanged: (value) => setState(() => query = value),
-                decoration: const InputDecoration(hintText: context.tr('search_city_or_timezone'), prefixText: '⌕  '),
+                decoration: InputDecoration(hintText: context.tr('search_city_or_timezone'), prefixText: '⌕  '),
               ),
             ),
             const SizedBox(height: 8),
