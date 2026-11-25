@@ -284,5 +284,8 @@
   "try_another_filter": "Try another filter or search. Names should begin with the recommended sound",
   "names_starter_disclaimer": "Name collection is a starter list. Meanings and regional spellings can vary; please verify your preferred name before finalising it.",
   "choose_time_tradition": "Choose a time\nwith tradition in mind",
-  "explore_muhurat_guidance": "Explore traditional Muhurat guidance"
+  "explore_muhurat_guidance": "Explore traditional Muhurat guidance",
+  "categories": "categories",
+  "birth_chart_unavailable": "Birth chart unavailable in this saved report",
+  "lagna": "Lagna"
 }
