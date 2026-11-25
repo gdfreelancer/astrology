@@ -11,15 +11,15 @@ class MuhuratScreen extends StatefulWidget {
 }
 
 class _MuhuratScreenState extends State<MuhuratScreen> {
-  static const _activities = <_MuhuratActivity>[
-    _MuhuratActivity('💍', 'Marriage', 'Traditional wedding dates and ceremony timings.'),
-    _MuhuratActivity('🏡', 'Griha Pravesh', 'Auspicious entry into a new home.'),
-    _MuhuratActivity('🚗', 'Vehicle Purchase', 'Timing considerations for buying a vehicle.'),
-    _MuhuratActivity('🏪', 'Business Opening', 'Starting a shop, office or new venture.'),
-    _MuhuratActivity('🍼', 'Naming Ceremony', 'Namkaran ceremony for a newborn.'),
-    _MuhuratActivity('🏠', 'Property Purchase', 'Traditional timing considerations for property matters.'),
-    _MuhuratActivity('🧳', 'Journey Start', 'Choosing a traditional time to begin a journey.'),
-    _MuhuratActivity('📚', 'Learning / Vidyarambh', 'Beginning education or a new course of study.'),
+  static final _activities = <_MuhuratActivity>[
+    _MuhuratActivity('💍', context.tr('activity_marriage'), context.tr('activity_marriage_desc')),
+    _MuhuratActivity('🏡', context.tr('activity_griha_pravesh'), context.tr('activity_griha_pravesh_desc')),
+    _MuhuratActivity('🚗', context.tr('activity_vehicle'), context.tr('activity_vehicle_desc')),
+    _MuhuratActivity('🏪', context.tr('activity_business'), context.tr('activity_business_desc')),
+    _MuhuratActivity('🍼', context.tr('activity_naming'), context.tr('activity_naming_desc')),
+    _MuhuratActivity('🏠', context.tr('activity_property'), context.tr('activity_property_desc')),
+    _MuhuratActivity('🧳', context.tr('activity_journey'), context.tr('activity_journey_desc')),
+    _MuhuratActivity('📚', context.tr('activity_learning'), context.tr('activity_learning_desc')),
   ];
   int _selectedActivity = 0;
   DateTime _selectedDate = DateUtils.dateOnly(DateTime.now());
