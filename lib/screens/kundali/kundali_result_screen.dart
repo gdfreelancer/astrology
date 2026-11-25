@@ -82,7 +82,7 @@ class KundaliResultScreen extends StatelessWidget {
             ]),
 
             const SizedBox(height: 20),
-            const Text(context.tr('janma_kundali_d1'), style: TextStyle(fontSize: 15, color: AppTheme.ink, fontWeight: FontWeight.w800)),
+            Text(context.tr('janma_kundali_d1'), style: TextStyle(fontSize: 15, color: AppTheme.ink, fontWeight: FontWeight.w800)),
             const SizedBox(height: 5),
             Text(
               '${context.tr(switch (chartStyle) { KundaliChartStyle.northIndian => 'north_indian', KundaliChartStyle.southIndian => 'south_indian', KundaliChartStyle.eastIndian => 'east_indian' })} ${context.tr('chart')} · Whole-sign houses',
@@ -91,9 +91,9 @@ class KundaliResultScreen extends StatelessWidget {
             const SizedBox(height: 11),
             _KundaliHouseGrid(chart: birthResult.kundaliChart),
             const SizedBox(height: 20),
-            const Text(context.tr('graha_placements'), style: TextStyle(fontSize: 15, color: AppTheme.ink, fontWeight: FontWeight.w800)),
+            Text(context.tr('graha_placements'), style: TextStyle(fontSize: 15, color: AppTheme.ink, fontWeight: FontWeight.w800)),
             const SizedBox(height: 5),
-            const Text(context.tr('graha_placements_help'), style: TextStyle(fontSize: 10, color: AppTheme.muted)),
+            Text(context.tr('graha_placements_help'), style: TextStyle(fontSize: 10, color: AppTheme.muted)),
             const SizedBox(height: 10),
             _GrahaPlacementList(chart: birthResult.kundaliChart),
             const SizedBox(height: 19),
@@ -101,7 +101,7 @@ class KundaliResultScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18), border: Border.all(color: const Color(0xFFEAE5EF))),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const Text(context.tr('calculation_details'), style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+                Text(context.tr('calculation_details'), style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: AppTheme.ink)),
                 const SizedBox(height: 12),
                 _DetailLine(label: context.tr('birth_time_zone'), value: birthResult.timeZoneId),
                 _DetailLine(label: context.tr('coordinates'), value: '${birthResult.latitude.toStringAsFixed(4)}, ${birthResult.longitude.toStringAsFixed(4)}'),
@@ -124,7 +124,7 @@ class KundaliResultScreen extends StatelessWidget {
             ),
             if (birthResult.nearBoundary) ...[
               const SizedBox(height: 10),
-              const Text(context.tr('verify_boundary'), style: TextStyle(color: Color(0xFFB94C4C), fontSize: 10, height: 1.45)),
+              Text(context.tr('verify_boundary'), style: TextStyle(color: Color(0xFFB94C4C), fontSize: 10, height: 1.45)),
             ],
           ],
         ),
@@ -254,7 +254,7 @@ class _KundaliHouseGrid extends StatelessWidget {
             },
           ),
           const SizedBox(height: 8),
-          const Text(context.tr('house_one_note'), style: TextStyle(fontSize: 9, color: AppTheme.muted)),
+          Text(context.tr('house_one_note'), style: TextStyle(fontSize: 9, color: AppTheme.muted)),
         ],
       ),
     );
