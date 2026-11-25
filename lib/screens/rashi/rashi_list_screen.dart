@@ -85,7 +85,7 @@ class _RashiListScreenState extends State<RashiListScreen> {
                       final value = _filters[i];
                       final selected = _element == value;
                       return ChoiceChip(
-                        label: Text(value == 'All' ? context.tr('all_rashis') : value.split(' ').first),
+                        label: Text(value == 'All' ? context.tr('all_rashis') : context.tr(switch (value) { 'Fire (Agni)' => 'attr_fire', 'Earth (Prithvi)' => 'attr_earth', 'Air (Vayu)' => 'attr_air', 'Water (Jala)' => 'attr_water', _ => 'all_rashis' })),
                         selected: selected,
                         onSelected: (_) => setState(() => _element = value),
                         selectedColor: AppTheme.plum.withValues(alpha: .14),
