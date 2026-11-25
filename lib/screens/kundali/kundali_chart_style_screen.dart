@@ -73,7 +73,7 @@ class _KundaliChartStyleScreenState extends State<KundaliChartStyleScreen> {
                   Text(context.tr('chart_style_tagline'), style: TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.w800)),
                   SizedBox(height: 7),
                   Text(
-                    'Choose the traditional birth-chart layout you are familiar with. We will remember your choice for future Kundalis.',
+                    context.tr('choose_chart_style_description'),
                     style: TextStyle(color: Color(0xFFEDE5F8), fontSize: 12, height: 1.5),
                   ),
                 ],
