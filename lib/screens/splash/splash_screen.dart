@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_locale.dart';
+
 import '../../theme/app_theme.dart';
 import '../home/home_screen.dart';
 
@@ -105,7 +107,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     ),
                     const SizedBox(height: 8),
                     const Text(
-                      'Find clarity in your stars',
+                      context.tr('birth_chart_subtitle'),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 14,
@@ -124,7 +126,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     ),
                     const SizedBox(height: 30),
                     const Text(
-                      'A LITTLE GUIDANCE FROM THE UNIVERSE',
+                      context.tr('universe_subtitle'),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 9,
