@@ -187,7 +187,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 _section(context.tr('app_preferences')),
                 _group([
                   _SettingTile(icon: Icons.language_rounded, title: context.tr('language'), subtitle: _languageName(languageCode), value: '›', onTap: _selectLanguage),
-                  _SettingTile(icon: Icons.schedule_rounded, title: context.tr('time_format'), subtitle: context.tr('time_format_description'), value: _use24Hour ? '24-hour' : '12-hour', onTap: () => _showTimeFormat()),
+                  _SettingTile(icon: Icons.schedule_rounded, title: context.tr('time_format'), subtitle: context.tr('time_format_description'), value: _use24Hour ? context.tr('twenty_four_hour') : context.tr('twelve_hour'), onTap: () => _showTimeFormat()),
+                  _SettingTile(icon: Icons.notifications_none_rounded, title: context.tr('notifications'), subtitle: context.tr('notifications_coming_soon'), value: context.tr('coming_soon'), onTap: _showNotificationsInfo),
                 ]),
                 const SizedBox(height: 18),
                 _section(context.tr('kundali_preferences')),
@@ -246,6 +247,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ]),
     );
     if (result != null) _setTimeFormat(result);
+  }
+
+  void _showNotificationsInfo() {
+    showDialog<void>(context: context, builder: (dialogContext) => AlertDialog(
+      title: Text(context.tr('notifications')),
+      content: Text(context.tr('notifications_coming_soon')),
+      actions: [TextButton(onPressed: () => Navigator.pop(dialogContext), child: Text(context.tr('try_again')))],
+    ));
   }
 
   void _showAbout() {
