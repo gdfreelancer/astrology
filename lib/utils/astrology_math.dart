@@ -35,25 +35,27 @@ class AstrologyMath {
   static int nakshatraIndex(double siderealLongitude) =>
       (normalizeDegrees(siderealLongitude) / degreesPerNakshatra)
           .floor()
-          .clamp(0, 26);
+          .clamp(0, 26)
+          .toInt();
 
   static int padaNumber(double siderealLongitude) {
     final withinNakshatra =
         normalizeDegrees(siderealLongitude) % degreesPerNakshatra;
-    return (withinNakshatra / degreesPerPada).floor().clamp(0, 3) + 1;
+    return (withinNakshatra / degreesPerPada).floor().clamp(0, 3).toInt() + 1;
   }
 
   /// Tithi index: 0..14 Shukla, 15..29 Krishna.
   static int tithiIndex(double sunLongitude, double moonLongitude) =>
       (angularSeparation(sunLongitude, moonLongitude) / 12.0)
           .floor()
-          .clamp(0, 29);
+          .clamp(0, 29)
+          .toInt();
 
   static int yogaIndex(double sunLongitude, double moonLongitude) {
     final sum = normalizeDegrees(
       normalizeDegrees(sunLongitude) + normalizeDegrees(moonLongitude),
     );
-    return (sum / degreesPerNakshatra).floor().clamp(0, 26);
+    return (sum / degreesPerNakshatra).floor().clamp(0, 26).toInt();
   }
 
   /// Maps the 60 half-tithis to the seven repeating and four fixed karanas.
