@@ -166,5 +166,11 @@
   "auspicious_moments": "AUSPICIOUS MOMENTS",
   "selected_date": "SELECTED DATE",
   "muhurat_preparing": "Muhurat calculation is being prepared",
-  "language_switch_saved": "Language preference saved."
+  "language_switch_saved": "Language preference saved.",
+  "india_timezone": "India · Asia/Kolkata",
+  "tap_element": "Tap an element for its timing and meaning",
+  "upcoming_observances": "Upcoming lunar observances",
+  "tithi_based_observances": "Dates identified from Tithi active at local sunrise.",
+  "no_observances": "No matching observances found in this period.",
+  "observance_disclaimer": "This is a Tithi-based observance finder, not a complete festival calendar. Festival and vrata dates can require additional regional rules, moonrise checks and local traditions."
 }
