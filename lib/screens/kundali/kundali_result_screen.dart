@@ -67,11 +67,11 @@ class KundaliResultScreen extends StatelessWidget {
             Row(children: [
               Expanded(child: _InfoCard(label: context.tr('pada'), value: birthResult.pada.toString(), symbol: '◈')),
               const SizedBox(width: 10),
-              Expanded(child: _InfoCard(label: 'Naming syllable', value: birthResult.namingSyllable, symbol: 'ॐ')),
+              Expanded(child: _InfoCard(label: context.tr('naming_syllable'), value: birthResult.namingSyllable, symbol: 'ॐ')),
             ]),
 
             const SizedBox(height: 20),
-            const Text('Janma Kundali · D1 Rashi chart', style: TextStyle(fontSize: 15, color: AppTheme.ink, fontWeight: FontWeight.w800)),
+            const Text(context.tr('janma_kundali_d1'), style: TextStyle(fontSize: 15, color: AppTheme.ink, fontWeight: FontWeight.w800)),
             const SizedBox(height: 5),
             Text(
               '${context.tr(switch (chartStyle) { KundaliChartStyle.northIndian => 'north_indian', KundaliChartStyle.southIndian => 'south_indian', KundaliChartStyle.eastIndian => 'east_indian' })} ${context.tr('chart')} · Whole-sign houses',
@@ -80,9 +80,9 @@ class KundaliResultScreen extends StatelessWidget {
             const SizedBox(height: 11),
             _KundaliHouseGrid(chart: birthResult.kundaliChart),
             const SizedBox(height: 20),
-            const Text('Graha placements', style: TextStyle(fontSize: 15, color: AppTheme.ink, fontWeight: FontWeight.w800)),
+            const Text(context.tr('graha_placements'), style: TextStyle(fontSize: 15, color: AppTheme.ink, fontWeight: FontWeight.w800)),
             const SizedBox(height: 5),
-            const Text('See the Rashi and house occupied by each graha.', style: TextStyle(fontSize: 10, color: AppTheme.muted)),
+            const Text(context.tr('graha_placements_help'), style: TextStyle(fontSize: 10, color: AppTheme.muted)),
             const SizedBox(height: 10),
             _GrahaPlacementList(chart: birthResult.kundaliChart),
             const SizedBox(height: 19),
@@ -90,12 +90,12 @@ class KundaliResultScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18), border: Border.all(color: const Color(0xFFEAE5EF))),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const Text('Calculation details', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+                const Text(context.tr('calculation_details'), style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: AppTheme.ink)),
                 const SizedBox(height: 12),
-                _DetailLine(label: 'Birth time zone', value: birthResult.timeZoneId),
-                _DetailLine(label: 'Coordinates', value: '${birthResult.latitude.toStringAsFixed(4)}, ${birthResult.longitude.toStringAsFixed(4)}'),
-                _DetailLine(label: 'Ayanamsha', value: '${birthResult.ayanamsa.toStringAsFixed(4)}°'),
-                _DetailLine(label: 'Sidereal Moon longitude', value: '${birthResult.siderealMoonLongitude.toStringAsFixed(4)}°'),
+                _DetailLine(label: context.tr('birth_time_zone'), value: birthResult.timeZoneId),
+                _DetailLine(label: context.tr('coordinates'), value: '${birthResult.latitude.toStringAsFixed(4)}, ${birthResult.longitude.toStringAsFixed(4)}'),
+                _DetailLine(label: context.tr('ayanamsha'), value: '${birthResult.ayanamsa.toStringAsFixed(4)}°'),
+                _DetailLine(label: context.tr('sidereal_moon_longitude'), value: '${birthResult.siderealMoonLongitude.toStringAsFixed(4)}°'),
               ]),
             ),
             const SizedBox(height: 14),
@@ -113,7 +113,7 @@ class KundaliResultScreen extends StatelessWidget {
             ),
             if (birthResult.nearBoundary) ...[
               const SizedBox(height: 10),
-              const Text('The Moon is close to a Nakshatra or Pada boundary. Verify the birth time and compare with a trusted ephemeris.', style: TextStyle(color: Color(0xFFB94C4C), fontSize: 10, height: 1.45)),
+              const Text(context.tr('verify_boundary'), style: TextStyle(color: Color(0xFFB94C4C), fontSize: 10, height: 1.45)),
             ],
           ],
         ),
@@ -222,7 +222,7 @@ class _KundaliHouseGrid extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('House $house', style: const TextStyle(fontSize: 8, color: AppTheme.muted, fontWeight: FontWeight.w700)),
+                    Text(context.tr('house_number').replace('{n}', '$house'), style: const TextStyle(fontSize: 8, color: AppTheme.muted, fontWeight: FontWeight.w700)),
                     const SizedBox(height: 2),
                     Text(
                       '${kundaliRashiSymbols[sign]} ${kundaliRashiNames[sign]}',
@@ -243,7 +243,7 @@ class _KundaliHouseGrid extends StatelessWidget {
             },
           ),
           const SizedBox(height: 8),
-          const Text('House 1 begins from the Ascendant sign. Empty houses are shown with —.', style: TextStyle(fontSize: 9, color: AppTheme.muted)),
+          const Text(context.tr('house_one_note'), style: TextStyle(fontSize: 9, color: AppTheme.muted)),
         ],
       ),
     );
@@ -287,7 +287,7 @@ class _GrahaPlacementList extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Text('House ${chart.grahas[i].houseNumber}', style: const TextStyle(fontSize: 10, color: AppTheme.plum, fontWeight: FontWeight.w800)),
+                  Text(context.tr('house_number').replace('{n}', '${chart.grahas[i].houseNumber}'), style: const TextStyle(fontSize: 10, color: AppTheme.plum, fontWeight: FontWeight.w800)),
                 ],
               ),
             ),
