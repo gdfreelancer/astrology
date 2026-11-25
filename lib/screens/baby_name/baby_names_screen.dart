@@ -65,9 +65,9 @@ class _BabyNamesScreenState extends State<BabyNamesScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Names inspired by the stars', style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w800)),
+                      Text(context.tr('names_inspired'), style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w800)),
                       const SizedBox(height: 5),
-                      Text('Starting sound: ${widget.result.namingSyllable}', style: const TextStyle(color: Color(0xFFFFE3A8), fontSize: 13, fontWeight: FontWeight.w800)),
+                      Text('${context.tr('starting_sound')}: ${widget.result.namingSyllable}', style: const TextStyle(color: Color(0xFFFFE3A8), fontSize: 13, fontWeight: FontWeight.w800)),
                       Text('${widget.result.nakshatra} · Pada ${widget.result.pada}', style: const TextStyle(color: Color(0xFFE9DFF8), fontSize: 10)),
                     ],
                   ),
@@ -78,13 +78,13 @@ class _BabyNamesScreenState extends State<BabyNamesScreen> {
           const SizedBox(height: 18),
           TextField(
             onChanged: (value) => setState(() => _query = value),
-            decoration: const InputDecoration(hintText: 'Search name or meaning', prefixText: '⌕  '),
+            decoration: InputDecoration(hintText: context.tr('search_name_meaning'), prefixText: '⌕  '),
           ),
           const SizedBox(height: 13),
           Wrap(
             spacing: 8,
             children: ['All', 'Boy', 'Girl'].map((filter) => ChoiceChip(
-              label: Text(filter),
+              label: Text(filter == 'All' ? context.tr('all') : filter == 'Boy' ? context.tr('boy') : context.tr('girl')),
               selected: _genderFilter == filter,
               onSelected: (_) => setState(() => _genderFilter = filter),
               selectedColor: const Color(0xFFEDE5F8),
@@ -98,7 +98,7 @@ class _BabyNamesScreenState extends State<BabyNamesScreen> {
           Row(
             children: [
               Expanded(child: Text(context.tr('baby_name_rashi'), style: TextStyle(color: AppTheme.ink, fontSize: 16, fontWeight: FontWeight.w800))),
-              Text('${filtered.length} names', style: const TextStyle(color: AppTheme.muted, fontSize: 10, fontWeight: FontWeight.w700)),
+              Text('${filtered.length} ${context.tr('names')}', style: const TextStyle(color: AppTheme.muted, fontSize: 10, fontWeight: FontWeight.w700)),
             ],
           ),
           const SizedBox(height: 10),
@@ -110,9 +110,9 @@ class _BabyNamesScreenState extends State<BabyNamesScreen> {
                 children: [
                   const Text('🌱', style: TextStyle(fontSize: 32)),
                   const SizedBox(height: 8),
-                  const Text('No matching names in this starter collection', textAlign: TextAlign.center, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+                  Text(context.tr('no_matching_names'), textAlign: TextAlign.center, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: AppTheme.ink)),
                   const SizedBox(height: 5),
-                  Text('Try another filter or search. Names should begin with the recommended sound “${widget.result.namingSyllable}”.', textAlign: TextAlign.center, style: const TextStyle(color: AppTheme.muted, fontSize: 11, height: 1.5)),
+                  Text('${context.tr('try_another_filter')} “${widget.result.namingSyllable}”.', textAlign: TextAlign.center, style: const TextStyle(color: AppTheme.muted, fontSize: 11, height: 1.5)),
                 ],
               ),
             )
@@ -147,7 +147,7 @@ class _BabyNamesScreenState extends State<BabyNamesScreen> {
               ),
             )),
           const SizedBox(height: 8),
-          const Text('Name collection is a starter list. Meanings and regional spellings can vary; please verify your preferred name before finalising it.', textAlign: TextAlign.center, style: TextStyle(color: AppTheme.muted, fontSize: 10, height: 1.5)),
+          Text(context.tr('names_starter_disclaimer'), textAlign: TextAlign.center, style: TextStyle(color: AppTheme.muted, fontSize: 10, height: 1.5)),
         ],
       ),
     );
