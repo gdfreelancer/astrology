@@ -192,7 +192,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(height: 18),
                 _section(context.tr('kundali_preferences')),
                 _group([
-                  _SettingTile(icon: Icons.grid_view_rounded, title: context.tr('chart_style'), subtitle: context.tr('chart_style_description'), value: _chartStyle?.label ?? context.tr('not_selected'), onTap: _selectChartStyle),
+                  _SettingTile(icon: Icons.grid_view_rounded, title: context.tr('chart_style'), subtitle: context.tr('chart_style_description'), value: _chartStyle == null ? context.tr('not_selected') : _chartStyleLabel(context, _chartStyle!), onTap: _selectChartStyle),
                 ]),
                 const SizedBox(height: 18),
                 _section(context.tr('panchang_preferences')),
@@ -216,6 +216,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
     );
   }
+
+  String _chartStyleLabel(BuildContext context, KundaliChartStyle style) => switch (style) { KundaliChartStyle.northIndian => context.tr('north_indian'), KundaliChartStyle.southIndian => context.tr('south_indian'), KundaliChartStyle.eastIndian => context.tr('east_indian') };
 
   String _languageName(String code) => switch (code) { 'hi' => 'हिन्दी', 'gu' => 'ગુજરાતી', _ => 'English' };
 
