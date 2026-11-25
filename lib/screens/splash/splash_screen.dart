@@ -96,7 +96,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     ),
                     const SizedBox(height: 25),
                     const Text(
-                      'Astrology',
+                      'Saral Jyotish',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 34,
