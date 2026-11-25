@@ -65,7 +65,7 @@ class _KundaliChartStyleScreenState extends State<KundaliChartStyleScreen> {
                 ),
                 borderRadius: BorderRadius.circular(23),
               ),
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('🪷', style: TextStyle(fontSize: 34)),
