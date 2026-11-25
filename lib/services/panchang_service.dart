@@ -10,7 +10,6 @@ import '../utils/astrology_math.dart';
 class PanchangService {
   static const tithis=['Pratipada','Dwitiya','Tritiya','Chaturthi','Panchami','Shashthi','Saptami','Ashtami','Navami','Dashami','Ekadashi','Dwadashi','Trayodashi','Chaturdashi','Purnima'];
   static const yogas=['Vishkambha','Priti','Ayushman','Saubhagya','Shobhana','Atiganda','Sukarma','Dhriti','Shoola','Ganda','Vriddhi','Dhruva','Vyaghata','Harshana','Vajra','Siddhi','Vyatipata','Variyana','Parigha','Shiva','Siddha','Sadhya','Shubha','Shukla','Brahma','Indra','Vaidhriti'];
-  static const karanas=['Kimstughna','Bava','Balava','Kaulava','Taitila','Garaja','Vanija','Vishti (Bhadra)','Shakuni','Chatushpada','Naga'];
   static const weekdays=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   static const rashis=['Mesha','Vrishabha','Mithuna','Karka','Simha','Kanya','Tula','Vrishchika','Dhanu','Makara','Kumbha','Meena'];
   static const ritus=['Vasanta','Vasanta','Grishma','Grishma','Varsha','Varsha','Sharad','Sharad','Hemanta','Hemanta','Shishira','Shishira'];
