@@ -23,7 +23,7 @@ class VimshottariDashaService {
   }) {
     final longitude = _normalize(siderealMoonLongitude);
     const nakshatraSpan = 360 / 27;
-    final nakshatraIndex = (longitude / nakshatraSpan).floor().clamp(0, 26);
+    final nakshatraIndex = (longitude / nakshatraSpan).floor().clamp(0, 26).toInt();
     final progress = (longitude - nakshatraIndex * nakshatraSpan) /
         nakshatraSpan;
     final lord = sequence[nakshatraIndex % sequence.length];
