@@ -850,5 +850,9 @@
   "motion": "गति",
   "retrograde": "वक्री",
   "direct": "मार्गी",
-  "view_graha_analysis": "विस्तृत ग्रह विश्लेषण देखें"
+  "view_graha_analysis": "विस्तृत ग्रह विश्लेषण देखें",
+  "view_house_cusps": "सभी 12 भाव संधि देखें",
+  "start_boundary": "आरंभ",
+  "bhava_madhya": "भाव मध्य",
+  "end_boundary": "समाप्ति"
 }
