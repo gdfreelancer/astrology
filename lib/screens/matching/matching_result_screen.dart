@@ -121,7 +121,7 @@ class MatchingResultScreen extends StatelessWidget {
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Row(children: [const Icon(Icons.info_outline_rounded, color: Color(0xFF9C7138), size: 17), const SizedBox(width: 7), Text(context.tr('what_report_covers'), style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Color(0xFF795D36)))]),
                 SizedBox(height: 8),
-                Text('This report calculates the eight Ashtakoota categories using Moon sign and Nakshatra data. Individual D1 placements are displayed for reference, but they are not yet used to calculate Manglik Dosha, planetary aspects, Lagna compatibility or Dosha cancellation. The scoring uses a documented baseline table; regional traditions can differ.', style: TextStyle(fontSize: 10, height: 1.55, color: Color(0xFF795D36))),
+                Text(context.tr('matching_report_scope'), style: TextStyle(fontSize: 10, height: 1.55, color: Color(0xFF795D36))),
               ]),
             ),
             if (report.bride.nearBoundary || report.groom.nearBoundary) ...[
@@ -129,7 +129,7 @@ class MatchingResultScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(13),
                 decoration: BoxDecoration(color: const Color(0xFFFFEEEE), borderRadius: BorderRadius.circular(14)),
-                child: const Text('One or both Moon positions are close to a Nakshatra or Pada boundary. Small birth-time or ephemeris differences may change the matching result. Verify both birth details independently.', style: TextStyle(color: Color(0xFF9C4545), fontSize: 10, height: 1.5)),
+                child: const Text(context.tr('matching_boundary_warning'), style: TextStyle(color: Color(0xFF9C4545), fontSize: 10, height: 1.5)),
               ),
             ],
             const SizedBox(height: 13),
@@ -281,7 +281,7 @@ class _PersonBirthChart extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('House $house', style: const TextStyle(fontSize: 7, color: AppTheme.muted, fontWeight: FontWeight.w700)),
+                        Text(context.tr('house_number').replace('{n}', '$house'), style: const TextStyle(fontSize: 7, color: AppTheme.muted, fontWeight: FontWeight.w700)),
                         const SizedBox(height: 2),
                         Text('${kundaliRashiSymbols[sign]} ${kundaliRashiNames[sign]}', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 8, color: AppTheme.ink, fontWeight: FontWeight.w800)),
                         const Spacer(),
@@ -300,7 +300,7 @@ class _PersonBirthChart extends StatelessWidget {
                       SizedBox(width: 28, child: Text(chart.grahas[i].symbol, style: TextStyle(fontSize: 10, color: accent, fontWeight: FontWeight.w900))),
                       Expanded(child: Text(chart.grahas[i].name, style: const TextStyle(fontSize: 10, color: AppTheme.ink, fontWeight: FontWeight.w700))),
                       Expanded(child: Text(kundaliRashiNames[chart.grahas[i].signIndex], style: const TextStyle(fontSize: 9, color: AppTheme.muted))),
-                      Text('House ${chart.grahas[i].houseNumber}', style: TextStyle(fontSize: 9, color: accent, fontWeight: FontWeight.w800)),
+                      Text(context.tr('house_number').replace('{n}', '${chart.grahas[i].houseNumber}'), style: TextStyle(fontSize: 9, color: accent, fontWeight: FontWeight.w800)),
                     ],
                   ),
                 ),
