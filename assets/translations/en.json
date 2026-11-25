@@ -894,5 +894,7 @@
   "dasha_timeline_range_note": "The current date is outside the generated birth-to-first-cycle timeline. The full Mahadasha sequence is shown below.",
   "mahadasha_timeline": "Mahadasha timeline",
   "antardasha_timeline": "Antardasha sequence",
-  "dasha_calculation_note": "Vimshottari uses the Moon's birth Nakshatra lord and a 120-year cycle. The remaining first Mahadasha is proportional to the untraversed part of the Nakshatra; Antardasha lengths are proportional to their planetary year allocations. Dates use 365.2425 days per Dasha year. Traditional interpretations are not guaranteed predictions."
+  "dasha_calculation_note": "Vimshottari uses the Moon's birth Nakshatra lord and a 120-year cycle. The remaining first Mahadasha is proportional to the untraversed part of the Nakshatra; Antardasha lengths are proportional to their planetary year allocations. Dates use 365.2425 days per Dasha year. Traditional interpretations are not guaranteed predictions.",
+  "lord_placed_in": "Lord placed in",
+  "placement_unavailable": "Not available"
 }
