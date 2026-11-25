@@ -854,5 +854,7 @@
   "view_house_cusps": "सभी 12 भाव संधि देखें",
   "start_boundary": "आरंभ",
   "bhava_madhya": "भाव मध्य",
-  "end_boundary": "समाप्ति"
+  "end_boundary": "समाप्ति",
+  "ascendant": "लग्न",
+  "midheaven": "मध्य आकाश (दशम भाव)"
 }
