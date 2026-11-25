@@ -15,12 +15,12 @@ class MatchingResultScreen extends StatelessWidget {
   final MatchingReport report;
   final int? reportId;
 
-  String get _interpretation {
+  String _interpretation(BuildContext context) {
     final score = report.totalPoints;
-    if (score < 18) return 'Below the commonly used traditional threshold';
-    if (score < 25) return 'Moderate traditional Guna Milan score';
-    if (score < 33) return 'Good traditional Guna Milan score';
-    return 'High traditional Guna Milan score';
+    if (score < 18) return context.tr('score_below');
+    if (score < 25) return context.tr('score_moderate');
+    if (score < 33) return context.tr('score_good');
+    return context.tr('score_high');
   }
 
   Color get _scoreColor {
@@ -34,7 +34,7 @@ class MatchingResultScreen extends StatelessWidget {
       ..writeln('Kundali Matching')
       ..writeln('${report.bride.name} & ${report.groom.name}')
       ..writeln('Ashtakoota score: ${report.totalPoints.toStringAsFixed(1)} / 36')
-      ..writeln(_interpretation)
+      ..writeln(_interpretation(context))
       ..writeln();
     for (final item in report.kootas) {
       text.writeln('${item.name}: ${item.points.toStringAsFixed(1)} / ${item.maxPoints.toStringAsFixed(0)}');
@@ -88,7 +88,7 @@ class MatchingResultScreen extends StatelessWidget {
                   ]),
                 ),
                 const SizedBox(height: 13),
-                Text(_interpretation, textAlign: TextAlign.center, style: TextStyle(color: _scoreColor == const Color(0xFF438466) ? const Color(0xFFDDF4E7) : const Color(0xFFFFE3A8), fontSize: 12, fontWeight: FontWeight.w800)),
+                Text(_interpretation(context), textAlign: TextAlign.center, style: TextStyle(color: _scoreColor == const Color(0xFF438466) ? const Color(0xFFDDF4E7) : const Color(0xFFFFE3A8), fontSize: 12, fontWeight: FontWeight.w800)),
                 const SizedBox(height: 5),
                 Text(context.tr('traditional_score_note'), textAlign: TextAlign.center, style: TextStyle(color: Color(0xFFEDE5F8), fontSize: 9)),
               ]),
@@ -179,7 +179,7 @@ class _KootaTile extends StatelessWidget {
           tilePadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 2),
           childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
           title: Row(children: [
-            Expanded(child: Text(item.name, style: const TextStyle(color: AppTheme.ink, fontSize: 12, fontWeight: FontWeight.w800))),
+            Expanded(child: Text(context.tr('koota_${item.key}_name'), style: const TextStyle(color: AppTheme.ink, fontSize: 12, fontWeight: FontWeight.w800))),
             Text('${item.points.toStringAsFixed(item.points % 1 == 0 ? 0 : 1)} / ${item.maxPoints.toStringAsFixed(0)}', style: const TextStyle(color: AppTheme.plum, fontSize: 11, fontWeight: FontWeight.w800)),
           ]),
           subtitle: Padding(
@@ -187,7 +187,7 @@ class _KootaTile extends StatelessWidget {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               ClipRRect(borderRadius: BorderRadius.circular(5), child: LinearProgressIndicator(value: ratio, minHeight: 5, backgroundColor: const Color(0xFFF0ECF3), color: ratio >= .75 ? const Color(0xFF5B9877) : ratio >= .4 ? const Color(0xFFC18A3B) : const Color(0xFFB96B68))),
               const SizedBox(height: 6),
-              Text(item.summary, style: const TextStyle(color: AppTheme.muted, fontSize: 9)),
+              Text(context.tr('koota_${item.key}_summary'), style: const TextStyle(color: AppTheme.muted, fontSize: 9)),
             ]),
           ),
           children: [
@@ -197,7 +197,7 @@ class _KootaTile extends StatelessWidget {
               Expanded(child: _ValueBox(label: context.tr('groom_details'), value: item.groomValue)),
             ]),
             const SizedBox(height: 10),
-            Align(alignment: Alignment.centerLeft, child: Text(item.explanation, style: const TextStyle(color: AppTheme.muted, fontSize: 10, height: 1.5))),
+            Align(alignment: Alignment.centerLeft, child: Text(context.tr('koota_${item.key}_explanation'), style: const TextStyle(color: AppTheme.muted, fontSize: 10, height: 1.5))),
           ],
         ),
       ),
