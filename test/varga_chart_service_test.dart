@@ -22,7 +22,7 @@ void main() {
       expect(VargaChartService.mapLongitude(10.1, 3), 4);
       expect(VargaChartService.mapLongitude(20.1, 3), 8);
       expect(VargaChartService.mapLongitude(30.1, 9), 9); // fixed sign -> ninth
-      expect(VargaChartService.mapLongitude(60.1, 9), 4); // dual sign -> fifth
+      expect(VargaChartService.mapLongitude(60.1, 9), 6); // dual sign -> fifth
     });
 
     test('other special Varga starts are applied', () {
