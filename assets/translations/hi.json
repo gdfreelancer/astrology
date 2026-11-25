@@ -214,5 +214,21 @@
   "suggested_baby_names": "सुझाए गए बच्चे के नाम",
   "horoscope_intro": "आने वाले दिन के लिए\nथोड़ा ज्योतिषीय मार्गदर्शन",
   "horoscope_choose_moon": "शुरू करने के लिए अपनी चंद्र राशि चुनें",
-  "horoscope_disclaimer": "ये सामान्य राशि-आधारित विचार हैं, वर्तमान ग्रह गोचर या आपकी व्यक्तिगत जन्म कुंडली से निकली भविष्यवाणी नहीं।"
+  "horoscope_disclaimer": "ये सामान्य राशि-आधारित विचार हैं, वर्तमान ग्रह गोचर या आपकी व्यक्तिगत जन्म कुंडली से निकली भविष्यवाणी नहीं।",
+  "activity_marriage": "विवाह",
+  "activity_marriage_desc": "पारंपरिक विवाह तिथि और समारोह का समय।",
+  "activity_griha_pravesh": "गृह प्रवेश",
+  "activity_griha_pravesh_desc": "नए घर में प्रवेश का शुभ समय।",
+  "activity_vehicle": "वाहन खरीद",
+  "activity_vehicle_desc": "वाहन खरीदने के समय से जुड़े विचार।",
+  "activity_business": "व्यवसाय प्रारंभ",
+  "activity_business_desc": "दुकान, कार्यालय या नया व्यवसाय शुरू करना।",
+  "activity_naming": "नामकरण संस्कार",
+  "activity_naming_desc": "नवजात शिशु का नामकरण संस्कार।",
+  "activity_property": "संपत्ति खरीद",
+  "activity_property_desc": "संपत्ति से जुड़े कार्यों के पारंपरिक मुहूर्त।",
+  "activity_journey": "यात्रा प्रारंभ",
+  "activity_journey_desc": "यात्रा शुरू करने का पारंपरिक शुभ समय।",
+  "activity_learning": "विद्यारंभ",
+  "activity_learning_desc": "शिक्षा या नया पाठ्यक्रम शुरू करना।"
 }
