@@ -230,5 +230,7 @@
   "activity_journey": "Journey Start",
   "activity_journey_desc": "Choosing a traditional time to begin a journey.",
   "activity_learning": "Learning / Vidyarambh",
-  "activity_learning_desc": "Beginning education or a new course of study."
+  "activity_learning_desc": "Beginning education or a new course of study.",
+  "your_selection": "Your selection",
+  "coming_soon": "Coming soon"
 }
