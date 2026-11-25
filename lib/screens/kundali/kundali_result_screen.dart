@@ -11,6 +11,7 @@ import 'graha_analysis_screen.dart';
 import 'rashi_bhava_analysis_screen.dart';
 import 'vimshottari_dasha_screen.dart';
 import 'divisional_charts_screen.dart';
+import 'gochar_yogas_screen.dart';
 
 
 String _localizedRashi(int index) {
@@ -123,6 +124,15 @@ class KundaliResultScreen extends StatelessWidget {
                   siderealMoonLongitude: birthResult.siderealMoonLongitude,
                   birthDate: birthResult.birthLocal,
                 ),
+              )),
+            ),
+            const SizedBox(height: 8),
+            _AnalysisShortcut(
+              icon: Icons.auto_graph_rounded,
+              title: context.tr('gochar_yogas'),
+              subtitle: context.tr('gochar_yogas_short'),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => GocharYogasScreen(chart: birthResult.kundaliChart),
               )),
             ),
             const SizedBox(height: 8),
