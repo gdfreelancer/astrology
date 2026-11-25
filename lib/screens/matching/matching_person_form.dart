@@ -157,7 +157,7 @@ class MatchingPersonFormState extends State<MatchingPersonForm>
           ],
           if (_busy) ...[
             const SizedBox(height: 10),
-            const Row(children: [SizedBox(width: 15, height: 15, child: CircularProgressIndicator(strokeWidth: 2)), SizedBox(width: 8), Text(context.tr('verifying_birth_location'), style: TextStyle(fontSize: 10, color: AppTheme.muted))]),
+            Row(children: [const SizedBox(width: 15, height: 15, child: CircularProgressIndicator(strokeWidth: 2)), const SizedBox(width: 8), Text(context.tr('verifying_birth_location'), style: TextStyle(fontSize: 10, color: AppTheme.muted))]),
           ],
         ]),
       ),
