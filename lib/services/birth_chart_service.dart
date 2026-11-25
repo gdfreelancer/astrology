@@ -98,7 +98,7 @@ class BirthChartService {
     final ascSign = (ascendant / 30).floor().clamp(0, 11).toInt();
 
     double siderealPlanet(astronomy.Body body) {
-      final apparent = astronomy.ecliptic(astronomy.geoVector(body, utcBirth));
+      final apparent = astronomy.ecliptic(astronomy.geoVector(body, utcBirth, true));
       return _normalize(apparent.eLon - ayanamsa);
     }
 
