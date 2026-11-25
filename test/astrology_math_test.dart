@@ -46,7 +46,7 @@ void main() {
     });
 
     test('rejects an invalid half-tithi index', () {
-      expect(() => AstrologyMath.karanaName(60), throwsRangeError);
+      expect(() => AstrologyMath.karanaName(60), throwsA(isA<RangeError>()));
     });
   });
 
