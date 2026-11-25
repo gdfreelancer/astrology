@@ -101,7 +101,7 @@ class _MuhuratScreenState extends State<MuhuratScreen> {
     const SizedBox(height: 8),
     Text('${context.tr('your_selection')}: ${context.tr(activity.title)} on ${_dateLabel(_selectedDate)}${_placeController.text.trim().isEmpty ? '' : ' at ${_placeController.text.trim()}'}', style: const TextStyle(fontSize: 10, height: 1.5, color: AppTheme.ink)),
     const SizedBox(height: 7),
-    const Text('Exact auspicious time windows are not shown yet. They require a verified location-based Panchang calculation using Tithi, Nakshatra, Yoga, Karana, weekday and relevant dosha periods. No time has been assumed or generated.', style: TextStyle(fontSize: 10, height: 1.5, color: AppTheme.muted)),
+    const Text('${context.tr('muhurat_not_ready')}', style: TextStyle(fontSize: 10, height: 1.5, color: AppTheme.muted)),
   ]));
 
   Widget _howItWorks() => Container(padding: const EdgeInsets.all(16), decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18), border: Border.all(color: const Color(0xFFF0EBE5))), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
