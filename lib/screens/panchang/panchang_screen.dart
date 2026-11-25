@@ -105,7 +105,7 @@ class _PanchangScreenState extends State<PanchangScreen>{
         _heroTime(context.tr('moonrise'),d.moonrise==null?'—':_fmt(d.moonrise!,d.location.timeZoneId)),
       ]),
     ])),
-    const SizedBox(height:19),_heading(context.tr('panchang'),context.tr('tap_element')),
+    const SizedBox(height:19),_heading(context.tr('panchang_elements'),context.tr('tap_element')),
     const SizedBox(height:10),
     GridView.builder(shrinkWrap:true,physics:const NeverScrollableScrollPhysics(),itemCount:d.elements.length,gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount:2,crossAxisSpacing:9,mainAxisSpacing:9,childAspectRatio:1.55),itemBuilder:(ctx,i)=>_ElementTile(item:d.elements[i],onTap:()=>_open(PanchangDetailScreen(data:d)))),
     const SizedBox(height:19),_heading(context.tr('sun_moon_timings'),context.tr('calculated_selected_location')),
@@ -115,7 +115,7 @@ class _PanchangScreenState extends State<PanchangScreen>{
       const SizedBox(width:7),_metric('🌙',context.tr('moonrise'),d.moonrise==null?'—':_fmt(d.moonrise!,d.location.timeZoneId)),
       const SizedBox(width:7),_metric('🌘',context.tr('moonset'),d.moonset==null?'—':_fmt(d.moonset!,d.location.timeZoneId)),
     ]),
-    const SizedBox(height:19),_heading('Daily time windows',context.tr('auspicious_inauspicious_periods')),
+    const SizedBox(height:19),_heading(context.tr('daily_time_windows'),context.tr('auspicious_inauspicious_periods')),
     const SizedBox(height:9),_preview(d),
     const SizedBox(height:19),_heading(context.tr('explore_panchang'),context.tr('more_calendar_information')),
     const SizedBox(height:9),
@@ -167,12 +167,12 @@ class _ChoghadiyaScreenState extends State<ChoghadiyaScreen>{
   @override Widget build(BuildContext context){
     final periods=day?widget.data.choghadiyaDay:widget.data.choghadiyaNight;
     return Scaffold(appBar:AppBar(title:Text(context.tr('choghadiya'))),body:ListView(padding:const EdgeInsets.all(17),children:[
-      Container(padding:const EdgeInsets.all(16),decoration:BoxDecoration(gradient:const LinearGradient(colors:[Color(0xFF8062B5),Color(0xFF60468F)]),borderRadius:BorderRadius.circular(18)),child:const Text('Eight daytime and eight nighttime periods calculated from local sunrise and sunset.',style:TextStyle(color:Colors.white,fontSize:12,height:1.5))),
+      Container(padding:const EdgeInsets.all(16),decoration:BoxDecoration(gradient:const LinearGradient(colors:[Color(0xFF8062B5),Color(0xFF60468F)]),borderRadius:BorderRadius.circular(18)),child:Text(context.tr('choghadiya_description'),style:TextStyle(color:Colors.white,fontSize:12,height:1.5))),
       const SizedBox(height:14),
-      SegmentedButton<bool>(segments:const[ButtonSegment(value:true,label:Text('Day · 8')),ButtonSegment(value:false,label:Text('Night · 8'))],selected:{day},onSelectionChanged:(v)=>setState(()=>day=v.first)),
+      SegmentedButton<bool>(segments:[ButtonSegment(value:true,label:Text(context.tr('day_eight'))),ButtonSegment(value:false,label:Text(context.tr('night_eight')))],selected:{day},onSelectionChanged:(v)=>setState(()=>day=v.first)),
       const SizedBox(height:12),
       ...List.generate(periods.length,(i){final p=periods[i];final good=['Amrit','Shubh','Labh','Char'].contains(p.name);final active=DateTime.now().toUtc().isAfter(p.start)&&DateTime.now().toUtc().isBefore(p.end);final color=good?const Color(0xFF438466):const Color(0xFFB75B54);return Container(margin:const EdgeInsets.only(bottom:8),padding:const EdgeInsets.all(12),decoration:BoxDecoration(color:active?const Color(0xFFF2EDF9):Colors.white,borderRadius:BorderRadius.circular(13),border:Border.all(color:active?AppTheme.plum:const Color(0xFFF0EBE5))),child:Row(children:[Container(width:30,height:30,alignment:Alignment.center,decoration:BoxDecoration(color:color.withValues(alpha:.1),borderRadius:BorderRadius.circular(9)),child:Text((i+1).toString(),style:TextStyle(color:color,fontWeight:FontWeight.w800))),const SizedBox(width:10),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(p.name,style:const TextStyle(fontSize:12,fontWeight:FontWeight.w800)),Text(p.category,style:TextStyle(fontSize:9,color:color))])),Text(_fmt(p.start,widget.data.location.timeZoneId)+'\n'+_fmt(p.end,widget.data.location.timeZoneId),textAlign:TextAlign.right,style:const TextStyle(fontSize:10,height:1.5,fontWeight:FontWeight.w800))]));}),
-      const Text('Traditional classifications are guidance and may differ by regional practice.',style:TextStyle(fontSize:9,color:AppTheme.muted)),
+      Text(context.tr('traditional_classifications'),style:TextStyle(fontSize:9,color:AppTheme.muted)),
     ]));
   }
 }
@@ -183,7 +183,7 @@ class DailyTimingsScreen extends StatelessWidget{
     final items=[data.brahma,data.rahuKaal,data.yamaganda,data.gulika,data.abhijit];
     return Scaffold(appBar:AppBar(title:Text(context.tr('daily_timings'))),body:ListView(padding:const EdgeInsets.all(17),children:[
       ...items.map((p){final good=p.category=='Auspicious';final color=good?const Color(0xFF438466):const Color(0xFFB75B54);return Container(margin:const EdgeInsets.only(bottom:9),padding:const EdgeInsets.all(14),decoration:BoxDecoration(color:Colors.white,borderRadius:BorderRadius.circular(14),border:Border.all(color:const Color(0xFFF0EBE5))),child:Row(children:[Icon(good?Icons.auto_awesome:Icons.schedule,color:color),const SizedBox(width:10),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(p.name,style:const TextStyle(fontSize:12,fontWeight:FontWeight.w800)),Text(p.category,style:TextStyle(fontSize:9,color:color))])),Text(_fmt(p.start,data.location.timeZoneId)+'\n'+_fmt(p.end,data.location.timeZoneId),textAlign:TextAlign.right,style:const TextStyle(fontSize:10,height:1.5,fontWeight:FontWeight.w800))]));}),
-      const Text('Rahu Kaal, Yamaganda and Gulika are divided from local daylight. Brahma Muhurat is shown as 96–48 minutes before sunrise. Abhijit is an eighth-daytime-muhurta approximation.',style:TextStyle(fontSize:9,height:1.5,color:AppTheme.muted)),
+      Text(context.tr('rahu_yamaganda_description'),style:TextStyle(fontSize:9,height:1.5,color:AppTheme.muted)),
     ]));
   }
 }
@@ -218,7 +218,7 @@ class _FestivalsScreenState extends State<FestivalsScreen>{
   late List<PanchangObservance> items;
   @override void initState(){super.initState();items=PanchangService.upcomingObservances(from:widget.date,location:widget.location,days:60);}
   @override Widget build(BuildContext context)=>Scaffold(appBar:AppBar(title:Text(context.tr('vrat_observances'))),body:ListView(padding:const EdgeInsets.all(17),children:[
-    Container(padding:const EdgeInsets.all(16),decoration:BoxDecoration(gradient:const LinearGradient(colors:[Color(0xFF9A7044),Color(0xFF76512F)]),borderRadius:BorderRadius.circular(18)),child:const Text('Upcoming lunar observances\nDates identified from Tithi active at local sunrise.',style:TextStyle(fontSize:15,height:1.5,color:Colors.white,fontWeight:FontWeight.w800))),
+    Container(padding:const EdgeInsets.all(16),decoration:BoxDecoration(gradient:const LinearGradient(colors:[Color(0xFF9A7044),Color(0xFF76512F)]),borderRadius:BorderRadius.circular(18)),child:Text(context.tr('upcoming_observances_title')+'\n'+context.tr('upcoming_observances_description'),style:TextStyle(fontSize:15,height:1.5,color:Colors.white,fontWeight:FontWeight.w800))),
     const SizedBox(height:14),
     if(items.isEmpty)Text(context.tr('no_observances'),style:TextStyle(fontSize:11,color:AppTheme.muted)),
     ...items.map((e)=>Container(margin:const EdgeInsets.only(bottom:8),padding:const EdgeInsets.all(12),decoration:BoxDecoration(color:Colors.white,borderRadius:BorderRadius.circular(14),border:Border.all(color:const Color(0xFFF0EBE5))),child:Row(children:[
