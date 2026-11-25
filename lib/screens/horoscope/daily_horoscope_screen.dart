@@ -104,8 +104,8 @@ class _DailyHoroscopeScreenState extends State<DailyHoroscopeScreen> {
   Widget _introCard(BuildContext context) => Container(padding: const EdgeInsets.all(19), decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFF8062B5), Color(0xFF60468F)], begin: Alignment.topLeft, end: Alignment.bottomRight), borderRadius: BorderRadius.circular(23)), child: Row(children: [
     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(context.tr('your_daily_cosmic_note'), style: TextStyle(color: Color(0xFFE9DFF8), fontSize: 9, letterSpacing: 1.3, fontWeight: FontWeight.w800)),
-      SizedBox(height: 8), Text('A little guidance for\nthe day ahead', style: TextStyle(color: Colors.white, fontSize: 21, height: 1.2, fontWeight: FontWeight.w800)),
-      SizedBox(height: 6), Text('Choose your Moon sign to begin', style: TextStyle(color: Color(0xFFE9DFF8), fontSize: 10)),
+      SizedBox(height: 8), Text(context.tr('horoscope_intro'), style: TextStyle(color: Colors.white, fontSize: 21, height: 1.2, fontWeight: FontWeight.w800)),
+      SizedBox(height: 6), Text(context.tr('horoscope_choose_moon'), style: TextStyle(color: Color(0xFFE9DFF8), fontSize: 10)),
     ])), SizedBox(width: 12), Text('✨', style: TextStyle(fontSize: 52)),
   ]));
 
