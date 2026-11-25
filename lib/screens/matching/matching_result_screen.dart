@@ -119,7 +119,7 @@ class MatchingResultScreen extends StatelessWidget {
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(color: const Color(0xFFFFF6E8), borderRadius: BorderRadius.circular(17), border: Border.all(color: const Color(0xFFF1E2C9))),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Row(children: [Icon(Icons.info_outline_rounded, color: Color(0xFF9C7138), size: 17), SizedBox(width: 7), Text(context.tr('what_report_covers'), style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Color(0xFF795D36)))]),
+                Row(children: [const Icon(Icons.info_outline_rounded, color: Color(0xFF9C7138), size: 17), const SizedBox(width: 7), Text(context.tr('what_report_covers'), style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Color(0xFF795D36)))]),
                 SizedBox(height: 8),
                 Text('This report calculates the eight Ashtakoota categories using Moon sign and Nakshatra data. Individual D1 placements are displayed for reference, but they are not yet used to calculate Manglik Dosha, planetary aspects, Lagna compatibility or Dosha cancellation. The scoring uses a documented baseline table; regional traditions can differ.', style: TextStyle(fontSize: 10, height: 1.55, color: Color(0xFF795D36))),
               ]),
