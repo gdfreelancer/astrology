@@ -7,6 +7,7 @@ import '../../services/kundali/kundali_preferences_service.dart';
 import '../../services/settings/app_preferences_service.dart';
 import '../../theme/app_theme.dart';
 import '../kundali/kundali_chart_style_screen.dart';
+import '../rashi/rashi_data.dart';
 import 'language_selection_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -80,7 +81,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       builder: (sheet) => _ChoiceSheet(
         title: context.tr('default_rashi'),
         children: _rashis.map((rashi) => ListTile(
-          title: Text(_rashiLabel(rashi)),
+          title: Text(_rashiLabel(context, rashi)),
           trailing: _defaultRashi == rashi ? const Icon(Icons.check_circle, color: AppTheme.plum) : null,
           onTap: () => Navigator.pop(sheet, rashi),
         )).toList(),
@@ -91,16 +92,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (mounted) setState(() => _defaultRashi = selected);
   }
 
-  String _rashiLabel(String value) {
-    const labels = {
-      'Mesha': 'Aries · Mesha', 'Vrishabha': 'Taurus · Vrishabha',
-      'Mithuna': 'Gemini · Mithuna', 'Karka': 'Cancer · Karka',
-      'Simha': 'Leo · Simha', 'Kanya': 'Virgo · Kanya',
-      'Tula': 'Libra · Tula', 'Vrishchika': 'Scorpio · Vrishchika',
-      'Dhanu': 'Sagittarius · Dhanu', 'Makara': 'Capricorn · Makara',
-      'Kumbha': 'Aquarius · Kumbha', 'Meena': 'Pisces · Meena',
+  String _rashiLabel(BuildContext context, String value) {
+    const order = ['Mesha', 'Vrishabha', 'Mithuna', 'Karka', 'Simha', 'Kanya', 'Tula', 'Vrishchika', 'Dhanu', 'Makara', 'Kumbha', 'Meena'];
+    final index = order.indexOf(value);
+    if (index < 0 || index >= rashis.length) return value;
+    final rashi = rashis[index];
+    final language = AppLocale.locale.value.languageCode;
+    final localized = switch (language) {
+      'hi' => rashi.hindi,
+      'gu' => rashi.gujarati,
+      _ => rashi.english,
     };
-    return labels[value] ?? value;
+    return '$localized · ${rashi.english}';
   }
 
   Future<void> _editLocation() async {
@@ -204,7 +207,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(height: 18),
                 _section(context.tr('horoscope_preferences')),
                 _group([
-                  _SettingTile(icon: Icons.auto_awesome_rounded, title: context.tr('default_rashi'), subtitle: context.tr('default_rashi_description'), value: _rashiLabel(_defaultRashi), onTap: _selectRashi),
+                  _SettingTile(icon: Icons.auto_awesome_rounded, title: context.tr('default_rashi'), subtitle: context.tr('default_rashi_description'), value: _rashiLabel(context, _defaultRashi), onTap: _selectRashi),
                 ]),
                 const SizedBox(height: 18),
                 _section(context.tr('about')),
@@ -253,7 +256,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     showDialog<void>(context: context, builder: (dialogContext) => AlertDialog(
       title: Text(context.tr('notifications')),
       content: Text(context.tr('notifications_coming_soon')),
-      actions: [TextButton(onPressed: () => Navigator.pop(dialogContext), child: Text(context.tr('try_again')))],
+      actions: [TextButton(onPressed: () => Navigator.pop(dialogContext), child: Text(context.tr('close')))],
     ));
   }
 
