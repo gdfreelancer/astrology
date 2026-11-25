@@ -153,7 +153,9 @@ class PanchangService {
     required PanchangLocation location,
     int days = 90,
   }) {
-    final start = DateTime.utc(from.year, from.month, from.day);
+    final zone = tz.getLocation(location.timeZoneId);
+    final localStart = tz.TZDateTime(zone, from.year, from.month, from.day);
+    final start = localStart.toUtc();
     final end = start.add(Duration(days: days));
     final events = <PanchangLunarEvent>[];
     var cursor = start;
