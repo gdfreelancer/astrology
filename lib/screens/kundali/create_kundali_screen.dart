@@ -379,8 +379,8 @@ class _TimeZoneDialogState extends State<_TimeZoneDialog> {
       child: SizedBox(
         height: MediaQuery.of(context).size.height * .72,
         child: Column(children: [
-          const Padding(padding: EdgeInsets.fromLTRB(18, 19, 18, 8), child: Align(alignment: Alignment.centerLeft, child: Text(context.tr('select_birth_timezone'), style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800)))),
-          Padding(padding: const EdgeInsets.symmetric(horizontal: 15), child: TextField(onChanged: (v) => setState(() => query = v), decoration: const InputDecoration(hintText: context.tr('search_city_or_timezone'), prefixIcon: Icon(Icons.search_rounded)))),
+          Padding(padding: const EdgeInsets.fromLTRB(18, 19, 18, 8), child: Align(alignment: Alignment.centerLeft, child: Text(context.tr('select_birth_timezone'), style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800)))),
+          Padding(padding: const EdgeInsets.symmetric(horizontal: 15), child: TextField(onChanged: (v) => setState(() => query = v), decoration: InputDecoration(hintText: context.tr('search_city_or_timezone'), prefixIcon: Icon(Icons.search_rounded)))),
           Expanded(child: ListView.builder(
             itemCount: filtered.length,
             itemBuilder: (_, index) {
