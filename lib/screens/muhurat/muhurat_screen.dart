@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_locale.dart';
 
 import '../../theme/app_theme.dart';
+import '../../services/settings/app_preferences_service.dart';
 
 class MuhuratScreen extends StatefulWidget {
   const MuhuratScreen({super.key});
@@ -25,6 +26,17 @@ class _MuhuratScreenState extends State<MuhuratScreen> {
   DateTime _selectedDate = DateUtils.dateOnly(DateTime.now());
   final _placeController = TextEditingController();
   bool _showNotice = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDefaultLocation();
+  }
+
+  Future<void> _loadDefaultLocation() async {
+    final saved = await AppPreferencesService.defaultLocation();
+    if (mounted && _placeController.text.trim().isEmpty) _placeController.text = saved.name;
+  }
 
   @override
   void dispose() { _placeController.dispose(); super.dispose(); }
@@ -109,7 +121,7 @@ class _MuhuratScreenState extends State<MuhuratScreen> {
     ])),
   ]));
   String _dateLabel(DateTime date) => '${_month(date.month)} ${date.day}, ${date.year}';
-  String _month(int month) => const ['January','February','March','April','May','June','July','August','September','October','November','December'][month - 1];
+  String _month(int month) => AppLocale.text('month_$month');
 }
 
 class _MuhuratActivity {
