@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_locale.dart';
+
 import '../../theme/app_theme.dart';
 import '../../widgets/rashi_artwork.dart';
 import 'rashi_info.dart';
@@ -23,7 +25,7 @@ class RashiDetailScreen extends StatelessWidget {
             Text(rashi.gujarati, style: const TextStyle(color: Color(0xFFFFDCA0), fontSize: 15, fontWeight: FontWeight.w800)),
             const SizedBox(height: 3),
             Text(rashi.english, style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.w800)),
-            Text('Rashi ${rashi.number}  •  ${rashi.symbol}', style: const TextStyle(color: Color(0xFFE8DFF3), fontSize: 11)),
+            Text(' ${context.tr('rashi_number')} ${rashi.number}  •  ${rashi.symbol}', style: const TextStyle(color: Color(0xFFE8DFF3), fontSize: 11)),
           ])),
         ])),
       ),
@@ -32,29 +34,29 @@ class RashiDetailScreen extends StatelessWidget {
         sliver: SliverList(delegate: SliverChildListDelegate([
           Text(rashi.summary, style: const TextStyle(fontSize: 14, height: 1.55, color: AppTheme.ink, fontWeight: FontWeight.w600)),
           const SizedBox(height: 20),
-          _sectionTitle('Traditional Rashi details', 'Core attributes in Vedic astrology'),
+          _sectionTitle(context.tr('traditional_rashi_details'), context.tr('core_vedic_attributes')),
           const SizedBox(height: 11),
-          _attributeGrid(),
+          _attributeGrid(context),
           const SizedBox(height: 24),
-          _sectionTitle('Personality & nature', 'Traditional interpretations'),
+          _sectionTitle(context.tr('personality_nature'), context.tr('traditional_interpretations')),
           const SizedBox(height: 10),
           _infoCard(rashi.personality),
           const SizedBox(height: 12),
-          _bulletCard('Strengths', rashi.strengths, const Color(0xFFEAF4EC)),
+          _bulletCard(context.tr('strengths'), rashi.strengths, const Color(0xFFEAF4EC)),
           const SizedBox(height: 10),
-          _bulletCard('Growth areas', rashi.challenges, const Color(0xFFFFF2E5)),
+          _bulletCard(context.tr('growth_areas'), rashi.challenges, const Color(0xFFFFF2E5)),
           const SizedBox(height: 24),
-          _sectionTitle('Life themes', 'General traditional associations, not predictions'),
+          _sectionTitle(context.tr('life_themes'), context.tr('general_associations')),
           const SizedBox(height: 11),
-          _lifeCard('♡', 'Love & relationships', rashi.love),
-          _lifeCard('✧', 'Career & work', rashi.career),
-          _lifeCard('₹', 'Money & resources', rashi.finance),
-          _lifeCard('⌂', 'Family & home', rashi.family),
-          _lifeCard('✺', 'Body symbolism', rashi.wellbeing),
+          _lifeCard('♡', context.tr('love_relationships'), rashi.love),
+          _lifeCard('✧', context.tr('career_work'), rashi.career),
+          _lifeCard('₹', context.tr('money_resources'), rashi.finance),
+          _lifeCard('⌂', context.tr('family_home'), rashi.family),
+          _lifeCard('✺', context.tr('body_symbolism'), rashi.wellbeing),
           const SizedBox(height: 24),
-          _sectionTitle('Nakshatras in this Rashi', 'Nakshatra portions and their Pada coverage'),
+          _sectionTitle(context.tr('nakshatras_in_rashi'), context.tr('nakshatra_pada_coverage')),
           const SizedBox(height: 9),
-          _infoCard('These are the Nakshatra portions that fall within ${rashi.sanskrit}. A Nakshatra can extend across two adjacent Rashis.'),
+          _infoCard('${context.tr('nakshatra_portions')}'),
           const SizedBox(height: 10),
           ...rashi.nakshatras.map((item) => Container(
             margin: const EdgeInsets.only(bottom: 8),
@@ -70,21 +72,21 @@ class RashiDetailScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(color: const Color(0xFFFFF6E8), borderRadius: BorderRadius.circular(16), border: Border.all(color: const Color(0xFFF2E5D0))),
-            child: const Text('Astrology content is presented for cultural and educational interest. Individual birth-chart results depend on exact planetary positions, birth time, location and the tradition used. Health, financial and relationship decisions should not be based on Rashi descriptions alone.', style: TextStyle(fontSize: 10, height: 1.5, color: AppTheme.muted)),
+            child: Text(context.tr('astrology_education_disclaimer'), style: TextStyle(fontSize: 10, height: 1.5, color: AppTheme.muted)),
           ),
         ])),
       ),
     ]),
   );
 
-  Widget _attributeGrid() {
+  Widget _attributeGrid(BuildContext context) {
     final items = [
-      ('Ruling planet', rashi.ruler, '☼'),
-      ('Element / Tatva', rashi.element, '✧'),
-      ('Nature', rashi.nature, '◈'),
-      ('Gender', rashi.gender, '◇'),
-      ('Direction', rashi.direction, '➤'),
-      ('Body association', rashi.bodyPart, '◎'),
+      (context.tr('ruling_planet'), rashi.ruler, '☼'),
+      (context.tr('element_tatva'), rashi.element, '✧'),
+      (context.tr('nature'), rashi.nature, '◈'),
+      (context.tr('gender'), rashi.gender, '◇'),
+      (context.tr('direction'), rashi.direction, '➤'),
+      (context.tr('body_association'), rashi.bodyPart, '◎'),
     ];
     return GridView.builder(
       itemCount: items.length,
