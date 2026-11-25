@@ -88,6 +88,10 @@ class MatchingPersonFormState extends State<MatchingPersonForm>
       context: context,
       initialTime: _time ?? const TimeOfDay(hour: 12, minute: 0),
       helpText: context.tr('exact_time_of_birth'),
+      builder: (dialogContext, child) => MediaQuery(
+        data: MediaQuery.of(dialogContext).copyWith(alwaysUse24HourFormat: AppPreferencesService.cachedUse24HourTime),
+        child: child!,
+      ),
     );
     if (value != null) setState(() => _time = value);
   }
