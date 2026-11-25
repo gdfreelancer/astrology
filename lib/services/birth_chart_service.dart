@@ -215,6 +215,14 @@ class BirthChartService {
   /// Sripati-style Bhava Madhya: each quadrant (MC→Asc, Asc→IC, etc.)
   /// is divided into three equal house-centre intervals. Sandhi boundaries
   /// are the midpoints between adjacent Bhava Madhyas, as in the PDF method.
+  static List<BhavaHouse> calculateBhavaHouses({
+    required double ascendantLongitude,
+    required double midheavenLongitude,
+  }) => _calculateBhavas(ascendantLongitude, midheavenLongitude);
+
+  static int houseForLongitude(double longitude, List<BhavaHouse> houses) =>
+      _findBhava(longitude, houses);
+
   static List<BhavaHouse> _calculateBhavas(double ascendant, double mc) {
     final ic = _normalize(mc + 180);
     final descendant = _normalize(ascendant + 180);
