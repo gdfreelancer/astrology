@@ -5,6 +5,7 @@ import 'package:timezone/timezone.dart' as tz;
 
 import '../data/nakshatra_data.dart';
 import '../models/birth_chart_result.dart';
+import '../models/kundali/kundali_graha.dart';
 
 class BirthChartService {
   static BirthChartResult calculate({
@@ -41,6 +42,8 @@ class BirthChartService {
     final pada = (withinNakshatra / padaSpan).floor() + 1;
     final rashiIndex = (siderealLongitude / 30.0).floor().clamp(0, 11).toInt();
 
+    final kundaliChart = _calculateKundaliChart(utcBirth, latitude, longitude, ayanamsa);
+
     final boundaryDistance = math.min(
       withinNakshatra % padaSpan,
       padaSpan - (withinNakshatra % padaSpan),
@@ -66,6 +69,78 @@ class BirthChartService {
       namingSyllable: nakshatras[nakshatraIndex].syllables[pada - 1],
       nakshatraProgress: withinNakshatra / nakshatraSpan,
       nearBoundary: boundaryDistance < 0.03,
+      kundaliChart: kundaliChart,
+    );
+  }
+
+
+  static KundaliChart _calculateKundaliChart(
+    DateTime utcBirth,
+    double latitude,
+    double longitude,
+    double ayanamsa,
+  ) {
+    final obliquity = astronomy.eTilt(astronomy.AstroTime(utcBirth)).tobl;
+    final localSiderealDegrees =
+        ((astronomy.siderealTime(utcBirth) * 15.0 + longitude) % 360 + 360) % 360;
+    final theta = localSiderealDegrees * math.pi / 180;
+    final phi = latitude * math.pi / 180;
+    final epsilon = obliquity * math.pi / 180;
+
+    final ascTropical = _normalize(
+      (math.atan2(
+        -math.cos(theta),
+        math.sin(epsilon) * math.tan(phi) +
+            math.cos(epsilon) * math.sin(theta),
+      ) * 180 / math.pi) + 180,
+    );
+    final ascendant = _normalize(ascTropical - ayanamsa);
+    final ascSign = (ascendant / 30).floor().clamp(0, 11).toInt();
+
+    double siderealPlanet(astronomy.Body body) {
+      final apparent = astronomy.ecliptic(astronomy.geoVector(body, utcBirth));
+      return _normalize(apparent.eLon - ayanamsa);
+    }
+
+    final positions = <({String name, String symbol, double longitude})>[
+      (name: 'Sun', symbol: 'Su', longitude: _normalize(astronomy.sunPosition(utcBirth).elon - ayanamsa)),
+      (name: 'Moon', symbol: 'Mo', longitude: _normalize(astronomy.eclipticGeoMoon(utcBirth).lon - ayanamsa)),
+      (name: 'Mars', symbol: 'Ma', longitude: siderealPlanet(astronomy.Body.Mars)),
+      (name: 'Mercury', symbol: 'Me', longitude: siderealPlanet(astronomy.Body.Mercury)),
+      (name: 'Jupiter', symbol: 'Ju', longitude: siderealPlanet(astronomy.Body.Jupiter)),
+      (name: 'Venus', symbol: 'Ve', longitude: siderealPlanet(astronomy.Body.Venus)),
+      (name: 'Saturn', symbol: 'Sa', longitude: siderealPlanet(astronomy.Body.Saturn)),
+    ];
+
+    final j2000 = DateTime.utc(2000, 1, 1, 12);
+    final centuries = utcBirth.difference(j2000).inMicroseconds /
+        Duration.microsecondsPerDay / 36525.0;
+    final rahuTropical = _normalize(
+      125.04452 - 1934.136261 * centuries +
+          0.0020708 * centuries * centuries +
+          centuries * centuries * centuries / 450000,
+    );
+    final rahu = _normalize(rahuTropical - ayanamsa);
+    positions
+      ..add((name: 'Rahu', symbol: 'Ra', longitude: rahu))
+      ..add((name: 'Ketu', symbol: 'Ke', longitude: _normalize(rahu + 180)));
+
+    final grahas = positions.map((position) {
+      final sign = (position.longitude / 30).floor().clamp(0, 11).toInt();
+      final house = ((sign - ascSign + 12) % 12) + 1;
+      return KundaliGraha(
+        name: position.name,
+        symbol: position.symbol,
+        longitude: position.longitude,
+        signIndex: sign,
+        houseNumber: house,
+      );
+    }).toList();
+
+    return KundaliChart(
+      ascendantLongitude: ascendant,
+      ascendantSignIndex: ascSign,
+      grahas: grahas,
     );
   }
 
