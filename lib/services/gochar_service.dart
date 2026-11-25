@@ -63,24 +63,45 @@ class GocharService {
     return definitions.map((item) {
       final beforeDate = utc.subtract(const Duration(hours: 12));
       final afterDate = utc.add(const Duration(hours: 12));
+      double atRahu(DateTime d) {
+        final t = d.difference(DateTime.utc(2000, 1, 1, 12)).inMicroseconds /
+            Duration.microsecondsPerDay /
+            36525.0;
+        return _norm(
+          125.04452 -
+              1934.136261 * t +
+              0.0020708 * t * t +
+              t * t * t / 450000 -
+              AyanamshaService.lahiri(d),
+        );
+      }
+
       double at(DateTime d) {
-        if (item.$1 == 'Moon') return _norm(astronomy.eclipticGeoMoon(d).lon - AyanamshaService.lahiri(d));
-        if (item.$1 == 'Sun') return _norm(astronomy.sunPosition(d).eLon - AyanamshaService.lahiri(d));
-        if (item.$1 == 'Rahu') {
-          final t = d.difference(DateTime.utc(2000,1,1,12)).inMicroseconds / Duration.microsecondsPerDay / 36525.0;
-          return _norm(125.04452 - 1934.136261*t + .0020708*t*t + t*t*t/450000 - AyanamshaService.lahiri(d));
+        if (item.$1 == 'Moon') {
+          return _norm(
+            astronomy.eclipticGeoMoon(d).lon - AyanamshaService.lahiri(d),
+          );
         }
-        if (item.$1 == 'Ketu') return _norm(atRahu(d)+180);
-        final body = switch(item.$1) {
-          'Mars' => astronomy.Body.Mars, 'Mercury' => astronomy.Body.Mercury,
-          'Jupiter' => astronomy.Body.Jupiter, 'Venus' => astronomy.Body.Venus,
+        if (item.$1 == 'Sun') {
+          return _norm(
+            astronomy.sunPosition(d).eLon - AyanamshaService.lahiri(d),
+          );
+        }
+        if (item.$1 == 'Rahu') return atRahu(d);
+        if (item.$1 == 'Ketu') return _norm(atRahu(d) + 180);
+        final body = switch (item.$1) {
+          'Mars' => astronomy.Body.Mars,
+          'Mercury' => astronomy.Body.Mercury,
+          'Jupiter' => astronomy.Body.Jupiter,
+          'Venus' => astronomy.Body.Venus,
           _ => astronomy.Body.Saturn,
         };
-        return _norm(astronomy.ecliptic(astronomy.geoVector(body,d,true)).eLon - AyanamshaService.lahiri(d));
-      }
-      double atRahu(DateTime d) {
-        final t = d.difference(DateTime.utc(2000,1,1,12)).inMicroseconds / Duration.microsecondsPerDay / 36525.0;
-        return _norm(125.04452 - 1934.136261*t + .0020708*t*t + t*t*t/450000 - AyanamshaService.lahiri(d));
+        return _norm(
+          astronomy.ecliptic(
+            astronomy.geoVector(body, d, true),
+          ).eLon -
+              AyanamshaService.lahiri(d),
+        );
       }
       final delta = _norm(at(afterDate)-at(beforeDate));
       final signed = delta > 180 ? delta-360 : delta;
