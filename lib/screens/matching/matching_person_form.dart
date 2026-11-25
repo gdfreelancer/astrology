@@ -50,7 +50,7 @@ class MatchingPersonFormState extends State<MatchingPersonForm>
     setState(() { _busy = true; _error = null; });
     try {
       final places = await Geocoding().locationFromAddress(_place.text.trim());
-      if (places.isEmpty) throw StateError('No matching place found');
+      if (places.isEmpty) throw StateError(context.tr('no_matching_place_found'));
       final location = places.first;
       final result = BirthChartService.calculate(
         birthDate: _date!,
@@ -131,7 +131,7 @@ class MatchingPersonFormState extends State<MatchingPersonForm>
           TextFormField(
             controller: _name,
             textCapitalization: TextCapitalization.words,
-            validator: (value) => value == null || value.trim().isEmpty ? 'Enter the ${widget.role.toLowerCase()} name.' : null,
+            validator: (value) => value == null || value.trim().isEmpty ? context.tr('enter_person_name').replaceAll('{role}', widget.role.toLowerCase()) : null,
             decoration: _input(context, context.tr('enter_name'), Icons.person_outline_rounded),
           ),
           const SizedBox(height: 12),
@@ -157,7 +157,7 @@ class MatchingPersonFormState extends State<MatchingPersonForm>
           ],
           if (_busy) ...[
             const SizedBox(height: 10),
-            const Row(children: [SizedBox(width: 15, height: 15, child: CircularProgressIndicator(strokeWidth: 2)), SizedBox(width: 8), Text('Verifying birth location…', style: TextStyle(fontSize: 10, color: AppTheme.muted))]),
+            const Row(children: [SizedBox(width: 15, height: 15, child: CircularProgressIndicator(strokeWidth: 2)), SizedBox(width: 8), Text(context.tr('verifying_birth_location'), style: TextStyle(fontSize: 10, color: AppTheme.muted))]),
           ],
         ]),
       ),
