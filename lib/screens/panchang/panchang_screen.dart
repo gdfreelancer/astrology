@@ -132,7 +132,7 @@ class _PanchangScreenState extends State<PanchangScreen>{
     _link('⏳',context.tr('choghadiya'),context.tr('day_night_periods'),()=>_open(ChoghadiyaScreen(data:d))),
     _link('🕉️',context.tr('daily_timings'),context.tr('rahu_yamaganda_muhurat'),()=>_open(DailyTimingsScreen(data:d))),
     _link('🗓️',context.tr('hindu_calendar'),'Monthly Tithi calendar',()=>_open(PanchangCalendarScreen(date:_date,location:_location,onDateSelected:(v){Navigator.pop(context);setState(()=>_date=v);_load();}))),
-    _link('🌼',context.tr('vrat_observances'),'Upcoming Tithi-based days',()=>_open(FestivalsScreen(date:_date,location:_location))),
+    _link('🌼',context.tr('vrat_observances'),context.tr('upcoming_observances_description'),()=>_open(FestivalsScreen(date:_date,location:_location))),
     const SizedBox(height:10),
     Container(padding:const EdgeInsets.all(14),decoration:BoxDecoration(color:const Color(0xFFFFF5E7),borderRadius:BorderRadius.circular(15)),child:Text(_pText(d.sunRashi)+' · '+_pText(d.ritu)+' · '+_pText(d.ayana)+'\nAyanamsha: '+d.ayanamsha.toStringAsFixed(2)+'°',style:const TextStyle(fontSize:10,height:1.6,fontWeight:FontWeight.w700,color:AppTheme.ink))),
     const SizedBox(height:12),Text(context.tr('panchang_disclaimer'),style:TextStyle(fontSize:9,height:1.5,color:AppTheme.muted)),
@@ -181,7 +181,7 @@ class _ChoghadiyaScreenState extends State<ChoghadiyaScreen>{
       const SizedBox(height:14),
       SegmentedButton<bool>(segments:[ButtonSegment(value:true,label:Text(context.tr('day_eight'))),ButtonSegment(value:false,label:Text(context.tr('night_eight')))],selected:{day},onSelectionChanged:(v)=>setState(()=>day=v.first)),
       const SizedBox(height:12),
-      ...List.generate(periods.length,(i){final p=periods[i];final good=['Amrit','Shubh','Labh','Char'].contains(p.name);final active=DateTime.now().toUtc().isAfter(p.start)&&DateTime.now().toUtc().isBefore(p.end);final color=good?const Color(0xFF438466):const Color(0xFFB75B54);return Container(margin:const EdgeInsets.only(bottom:8),padding:const EdgeInsets.all(12),decoration:BoxDecoration(color:active?const Color(0xFFF2EDF9):Colors.white,borderRadius:BorderRadius.circular(13),border:Border.all(color:active?AppTheme.plum:const Color(0xFFF0EBE5))),child:Row(children:[Container(width:30,height:30,alignment:Alignment.center,decoration:BoxDecoration(color:color.withValues(alpha:.1),borderRadius:BorderRadius.circular(9)),child:Text((i+1).toString(),style:TextStyle(color:color,fontWeight:FontWeight.w800))),const SizedBox(width:10),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(p.name,style:const TextStyle(fontSize:12,fontWeight:FontWeight.w800)),Text(_pText(p.category),style:TextStyle(fontSize:9,color:color))])),Text(_fmt(p.start,widget.data.location.timeZoneId)+'\n'+_fmt(p.end,widget.data.location.timeZoneId),textAlign:TextAlign.right,style:const TextStyle(fontSize:10,height:1.5,fontWeight:FontWeight.w800))]));}),
+      ...List.generate(periods.length,(i){final p=periods[i];final good=['Amrit','Shubh','Labh','Char'].contains(p.name);final active=DateTime.now().toUtc().isAfter(p.start)&&DateTime.now().toUtc().isBefore(p.end);final color=good?const Color(0xFF438466):const Color(0xFFB75B54);return Container(margin:const EdgeInsets.only(bottom:8),padding:const EdgeInsets.all(12),decoration:BoxDecoration(color:active?const Color(0xFFF2EDF9):Colors.white,borderRadius:BorderRadius.circular(13),border:Border.all(color:active?AppTheme.plum:const Color(0xFFF0EBE5))),child:Row(children:[Container(width:30,height:30,alignment:Alignment.center,decoration:BoxDecoration(color:color.withValues(alpha:.1),borderRadius:BorderRadius.circular(9)),child:Text((i+1).toString(),style:TextStyle(color:color,fontWeight:FontWeight.w800))),const SizedBox(width:10),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(_pText(p.name),style:const TextStyle(fontSize:12,fontWeight:FontWeight.w800)),Text(_pText(p.category),style:TextStyle(fontSize:9,color:color))])),Text(_fmt(p.start,widget.data.location.timeZoneId)+'\n'+_fmt(p.end,widget.data.location.timeZoneId),textAlign:TextAlign.right,style:const TextStyle(fontSize:10,height:1.5,fontWeight:FontWeight.w800))]));}),
       Text(context.tr('traditional_classifications'),style:TextStyle(fontSize:9,color:AppTheme.muted)),
     ]));
   }
@@ -233,7 +233,7 @@ class _FestivalsScreenState extends State<FestivalsScreen>{
     if(items.isEmpty)Text(context.tr('no_observances'),style:TextStyle(fontSize:11,color:AppTheme.muted)),
     ...items.map((e)=>Container(margin:const EdgeInsets.only(bottom:8),padding:const EdgeInsets.all(12),decoration:BoxDecoration(color:Colors.white,borderRadius:BorderRadius.circular(14),border:Border.all(color:const Color(0xFFF0EBE5))),child:Row(children:[
       Container(width:43,height:45,alignment:Alignment.center,decoration:BoxDecoration(color:const Color(0xFFFFF3E1),borderRadius:BorderRadius.circular(10)),child:Column(mainAxisAlignment:MainAxisAlignment.center,children:[Text(e.date.day.toString(),style:const TextStyle(fontSize:17,fontWeight:FontWeight.w800)),Text(_monthName(e.date.month).substring(0,3).toUpperCase(),style:const TextStyle(fontSize:7,color:AppTheme.muted,fontWeight:FontWeight.w800))])),
-      const SizedBox(width:10),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(_pText(e.title),style:const TextStyle(fontSize:11,fontWeight:FontWeight.w800)),Text(_pText(e.subtitle),style:const TextStyle(fontSize:9,color:AppTheme.muted))])),Text(_pText(e.category).toUpperCase(),style:const TextStyle(fontSize:8,color:AppTheme.plum,fontWeight:FontWeight.w800)),
+      const SizedBox(width:10),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(_pText(e.title),style:const TextStyle(fontSize:11,fontWeight:FontWeight.w800)),Text(_localizedObservanceSubtitle(e.subtitle),style:const TextStyle(fontSize:9,color:AppTheme.muted))])),Text(_pText(e.category).toUpperCase(),style:const TextStyle(fontSize:8,color:AppTheme.plum,fontWeight:FontWeight.w800)),
     ]))),
     const SizedBox(height:8),Text(context.tr('observance_disclaimer'),style:TextStyle(fontSize:9,height:1.5,color:AppTheme.muted)),
   ]));
@@ -245,6 +245,18 @@ String _monthName(int m)=>AppLocale.text('month_$m');
   final key = special[value] ?? 'p_$slug';
   final translated = AppLocale.text(key);
   return translated == key ? value : translated;
+}
+
+String _localizedObservanceSubtitle(String value) {
+  if (value.contains('Lunar day')) {
+    final parts = value.split(' · ');
+    return AppLocale.text('p_paksha_lunar_day').replaceAll('{paksha}', _pText(parts.first)).replaceAll('{n}', parts.last.split(' ').last);
+  }
+  if (value.contains('Trayodashi at sunset')) {
+    final paksha = value.split(' · ').first;
+    return AppLocale.text('p_trayodashi_sunset').replaceAll('{paksha}', _pText(paksha));
+  }
+  return _pText(value);
 }
 
 String _pDescription(String name, String value) {
@@ -404,7 +416,7 @@ class _PanchangScreenState extends State<PanchangScreen>{
 class _ElementTile extends StatelessWidget{
   const _ElementTile({required this.item,required this.onTap});
   final PanchangElement item;final VoidCallback onTap;
-  @override Widget build(BuildContext context)=>Material(color:Colors.white,borderRadius:BorderRadius.circular(15),child:InkWell(onTap:onTap,borderRadius:BorderRadius.circular(15),child:Container(padding:const EdgeInsets.all(12),decoration:BoxDecoration(borderRadius:BorderRadius.circular(15),border:Border.all(color:const Color(0xFFF0EBE5))),child:Column(crossAxisAlignment:CrossAxisAlignment.start,mainAxisAlignment:MainAxisAlignment.center,children:[Text(item.name.toUpperCase(),style:const TextStyle(fontSize:8,letterSpacing:1,color:AppTheme.muted,fontWeight:FontWeight.w800)),const SizedBox(height:6),Text(item.value,maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:14,fontWeight:FontWeight.w800)),const SizedBox(height:4),Text(item.description,maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:8,color:AppTheme.muted)),const SizedBox(height:5),Text(context.tr('view_details'),style:TextStyle(fontSize:8,color:AppTheme.plum,fontWeight:FontWeight.w800))]))));
+  @override Widget build(BuildContext context)=>Material(color:Colors.white,borderRadius:BorderRadius.circular(15),child:InkWell(onTap:onTap,borderRadius:BorderRadius.circular(15),child:Container(padding:const EdgeInsets.all(12),decoration:BoxDecoration(borderRadius:BorderRadius.circular(15),border:Border.all(color:const Color(0xFFF0EBE5))),child:Column(crossAxisAlignment:CrossAxisAlignment.start,mainAxisAlignment:MainAxisAlignment.center,children:[Text(_pText(item.name).toUpperCase(),style:const TextStyle(fontSize:8,letterSpacing:1,color:AppTheme.muted,fontWeight:FontWeight.w800)),const SizedBox(height:6),Text(_pText(item.value),maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:14,fontWeight:FontWeight.w800)),const SizedBox(height:4),Text(_pDescription(item.name,item.description),maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:8,color:AppTheme.muted)),const SizedBox(height:5),Text(context.tr('view_details'),style:TextStyle(fontSize:8,color:AppTheme.plum,fontWeight:FontWeight.w800))]))));
 }
 
 class PanchangDetailScreen extends StatelessWidget{
