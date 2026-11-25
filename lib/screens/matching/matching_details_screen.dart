@@ -75,7 +75,7 @@ class _MatchingDetailsScreenState extends State<MatchingDetailsScreen> {
                 borderRadius: BorderRadius.circular(21),
                 gradient: const LinearGradient(colors: [Color(0xFF9A648E), Color(0xFF7255A5)], begin: Alignment.topLeft, end: Alignment.bottomRight),
               ),
-              child: const Row(children: [
+              child: Row(children: [
                 Text('💞', style: TextStyle(fontSize: 38)),
                 SizedBox(width: 13),
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -86,14 +86,14 @@ class _MatchingDetailsScreenState extends State<MatchingDetailsScreen> {
               ]),
             ),
             const SizedBox(height: 20),
-            const Row(children: [
+            Row(children: [
               Expanded(child: Text(context.tr('bride_details'), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppTheme.ink))),
               Text('01 / 02', style: TextStyle(fontSize: 10, color: AppTheme.muted, fontWeight: FontWeight.w700)),
             ]),
             const SizedBox(height: 10),
             MatchingPersonForm(key: _brideKey, role: 'Bride', accent: const Color(0xFFB45D82)),
             const SizedBox(height: 19),
-            const Row(children: [
+            Row(children: [
               Expanded(child: Text(context.tr('groom_details'), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppTheme.ink))),
               Text('02 / 02', style: TextStyle(fontSize: 10, color: AppTheme.muted, fontWeight: FontWeight.w700)),
             ]),
@@ -103,7 +103,7 @@ class _MatchingDetailsScreenState extends State<MatchingDetailsScreen> {
             Container(
               padding: const EdgeInsets.all(13),
               decoration: BoxDecoration(color: const Color(0xFFFFF6E8), borderRadius: BorderRadius.circular(15), border: Border.all(color: const Color(0xFFF1E2C9))),
-              child: const Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Icon(Icons.info_outline_rounded, color: Color(0xFF9C7138), size: 17),
                 SizedBox(width: 8),
                 Expanded(child: Text(context.tr('matching_method_note'), style: TextStyle(fontSize: 10, height: 1.5, color: Color(0xFF795D36)))),
