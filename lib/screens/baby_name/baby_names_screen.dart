@@ -46,7 +46,7 @@ class _BabyNamesScreenState extends State<BabyNamesScreen> {
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('‹', style: TextStyle(fontSize: 32, height: 1, color: AppTheme.plum)),
         ),
-        title: Text(context.tr('explore_suggested_baby_names'), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
+        title: Text(context.tr('suggested_baby_names'), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
