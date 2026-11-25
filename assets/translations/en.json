@@ -998,5 +998,20 @@
   "yoga_pancha_desc": "The planet is in a kendra house from the Ascendant and in a listed own or exaltation sign. Full classical conditions are not evaluated.",
   "gochar_accuracy_note": "Transit positions use GeoEngine with the app's approximate mean Lahiri ayanamsha. Sade Sati shows only the selected-date phase, not exact start/end dates. Yoga checks are limited rule-based indicators, not predictions or a complete classical assessment.",
   "moon_house_short": "Moon",
-  "lagna_house_short": "Lagna"
+  "lagna_house_short": "Lagna",
+  "advanced_compatibility": "Advanced compatibility",
+  "advanced_compatibility_help": "Additional traditional indicators from each saved D1 chart, shown separately from the 36-point score.",
+  "manglik_dosha": "Manglik / Kuja indicators",
+  "from_lagna": "From Lagna",
+  "from_moon": "From Moon",
+  "from_venus": "From Venus",
+  "indicator_present": "Indicator present",
+  "indicator_not_present": "Indicator not present",
+  "mars_position": "Mars position",
+  "seventh_house_profile": "7th house profile",
+  "seventh_house_sign": "7th house sign",
+  "seventh_house_occupants": "Planets in 7th",
+  "seventh_lord": "7th house lord",
+  "none_listed": "No planets listed",
+  "advanced_compatibility_note": "Manglik indicators are shown independently from Lagna, Moon and Venus. Traditions differ on exceptions and cancellation; this report does not decide final dosha status. The 7th-house profile is descriptive, not a relationship prediction."
 }
