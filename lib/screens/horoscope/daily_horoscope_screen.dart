@@ -14,6 +14,19 @@ class DailyHoroscopeScreen extends StatefulWidget {
 class _DailyHoroscopeScreenState extends State<DailyHoroscopeScreen> {
   int _selectedRashi = 0;
   DateTime _selectedDate = DateUtils.dateOnly(DateTime.now());
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDefaultRashi();
+  }
+
+  Future<void> _loadDefaultRashi() async {
+    final value = await AppPreferencesService.defaultRashi();
+    const order = ['Mesha', 'Vrishabha', 'Mithuna', 'Karka', 'Simha', 'Kanya', 'Tula', 'Vrishchika', 'Dhanu', 'Makara', 'Kumbha', 'Meena'];
+    final index = order.indexOf(value);
+    if (mounted && index >= 0) setState(() => _selectedRashi = index);
+  }
   static const _guidance = <int, List<String>>{
     1: ['Channel your enthusiasm into one clear priority. A measured first step can be more useful than rushing into several plans.', 'Keep conversations direct but patient. Listening fully can help avoid misunderstandings.', 'Review small expenses before making an impulse purchase.'],
     2: ['Steady progress is worth more than quick results. Give an ongoing task the attention it deserves.', 'A thoughtful gesture can strengthen a close bond. Make space for another point of view.', 'Focus on practical choices and avoid spending only for convenience.'],
