@@ -29,6 +29,7 @@ class MatchingService {
         siderealMoonLongitude: bride.siderealMoonLongitude,
         ayanamsa: bride.ayanamsa,
         nearBoundary: bride.nearBoundary,
+        kundaliChart: bride.kundaliChart,
       ),
       groom: MatchingPerson(
         name: groomName.trim().isEmpty ? 'Groom' : groomName.trim(),
@@ -46,6 +47,7 @@ class MatchingService {
         siderealMoonLongitude: groom.siderealMoonLongitude,
         ayanamsa: groom.ayanamsa,
         nearBoundary: groom.nearBoundary,
+        kundaliChart: groom.kundaliChart,
       ),
       kootas: kootas,
       calculationVersion: AshtakootaCalculator.calculationVersion,
