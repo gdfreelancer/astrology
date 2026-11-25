@@ -1,4 +1,3 @@
-import 'dart:math' as math;
 import 'package:geoengine/geoengine.dart' as astronomy;
 import '../models/kundali/kundali_graha.dart';
 import 'astrology/ayanamsha_service.dart';
@@ -111,7 +110,7 @@ class GocharService {
     if (moon!=null && mars!=null && moon.signIndex==mars.signIndex) {
       results.add(const DetectedYoga(key:'chandra_mangal',descriptionKey:'yoga_chandra_mangal_desc',planetNames:['Moon','Mars']));
     }
-    for (final pair in <(KundaliGraha?,String)>[(mars,'ruchaka'),(mercury,'bhadra'),(jupiter,'hamsa'),(venus(chart),'malavya'),(_findGraha(chart,'Saturn'),'shasha')]) {
+    for (final pair in <(KundaliGraha?,String)>[(mars,'ruchaka'),(mercury,'bhadra'),(jupiter,'hamsa'),(_findGraha(chart,'Venus'),'malavya'),(_findGraha(chart,'Saturn'),'shasha')]) {
       final g=pair.$1;
       if(g!=null && _isKendra(g.houseNumber-1) && _isOwnOrExalted(g.name,g.signIndex)) {
         results.add(DetectedYoga(key:'pancha_mahapurusha_${pair.$2}',descriptionKey:'yoga_pancha_desc',planetNames:[g.name]));
