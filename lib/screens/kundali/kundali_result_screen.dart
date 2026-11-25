@@ -7,6 +7,17 @@ import '../../models/kundali/kundali_chart_style.dart';
 import '../../models/kundali/kundali_graha.dart';
 import '../../theme/app_theme.dart';
 
+
+String _localizedRashi(int index) {
+  const keys = ['p_mesha','p_vrishabha','p_mithuna','p_karka','p_simha','p_kanya','p_tula','p_vrishchika','p_dhanu','p_makara','p_kumbha','p_meena'];
+  return AppLocale.text(keys[index]);
+}
+String _localizedGraha(String name) {
+  const keys = {'Sun':'planet_sun','Moon':'planet_moon','Mars':'planet_mars','Mercury':'planet_mercury','Jupiter':'planet_jupiter','Venus':'planet_venus','Saturn':'planet_saturn','Rahu':'planet_rahu','Ketu':'planet_ketu'};
+  final key = keys[name];
+  return key == null ? name : AppLocale.text(key);
+}
+
 class KundaliResultScreen extends StatelessWidget {
   const KundaliResultScreen({
     super.key,
@@ -188,7 +199,7 @@ class _KundaliHouseGrid extends StatelessWidget {
               const SizedBox(width: 6),
               Expanded(
                 child: Text(
-                  'Lagna: ${kundaliRashiNames[chart.ascendantSignIndex]} · ${_degree(chart.ascendantLongitude)}',
+                  'Lagna: ${_localizedRashi(chart.ascendantSignIndex)} · ${_degree(chart.ascendantLongitude)}',
                   style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppTheme.ink),
                 ),
               ),
@@ -225,7 +236,7 @@ class _KundaliHouseGrid extends StatelessWidget {
                     Text(context.tr('house_number').replace('{n}', '$house'), style: const TextStyle(fontSize: 8, color: AppTheme.muted, fontWeight: FontWeight.w700)),
                     const SizedBox(height: 2),
                     Text(
-                      '${kundaliRashiSymbols[sign]} ${kundaliRashiNames[sign]}',
+                      '${kundaliRashiSymbols[sign]} ${_localizedRashi(sign)}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(fontSize: 9, color: AppTheme.ink, fontWeight: FontWeight.w800),
@@ -282,8 +293,8 @@ class _GrahaPlacementList extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(chart.grahas[i].name, style: const TextStyle(fontSize: 11, color: AppTheme.ink, fontWeight: FontWeight.w800)),
-                        Text('${kundaliRashiNames[chart.grahas[i].signIndex]} · ${_degree(chart.grahas[i].longitude)}', style: const TextStyle(fontSize: 9, color: AppTheme.muted)),
+                        Text(_localizedGraha(chart.grahas[i].name), style: const TextStyle(fontSize: 11, color: AppTheme.ink, fontWeight: FontWeight.w800)),
+                        Text('${_localizedRashi(chart.grahas[i].signIndex)} · ${_degree(chart.grahas[i].longitude)}', style: const TextStyle(fontSize: 9, color: AppTheme.muted)),
                       ],
                     ),
                   ),
