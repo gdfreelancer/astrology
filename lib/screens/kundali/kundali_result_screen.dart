@@ -18,6 +18,22 @@ String _localizedGraha(String name) {
   return key == null ? name : AppLocale.text(key);
 }
 
+String _localizedRashi(int index) {
+  const keys = ['p_mesha','p_vrishabha','p_mithuna','p_karka','p_simha','p_kanya','p_tula','p_vrishchika','p_dhanu','p_makara','p_kumbha','p_meena'];
+  return AppLocale.text(keys[index]);
+}
+String _localizedGraha(String name) {
+  const keys = {'Sun':'planet_sun','Moon':'planet_moon','Mars':'planet_mars','Mercury':'planet_mercury','Jupiter':'planet_jupiter','Venus':'planet_venus','Saturn':'planet_saturn','Rahu':'planet_rahu','Ketu':'planet_ketu'};
+  final key = keys[name];
+  return key == null ? name : AppLocale.text(key);
+}
+String _localizedAstroName(String value) {
+  final slug = value.split(' (').first.toLowerCase().replaceAll(RegExp('[^a-z0-9]+'), '_');
+  final key = 'p_' + slug;
+  final translated = AppLocale.text(key);
+  return translated == key ? value : translated;
+}
+
 class KundaliResultScreen extends StatelessWidget {
   const KundaliResultScreen({
     super.key,
@@ -70,9 +86,9 @@ class KundaliResultScreen extends StatelessWidget {
             Text(context.tr('birth_details_calculated'), style: TextStyle(fontSize: 15, color: AppTheme.ink, fontWeight: FontWeight.w800)),
             const SizedBox(height: 11),
             Row(children: [
-              Expanded(child: _InfoCard(label: context.tr('janma_rashi'), value: birthResult.rashi, symbol: birthResult.rashiSymbol)),
+              Expanded(child: _InfoCard(label: context.tr('janma_rashi'), value: _localizedAstroName(birthResult.rashi), symbol: birthResult.rashiSymbol)),
               const SizedBox(width: 10),
-              Expanded(child: _InfoCard(label: context.tr('nakshatra'), value: birthResult.nakshatra, symbol: '✦')),
+              Expanded(child: _InfoCard(label: context.tr('nakshatra'), value: _localizedAstroName(birthResult.nakshatra), symbol: '✦')),
             ]),
             const SizedBox(height: 10),
             Row(children: [
@@ -117,7 +133,7 @@ class KundaliResultScreen extends StatelessWidget {
                 Icon(Icons.info_outline_rounded, color: Color(0xFF9C7138), size: 18),
                 SizedBox(width: 9),
                 Expanded(child: Text(
-                  'Planet positions use GeoEngine with the app’s approximate Lahiri ayanamsha. Houses are whole-sign houses derived from the calculated Ascendant. Verify important readings against a trusted Panchang or professional ephemeris; this is not a Swiss Ephemeris-validated chart.',
+                  ${context.tr('kundali_accuracy_disclaimer')},
                   style: TextStyle(color: Color(0xFF795D36), fontSize: 10, height: 1.5),
                 )),
               ]),
