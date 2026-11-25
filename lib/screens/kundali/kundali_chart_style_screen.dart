@@ -36,7 +36,7 @@ class _KundaliChartStyleScreenState extends State<KundaliChartStyleScreen> {
       if (!mounted) return;
       setState(() => _saving = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text(context.tr('chart_style_tip'))),
+        SnackBar(content: Text(context.tr('chart_style_tip'))),
       );
     }
   }
