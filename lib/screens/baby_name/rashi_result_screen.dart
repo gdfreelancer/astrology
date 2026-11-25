@@ -106,7 +106,7 @@ String _localizedAstroName(String value) {
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(color: const Color(0xFFFFF0E8), borderRadius: BorderRadius.circular(15)),
               child: const Text(
-                'This birth time is very close to a Nakshatra/Pada boundary. Small differences in ephemeris or recorded birth time may change the result. Please verify with a professional Panchang or ephemeris.',
+                '${context.tr('birth_boundary_disclaimer')}',
                 style: TextStyle(color: Color(0xFF9A5C35), fontSize: 11, height: 1.5),
               ),
             ),
@@ -123,7 +123,7 @@ String _localizedAstroName(String value) {
           ),
           const SizedBox(height: 13),
           const Text(
-            'Astrology is a traditional belief system. The calculation uses a geocentric lunar model and an approximate Lahiri ayanamsha; boundary cases should be cross-checked.',
+            '${context.tr('birth_calculation_disclaimer')}',
             textAlign: TextAlign.center,
             style: TextStyle(color: AppTheme.muted, fontSize: 10, height: 1.5),
           ),
