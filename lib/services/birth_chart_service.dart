@@ -6,6 +6,7 @@ import 'package:timezone/timezone.dart' as tz;
 import '../data/nakshatra_data.dart';
 import '../models/birth_chart_result.dart';
 import '../models/kundali/kundali_graha.dart';
+import 'astrology/ayanamsha_service.dart';
 
 class BirthChartService {
   static BirthChartResult calculate({
@@ -32,7 +33,7 @@ class BirthChartService {
     // GeoEngine returns the geocentric Moon in the true ecliptic of date.
     final moon = astronomy.eclipticGeoMoon(utcBirth);
     final tropicalLongitude = _normalize(moon.lon);
-    final ayanamsa = _lahiriAyanamsa(utcBirth);
+    final ayanamsa = AyanamshaService.lahiri(utcBirth);
     final siderealLongitude = _normalize(tropicalLongitude - ayanamsa);
 
     const nakshatraSpan = 360.0 / 27.0;
@@ -142,20 +143,6 @@ class BirthChartService {
       ascendantSignIndex: ascSign,
       grahas: grahas,
     );
-  }
-
-  // Lahiri/Chitrapaksha mean ayanamsha polynomial, anchored at J2000.0.
-  // The Moon model itself is from GeoEngine (Astronomy Engine).
-  static double _lahiriAyanamsa(DateTime utc) {
-    final j2000 = DateTime.utc(2000, 1, 1, 12);
-    final centuries = utc.difference(j2000).inMicroseconds /
-        Duration.microsecondsPerDay /
-        36525.0;
-    final arcSeconds =
-        (23 * 3600 + 51 * 60 + 25.532) +
-        5029.0966 * centuries +
-        1.11161 * centuries * centuries;
-    return arcSeconds / 3600.0;
   }
 
   static double _normalize(double value) => (value % 360 + 360) % 360;
