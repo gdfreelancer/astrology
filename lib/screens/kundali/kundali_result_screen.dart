@@ -18,15 +18,6 @@ String _localizedGraha(String name) {
   return key == null ? name : AppLocale.text(key);
 }
 
-String _localizedRashi(int index) {
-  const keys = ['p_mesha','p_vrishabha','p_mithuna','p_karka','p_simha','p_kanya','p_tula','p_vrishchika','p_dhanu','p_makara','p_kumbha','p_meena'];
-  return AppLocale.text(keys[index]);
-}
-String _localizedGraha(String name) {
-  const keys = {'Sun':'planet_sun','Moon':'planet_moon','Mars':'planet_mars','Mercury':'planet_mercury','Jupiter':'planet_jupiter','Venus':'planet_venus','Saturn':'planet_saturn','Rahu':'planet_rahu','Ketu':'planet_ketu'};
-  final key = keys[name];
-  return key == null ? name : AppLocale.text(key);
-}
 String _localizedAstroName(String value) {
   final slug = value.split(' (').first.toLowerCase().replaceAll(RegExp('[^a-z0-9]+'), '_');
   final key = 'p_' + slug;
@@ -129,11 +120,11 @@ class KundaliResultScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(color: const Color(0xFFFFF6E8), borderRadius: BorderRadius.circular(17), border: Border.all(color: const Color(0xFFF1E2C9))),
-              child: const Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Icon(Icons.info_outline_rounded, color: Color(0xFF9C7138), size: 18),
                 SizedBox(width: 9),
                 Expanded(child: Text(
-                  ${context.tr('kundali_accuracy_disclaimer')},
+                  context.tr('kundali_accuracy_disclaimer'),
                   style: TextStyle(color: Color(0xFF795D36), fontSize: 10, height: 1.5),
                 )),
               ]),
@@ -249,7 +240,7 @@ class _KundaliHouseGrid extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(context.tr('house_number').replace('{n}', '$house'), style: const TextStyle(fontSize: 8, color: AppTheme.muted, fontWeight: FontWeight.w700)),
+                    Text(context.tr('house_number').replaceAll('{n}', '$house'), style: const TextStyle(fontSize: 8, color: AppTheme.muted, fontWeight: FontWeight.w700)),
                     const SizedBox(height: 2),
                     Text(
                       '${kundaliRashiSymbols[sign]} ${_localizedRashi(sign)}',
@@ -314,7 +305,7 @@ class _GrahaPlacementList extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Text(context.tr('house_number').replace('{n}', '${chart.grahas[i].houseNumber}'), style: const TextStyle(fontSize: 10, color: AppTheme.plum, fontWeight: FontWeight.w800)),
+                  Text(context.tr('house_number').replaceAll('{n}', '${chart.grahas[i].houseNumber}'), style: const TextStyle(fontSize: 10, color: AppTheme.plum, fontWeight: FontWeight.w800)),
                 ],
               ),
             ),
