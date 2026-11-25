@@ -53,7 +53,7 @@ class KundaliResultScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
                   decoration: BoxDecoration(color: Colors.white.withValues(alpha: .14), borderRadius: BorderRadius.circular(30)),
-                  child: Text('${chartStyle.label} chart preference', style: const TextStyle(color: Color(0xFFFFE3A8), fontSize: 10, fontWeight: FontWeight.w800)),
+                  child: Text('${context.tr(switch (chartStyle) { KundaliChartStyle.northIndian => 'north_indian', KundaliChartStyle.southIndian => 'south_indian', KundaliChartStyle.eastIndian => 'east_indian' })} ${context.tr('chart')} preference', style: const TextStyle(color: Color(0xFFFFE3A8), fontSize: 10, fontWeight: FontWeight.w800)),
                 ),
               ]),
             ),
@@ -76,7 +76,7 @@ class KundaliResultScreen extends StatelessWidget {
             const Text('Janma Kundali · D1 Rashi chart', style: TextStyle(fontSize: 15, color: AppTheme.ink, fontWeight: FontWeight.w800)),
             const SizedBox(height: 5),
             Text(
-              '${chartStyle.label} presentation · Whole-sign houses',
+              '${context.tr(switch (chartStyle) { KundaliChartStyle.northIndian => 'north_indian', KundaliChartStyle.southIndian => 'south_indian', KundaliChartStyle.eastIndian => 'east_indian' })} ${context.tr('chart')} · Whole-sign houses',
               style: const TextStyle(fontSize: 10, color: AppTheme.muted),
             ),
             const SizedBox(height: 11),
