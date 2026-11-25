@@ -6,6 +6,7 @@ import '../../models/kundali/kundali_chart_style.dart';
 import '../../services/kundali/kundali_preferences_service.dart';
 import '../../services/settings/app_preferences_service.dart';
 import '../../theme/app_theme.dart';
+import '../birth_profiles/birth_profiles_screen.dart';
 import '../kundali/kundali_chart_style_screen.dart';
 import '../rashi/rashi_data.dart';
 import 'language_selection_screen.dart';
@@ -55,6 +56,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _chartStyle = values[3] as KundaliChartStyle?;
       _loading = false;
     });
+  }
+
+  Future<void> _openBirthProfiles() async {
+    await Navigator.of(context).push(MaterialPageRoute<void>(
+      builder: (_) => const BirthProfilesScreen(),
+    ));
   }
 
   Future<void> _selectChartStyle() async {
@@ -192,6 +199,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   _SettingTile(icon: Icons.language_rounded, title: context.tr('language'), subtitle: _languageName(languageCode), value: '›', onTap: _selectLanguage),
                   _SettingTile(icon: Icons.schedule_rounded, title: context.tr('time_format'), subtitle: context.tr('time_format_description'), value: _use24Hour ? context.tr('twenty_four_hour') : context.tr('twelve_hour'), onTap: () => _showTimeFormat()),
                   _SettingTile(icon: Icons.notifications_none_rounded, title: context.tr('notifications'), subtitle: context.tr('notifications_coming_soon'), value: context.tr('coming_soon'), onTap: _showNotificationsInfo),
+                ]),
+                const SizedBox(height: 18),
+                _section(context.tr('birth_profiles')),
+                _group([
+                  _SettingTile(icon: Icons.people_alt_outlined, title: context.tr('birth_profiles'), subtitle: context.tr('birth_profiles_description'), value: '›', onTap: _openBirthProfiles),
                 ]),
                 const SizedBox(height: 18),
                 _section(context.tr('kundali_preferences')),

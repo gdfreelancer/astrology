@@ -6,10 +6,13 @@ import 'package:timezone/data/latest.dart' as timezone_data;
 import 'package:timezone/timezone.dart' as tz;
 
 import '../../models/kundali/kundali_chart_style.dart';
+import '../../models/birth_profile.dart';
+import '../../services/birth_profile_service.dart';
 import '../../services/birth_chart_service.dart';
 import '../../services/settings/app_preferences_service.dart';
 import '../../services/kundali/kundali_preferences_service.dart';
 import '../../theme/app_theme.dart';
+import '../birth_profiles/birth_profiles_screen.dart';
 import 'kundali_chart_style_screen.dart';
 import 'kundali_result_screen.dart';
 
@@ -71,6 +74,155 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
       setState(() => _loadingPreference = false);
       _showMessage(context.tr('chart_style_tip'));
     }
+  }
+
+  Future<void> _chooseSavedProfile() async {
+    final profiles = await BirthProfileService.getAll();
+    if (!mounted) return;
+    if (profiles.isEmpty) {
+      final openManager = await showDialog<bool>(
+        context: context,
+        builder: (dialog) => AlertDialog(
+          title: Text(context.tr('no_saved_profiles')),
+          content: Text(context.tr('select_or_manage_profiles')),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialog, false),
+              child: Text(context.tr('cancel')),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(dialog, true),
+              style: FilledButton.styleFrom(backgroundColor: AppTheme.plum),
+              child: Text(context.tr('manage_profiles')),
+            ),
+          ],
+        ),
+      );
+      if (openManager == true && mounted) {
+        await Navigator.of(context).push(MaterialPageRoute<void>(
+          builder: (_) => const BirthProfilesScreen(),
+        ));
+      }
+      return;
+    }
+    final selected = await showModalBottomSheet<BirthProfile>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (sheet) => Container(
+        padding: const EdgeInsets.fromLTRB(16, 18, 16, 22),
+        decoration: const BoxDecoration(
+          color: Color(0xFFFFFCF8),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: SafeArea(
+          top: false,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(4, 0, 4, 10),
+                child: Text(context.tr('select_birth_profile'),
+                    style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
+              ),
+              ...profiles.map((profile) => ListTile(
+                leading: const CircleAvatar(
+                  backgroundColor: Color(0xFFF1EAF9),
+                  child: Icon(Icons.person_rounded, color: AppTheme.plum),
+                ),
+                title: Text(profile.name,
+                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+                subtitle: Text(profile.placeName,
+                    maxLines: 1, overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 10)),
+                onTap: () => Navigator.pop(sheet, profile),
+              )),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.manage_accounts_outlined, color: AppTheme.plum),
+                title: Text(context.tr('manage_profiles')),
+                onTap: () => Navigator.pop(sheet),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    if (selected == null) {
+      if (!mounted) return;
+      await Navigator.of(context).push(MaterialPageRoute<void>(
+        builder: (_) => const BirthProfilesScreen(),
+      ));
+      return;
+    }
+    if (!mounted) return;
+    setState(() {
+      _nameController.text = selected.name;
+      _placeController.text = selected.placeName;
+      _birthDate = selected.birthDate;
+      _birthTime = TimeOfDay(hour: selected.hour, minute: selected.minute);
+      _timeZoneId = selected.timeZoneId;
+      _gender = selected.gender;
+      _location = Location(
+        latitude: selected.latitude,
+        longitude: selected.longitude,
+        timestamp: DateTime.now(),
+      );
+      _placeError = null;
+    });
+  }
+
+  Future<void> _saveCurrentProfile() async {
+    if (!_formKey.currentState!.validate()) return;
+    if (_birthDate == null || _birthTime == null ||
+        _timeZoneId == null || _location == null) {
+      _showMessage(context.tr('complete_birth_profile_details'));
+      return;
+    }
+    final nameController = TextEditingController(text: _nameController.text.trim());
+    final name = await showDialog<String>(
+      context: context,
+      builder: (dialog) => AlertDialog(
+        title: Text(context.tr('save_as_profile')),
+        content: TextField(
+          controller: nameController,
+          autofocus: true,
+          textCapitalization: TextCapitalization.words,
+          decoration: InputDecoration(hintText: context.tr('profile_name_hint')),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialog),
+            child: Text(context.tr('cancel')),
+          ),
+          FilledButton(
+            onPressed: () {
+              if (nameController.text.trim().isNotEmpty) {
+                Navigator.pop(dialog, nameController.text.trim());
+              }
+            },
+            style: FilledButton.styleFrom(backgroundColor: AppTheme.plum),
+            child: Text(context.tr('save')),
+          ),
+        ],
+      ),
+    );
+    nameController.dispose();
+    if (name == null || !mounted) return;
+    final now = DateTime.now();
+    await BirthProfileService.save(BirthProfile(
+      id: now.microsecondsSinceEpoch.toString(),
+      name: name,
+      gender: _gender,
+      birthDate: _birthDate!,
+      hour: _birthTime!.hour,
+      minute: _birthTime!.minute,
+      placeName: _placeController.text.trim(),
+      latitude: _location!.latitude,
+      longitude: _location!.longitude,
+      timeZoneId: _timeZoneId!,
+    ));
+    if (mounted) _showMessage(context.tr('profile_saved'));
   }
 
   Future<void> _changeChartStyle() async {
@@ -204,6 +356,11 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
         title: Text(context.tr('create_kundali'), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
         actions: [
           IconButton(
+            tooltip: context.tr('birth_profiles'),
+            onPressed: _chooseSavedProfile,
+            icon: const Icon(Icons.person_search_rounded, color: AppTheme.plum),
+          ),
+          IconButton(
             tooltip: context.tr('change_chart_style'),
             onPressed: _changeChartStyle,
             icon: const Icon(Icons.tune_rounded, color: AppTheme.plum),
@@ -316,6 +473,19 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
                   const SizedBox(width: 6),
                   Expanded(child: Text('Location confirmed · ${_location!.latitude.toStringAsFixed(4)}, ${_location!.longitude.toStringAsFixed(4)}', style: const TextStyle(color: Color(0xFF438466), fontSize: 10, fontWeight: FontWeight.w700))),
                 ]),
+              ],
+              if (_location != null && _birthDate != null && _birthTime != null && _timeZoneId != null) ...[
+                const SizedBox(height: 9),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton.icon(
+                    onPressed: _saveCurrentProfile,
+                    icon: const Icon(Icons.bookmark_add_outlined, size: 17),
+                    label: Text(context.tr('save_as_profile'),
+                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800)),
+                    style: TextButton.styleFrom(foregroundColor: AppTheme.plum),
+                  ),
+                ),
               ],
               const SizedBox(height: 14),
               _Label(context.tr('birth_time_zone')),
