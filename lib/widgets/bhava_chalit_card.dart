@@ -30,6 +30,11 @@ class BhavaChalitCard extends StatelessWidget {
           const SizedBox(height: 5),
           Text(context.tr('bhava_chalit_description'),
             style: const TextStyle(fontSize: 10, color: AppTheme.muted, height: 1.4)),
+          const SizedBox(height: 9),
+          Row(children: [
+            Expanded(child: _CuspalValue(label: context.tr('ascendant'), value: _fullDeg(chart.ascendantLongitude))),
+            Expanded(child: _CuspalValue(label: context.tr('midheaven'), value: _fullDeg(chart.midheavenLongitude))),
+          ]),
           const SizedBox(height: 12),
           GridView.builder(
             shrinkWrap: true,
