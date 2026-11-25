@@ -85,16 +85,31 @@ class RashiDetailScreen extends StatelessWidget {
     return translated == key ? fallback : translated;
   }
 
+  String _localizedAttribute(String value) {
+    const keys = {
+      'Mars (Mangal)':'attr_mars','Venus (Shukra)':'attr_venus','Mercury (Budha)':'attr_mercury',
+      'Moon (Chandra)':'attr_moon','Sun (Surya)':'attr_sun','Jupiter (Guru)':'attr_jupiter','Saturn (Shani)':'attr_saturn',
+      'Fire (Agni)':'attr_fire','Earth (Prithvi)':'attr_earth','Air (Vayu)':'attr_air','Water (Jala)':'attr_water',
+      'Movable (Chara)':'attr_movable','Fixed (Sthira)':'attr_fixed','Dual (Dwiswabhava)':'attr_dual',
+      'Masculine':'attr_masculine','Feminine':'attr_feminine','East':'attr_east','South':'attr_south','West':'attr_west','North':'attr_north',
+      'Head':'attr_head','Face and neck':'attr_face_neck','Arms and shoulders':'attr_arms_shoulders','Chest':'attr_chest',
+      'Stomach and upper abdomen':'attr_stomach','Waist and lower abdomen':'attr_waist_abdomen','Lower abdomen and pelvis':'attr_lower_abdomen_pelvis',
+      'Reproductive organs':'attr_reproductive_organs','Thighs':'attr_thighs','Knees':'attr_knees','Calves and ankles':'attr_calves_ankles','Feet':'attr_feet'
+    };
+    final key = keys[value];
+    return key == null ? value : AppLocale.text(key);
+  }
+
   String _localizedRashiName(BuildContext context, RashiInfo value) => switch (AppLocale.locale.value.languageCode) { 'hi' => value.hindi, 'gu' => value.gujarati, _ => value.english };
 
   Widget _attributeGrid(BuildContext context) {
     final items = [
-      (context.tr('ruling_planet'), rashi.ruler, '☼'),
-      (context.tr('element_tatva'), rashi.element, '✧'),
-      (context.tr('nature'), rashi.nature, '◈'),
-      (context.tr('gender'), rashi.gender, '◇'),
-      (context.tr('direction'), rashi.direction, '➤'),
-      (context.tr('body_association'), rashi.bodyPart, '◎'),
+      (context.tr('ruling_planet'), _localizedAttribute(rashi.ruler), '☼'),
+      (context.tr('element_tatva'), _localizedAttribute(rashi.element), '✧'),
+      (context.tr('nature'), _localizedAttribute(rashi.nature), '◈'),
+      (context.tr('gender'), _localizedAttribute(rashi.gender), '◇'),
+      (context.tr('direction'), _localizedAttribute(rashi.direction), '➤'),
+      (context.tr('body_association'), _localizedAttribute(rashi.bodyPart), '◎'),
     ];
     return GridView.builder(
       itemCount: items.length,
