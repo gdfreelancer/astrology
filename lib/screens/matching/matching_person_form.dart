@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+import '../../l10n/app_locale.dart';
 import '../../models/birth_chart_result.dart';
+import '../../services/settings/app_preferences_service.dart';
 import '../../services/birth_chart_service.dart';
 import '../../theme/app_theme.dart';
 
@@ -42,7 +44,7 @@ class MatchingPersonFormState extends State<MatchingPersonForm>
   Future<BirthChartResult?> calculate() async {
     if (!_formKey.currentState!.validate()) return null;
     if (_date == null || _time == null || _zone == null) {
-      setState(() => _error = 'Select the birth date, exact time and time zone.');
+      setState(() => _error = context.tr('birth_time_zone_help'));
       return null;
     }
     setState(() { _busy = true; _error = null; });
@@ -62,7 +64,7 @@ class MatchingPersonFormState extends State<MatchingPersonForm>
       );
       return result;
     } catch (_) {
-      if (mounted) setState(() => _error = 'Could not locate this birth place. Check the city, state and country, then try again.');
+      if (mounted) setState(() => _error = context.tr('place_not_found'));
       return null;
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -76,7 +78,7 @@ class MatchingPersonFormState extends State<MatchingPersonForm>
       initialDate: _date ?? DateTime(1995, 1, 1),
       firstDate: DateTime(1900),
       lastDate: now,
-      helpText: '${widget.role} date of birth',
+      helpText: context.tr('date_of_birth'),
     );
     if (value != null) setState(() => _date = value);
   }
@@ -85,7 +87,7 @@ class MatchingPersonFormState extends State<MatchingPersonForm>
     final value = await showTimePicker(
       context: context,
       initialTime: _time ?? const TimeOfDay(hour: 12, minute: 0),
-      helpText: '${widget.role} local birth time',
+      helpText: context.tr('exact_time_of_birth'),
     );
     if (value != null) setState(() => _time = value);
   }
@@ -116,35 +118,35 @@ class MatchingPersonFormState extends State<MatchingPersonForm>
             Container(width: 39, height: 39, decoration: BoxDecoration(color: widget.accent.withValues(alpha: .12), borderRadius: BorderRadius.circular(13)), child: Icon(widget.role == 'Bride' ? Icons.female_rounded : Icons.male_rounded, color: widget.accent)),
             const SizedBox(width: 11),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(widget.role, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppTheme.ink)),
-              const Text('Birth information', style: TextStyle(fontSize: 10, color: AppTheme.muted)),
+              Text(widget.role == 'Bride' ? context.tr('bride_details') : context.tr('groom_details'), style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+              Text(context.tr('birth_information'), style: TextStyle(fontSize: 10, color: AppTheme.muted)),
             ])),
           ]),
           const SizedBox(height: 16),
-          _label('Full name'),
+          _label(context, context.tr('full_name')),
           TextFormField(
             controller: _name,
             textCapitalization: TextCapitalization.words,
             validator: (value) => value == null || value.trim().isEmpty ? 'Enter the ${widget.role.toLowerCase()} name.' : null,
-            decoration: _input('Enter name', Icons.person_outline_rounded),
+            decoration: _input(context, context.tr('enter_name'), Icons.person_outline_rounded),
           ),
           const SizedBox(height: 12),
-          _label('Date of birth'),
-          _tap(value: _date == null ? 'Select date of birth' : '${_date!.day.toString().padLeft(2,'0')} / ${_date!.month.toString().padLeft(2,'0')} / ${_date!.year}', icon: Icons.calendar_month_rounded, placeholder: _date == null, onTap: _pickDate),
+          _label(context, context.tr('date_of_birth')),
+          _tap(value: _date == null ? context.tr('select_date_of_birth') : '${_date!.day.toString().padLeft(2,'0')} / ${_date!.month.toString().padLeft(2,'0')} / ${_date!.year}', icon: Icons.calendar_month_rounded, placeholder: _date == null, onTap: _pickDate),
           const SizedBox(height: 12),
-          _label('Exact local birth time'),
-          _tap(value: _time?.format(context) ?? 'Select birth time', icon: Icons.schedule_rounded, placeholder: _time == null, onTap: _pickTime),
+          _label(context, context.tr('exact_time_of_birth')),
+          _tap(value: _formatTime(context, _time), icon: Icons.schedule_rounded, placeholder: _time == null, onTap: _pickTime),
           const SizedBox(height: 12),
-          _label('Birthplace (city, state, country)'),
+          _label(context, context.tr('place_of_birth')),
           TextFormField(
             controller: _place,
             textCapitalization: TextCapitalization.words,
-            validator: (value) => value == null || value.trim().isEmpty ? 'Enter the birth place.' : null,
-            decoration: _input('e.g. Ahmedabad, Gujarat, India', Icons.location_on_outlined),
+            validator: (value) => value == null || value.trim().isEmpty ? context.tr('enter_birth_place') : null,
+            decoration: _input(context, context.tr('location_hint'), Icons.location_on_outlined),
           ),
           const SizedBox(height: 12),
-          _label('Birth time zone'),
-          _tap(value: _zone ?? 'Select time zone', icon: Icons.public_rounded, placeholder: _zone == null, onTap: _pickZone),
+          _label(context, context.tr('birth_time_zone')),
+          _tap(value: _zone ?? context.tr('select_time_zone'), icon: Icons.public_rounded, placeholder: _zone == null, onTap: _pickZone),
           if (_error != null) ...[
             const SizedBox(height: 10),
             Text(_error!, style: const TextStyle(color: Color(0xFFB94C4C), fontSize: 10, height: 1.4)),
@@ -158,12 +160,18 @@ class MatchingPersonFormState extends State<MatchingPersonForm>
     );
   }
 
-  Widget _label(String value) => Padding(
+  String _formatTime(BuildContext context, TimeOfDay? value) {
+    if (value == null) return context.tr('select_local_birth_time');
+    if (AppPreferencesService.cachedUse24HourTime) return '${value.hour.toString().padLeft(2, '0')}:${value.minute.toString().padLeft(2, '0')}';
+    return value.format(context);
+  }
+
+  Widget _label(BuildContext context, String value) => Padding(
     padding: const EdgeInsets.only(bottom: 6),
     child: Text(value, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: AppTheme.ink)),
   );
 
-  InputDecoration _input(String hint, IconData icon) => InputDecoration(
+  InputDecoration _input(BuildContext context, String hint, IconData icon) => InputDecoration(
     hintText: hint,
     prefixIcon: Icon(icon, color: widget.accent, size: 18),
     filled: true,
@@ -215,8 +223,8 @@ class _ZoneDialogState extends State<_ZoneDialog> {
       child: SizedBox(
         height: MediaQuery.of(context).size.height * .7,
         child: Column(children: [
-          const Padding(padding: EdgeInsets.fromLTRB(18, 18, 18, 8), child: Align(alignment: Alignment.centerLeft, child: Text('Birth time zone', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800)))),
-          Padding(padding: const EdgeInsets.symmetric(horizontal: 15), child: TextField(onChanged: (value) => setState(() => query = value), decoration: const InputDecoration(hintText: 'Search city or time zone', prefixIcon: Icon(Icons.search_rounded)))),
+          const Padding(padding: EdgeInsets.fromLTRB(18, 18, 18, 8), child: Align(alignment: Alignment.centerLeft, child: Text(context.tr('birth_time_zone'), style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800)))),
+          Padding(padding: const EdgeInsets.symmetric(horizontal: 15), child: TextField(onChanged: (value) => setState(() => query = value), decoration: const InputDecoration(hintText: context.tr('time_zone'), prefixIcon: Icon(Icons.search_rounded)))),
           Expanded(child: ListView.builder(
             itemCount: matches.length,
             itemBuilder: (_, i) => ListTile(
