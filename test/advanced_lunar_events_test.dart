@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:astrology/models/panchang_data.dart';
 import 'package:astrology/services/panchang_service.dart';
 import 'package:timezone/data/latest.dart' as timezone_data;
+import 'package:timezone/timezone.dart' as tz;
 
 void main() {
   timezone_data.initializeTimeZones();
@@ -24,9 +25,9 @@ void main() {
     });
 
     test('events are chronologically sorted and cover lunar and solar events', () {
-      final start = DateTime.utc(2026, 1, 1);
+      final start = tz.TZDateTime(tz.getLocation('Asia/Kolkata'), 2026, 1, 1).toUtc();
       final events = PanchangService.upcomingLunarEvents(
-        from: start,
+        from: DateTime(2026, 1, 1),
         location: location,
         days: 90,
       );
