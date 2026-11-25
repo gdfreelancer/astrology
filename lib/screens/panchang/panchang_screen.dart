@@ -49,7 +49,7 @@ class _PanchangScreenState extends State<PanchangScreen>{
       child:Container(padding:const EdgeInsets.fromLTRB(20,16,20,24),decoration:const BoxDecoration(color:Color(0xFFFFFCF8),borderRadius:BorderRadius.vertical(top:Radius.circular(24))),child:SafeArea(top:false,child:Column(mainAxisSize:MainAxisSize.min,crossAxisAlignment:CrossAxisAlignment.start,children:[
         Text(context.tr('panchang_location'),style:TextStyle(fontSize:18,fontWeight:FontWeight.w800)),
         const SizedBox(height:6),Text(context.tr('location_timezone_help'),style:TextStyle(fontSize:11,color:AppTheme.muted)),
-        const SizedBox(height:14),TextField(controller:input,autofocus:true,textCapitalization:TextCapitalization.words,decoration:const InputDecoration(hintText:context.tr('city_state_country'),prefixIcon:Icon(Icons.location_on_outlined))),
+        const SizedBox(height:14),TextField(controller:input,autofocus:true,textCapitalization:TextCapitalization.words,decoration:InputDecoration(hintText:context.tr('city_state_country'),prefixIcon:const Icon(Icons.location_on_outlined))),
         const SizedBox(height:10),
         DropdownButtonFormField<String>(value:zone,decoration:const InputDecoration(labelText:'Time zone'),items:const[
           DropdownMenuItem(value:'Asia/Kolkata',child:Text(context.tr('india_timezone'))),
@@ -105,7 +105,7 @@ class _PanchangScreenState extends State<PanchangScreen>{
         _heroTime(context.tr('moonrise'),d.moonrise==null?'—':_fmt(d.moonrise!,d.location.timeZoneId)),
       ]),
     ])),
-    const SizedBox(height:19),_heading('Panchang elements',context.tr('tap_element')),
+    const SizedBox(height:19),_heading(context.tr('panchang'),context.tr('tap_element')),
     const SizedBox(height:10),
     GridView.builder(shrinkWrap:true,physics:const NeverScrollableScrollPhysics(),itemCount:d.elements.length,gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount:2,crossAxisSpacing:9,mainAxisSpacing:9,childAspectRatio:1.55),itemBuilder:(ctx,i)=>_ElementTile(item:d.elements[i],onTap:()=>_open(PanchangDetailScreen(data:d)))),
     const SizedBox(height:19),_heading(context.tr('sun_moon_timings'),context.tr('calculated_selected_location')),
