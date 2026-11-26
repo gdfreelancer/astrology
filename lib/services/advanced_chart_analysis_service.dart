@@ -15,6 +15,14 @@ class GrahaCondition {
   final bool combust;
   final double sunDistance;
 }
+
+class GrahaStrengthIndicator {
+  const GrahaStrengthIndicator(this.planet,this.naisargikaVirupa,this.directionalPeakHouse,this.directionalNote,this.motionNote);
+  final KundaliGraha planet;
+  final double naisargikaVirupa;
+  final int directionalPeakHouse;
+  final String directionalNote,motionNote;
+}
 class YogaFinding {
   const YogaFinding(this.name, this.description, this.caveat);
   final String name, description, caveat;
@@ -59,6 +67,26 @@ class AdvancedChartAnalysisService {
       final separation=sun==null||g.name=='Sun'?180.0:_distance(g.longitude,sun.longitude);
       final orb=switch(g.name){'Moon'=>12.0,'Mars'=>17.0,'Mercury'=>14.0,'Jupiter'=>11.0,'Venus'=>10.0,'Saturn'=>15.0,_=>0.0};
       return GrahaCondition(g,age,dignity,orb>0&&separation<=orb,separation);
+    }).toList(growable:false);
+  }
+  static List<GrahaStrengthIndicator> strengthIndicators(KundaliChart chart) {
+    const natural=<String,double>{
+      'Sun':60,'Moon':51.43,'Venus':42.86,'Jupiter':34.29,
+      'Mercury':25.71,'Mars':17.14,'Saturn':8.57,
+    };
+    const peak=<String,int>{
+      'Sun':10,'Mars':10,'Moon':4,'Venus':4,
+      'Mercury':1,'Jupiter':1,'Saturn':7,
+    };
+    return chart.grahas.where((g)=>natural.containsKey(g.name)).map((g){
+      final maxHouse=peak[g.name]!;
+      final opposite=((maxHouse+5)%12)+1;
+      final note=g.houseNumber==maxHouse?'Occupies the traditional directional peak house':
+        g.houseNumber==opposite?'Occupies the opposite (minimum-direction) house':
+        'Between the peak and opposite houses; exact Dig Bala needs house-midpoint geometry';
+      final motion=g.isRetrograde?'Retrograde: traditional Cheshta Bala may be elevated; no numeric value calculated':
+        'Direct: daily motion shown as '+g.dailyMotion.toStringAsFixed(3)+'°/day; no numeric Cheshta Bala calculated';
+      return GrahaStrengthIndicator(g,natural[g.name]!,maxHouse,note,motion);
     }).toList(growable:false);
   }
   static List<YogaFinding> yogas(KundaliChart chart) {
