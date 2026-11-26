@@ -9,8 +9,8 @@ class PoruthamItem {
 class PoruthamReport {
   const PoruthamReport(this.items);
   final List<PoruthamItem> items;
-  double get total=>items.fold(0,(s,e)=>s+e.score);
-  double get maximum=>items.fold(0,(s,e)=>s+e.maximum);
+  double get total=>items.fold<double>(0,(s,e)=>s+e.score);
+  double get maximum=>items.fold<double>(0,(s,e)=>s+e.maximum);
   bool get rajjuClear=>items.firstWhere((e)=>e.name=='Rajju').score>0;
   bool get vedhaClear=>items.firstWhere((e)=>e.name=='Vedha').score>0;
 }
