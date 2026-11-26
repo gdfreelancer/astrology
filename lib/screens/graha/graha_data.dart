@@ -1,0 +1,142 @@
+import 'package:flutter/material.dart';
+
+class GrahaInfo {
+  const GrahaInfo({
+    required this.id,
+    required this.english,
+    required this.sanskrit,
+    required this.hindi,
+    required this.gujarati,
+    required this.symbol,
+    required this.color,
+    required this.summaryKey,
+    required this.natureKey,
+    required this.karakaKey,
+    required this.qualitiesKey,
+    required this.bodyKey,
+    required this.ownSigns,
+    required this.exaltation,
+    required this.debilitation,
+    required this.weekday,
+    required this.colour,
+    required this.gemstone,
+    required this.element,
+    required this.guna,
+    required this.deity,
+    required this.mantra,
+  });
+
+  final String id, english, sanskrit, hindi, gujarati, symbol;
+  final Color color;
+  final String summaryKey, natureKey, karakaKey, qualitiesKey, bodyKey;
+  final String ownSigns, exaltation, debilitation, weekday, colour, gemstone;
+  final String element, guna, deity, mantra;
+}
+
+const grahas = <GrahaInfo>[
+  GrahaInfo(
+    id: 'sun', english: 'Sun', sanskrit: 'Surya', hindi: 'सूर्य', gujarati: 'સૂર્ય',
+    symbol: '☉', color: Color(0xFFE6A23C),
+    summaryKey: 'graha_sun_summary', natureKey: 'graha_sun_nature',
+    karakaKey: 'graha_sun_karaka', qualitiesKey: 'graha_sun_qualities',
+    bodyKey: 'graha_sun_body', ownSigns: 'Leo (Simha)', exaltation: 'Aries (Mesha) – 10°',
+    debilitation: 'Libra (Tula) – 10°', weekday: 'Sunday', colour: 'Ruby red / saffron',
+    gemstone: 'Ruby (Manikya)', element: 'Fire (Agni)', guna: 'Sattva',
+    deity: 'Surya / Aditya', mantra: 'Om Hraam Hreem Hraum Sah Suryaya Namah',
+  ),
+  GrahaInfo(
+    id: 'moon', english: 'Moon', sanskrit: 'Chandra', hindi: 'चंद्र', gujarati: 'ચંદ્ર',
+    symbol: '☾', color: Color(0xFF8D9DB8),
+    summaryKey: 'graha_moon_summary', natureKey: 'graha_moon_nature',
+    karakaKey: 'graha_moon_karaka', qualitiesKey: 'graha_moon_qualities',
+    bodyKey: 'graha_moon_body', ownSigns: 'Cancer (Karka)', exaltation: 'Taurus (Vrishabha) – 3°',
+    debilitation: 'Scorpio (Vrishchika) – 3°', weekday: 'Monday', colour: 'White / pearl',
+    gemstone: 'Pearl (Moti)', element: 'Water (Jala)', guna: 'Sattva',
+    deity: 'Chandra / Soma', mantra: 'Om Shraam Shreem Shraum Sah Chandraya Namah',
+  ),
+  GrahaInfo(
+    id: 'mars', english: 'Mars', sanskrit: 'Mangala', hindi: 'मंगल', gujarati: 'મંગળ',
+    symbol: '♂', color: Color(0xFFD65C4A),
+    summaryKey: 'graha_mars_summary', natureKey: 'graha_mars_nature',
+    karakaKey: 'graha_mars_karaka', qualitiesKey: 'graha_mars_qualities',
+    bodyKey: 'graha_mars_body', ownSigns: 'Aries (Mesha), Scorpio (Vrishchika)',
+    exaltation: 'Capricorn (Makara) – 28°', debilitation: 'Cancer (Karka) – 28°',
+    weekday: 'Tuesday', colour: 'Red', gemstone: 'Red Coral (Moonga)',
+    element: 'Fire (Agni)', guna: 'Tamas', deity: 'Mangala / Skanda',
+    mantra: 'Om Kraam Kreem Kraum Sah Bhaumaya Namah',
+  ),
+  GrahaInfo(
+    id: 'mercury', english: 'Mercury', sanskrit: 'Budha', hindi: 'बुध', gujarati: 'બુધ',
+    symbol: '☿', color: Color(0xFF4C9B78),
+    summaryKey: 'graha_mercury_summary', natureKey: 'graha_mercury_nature',
+    karakaKey: 'graha_mercury_karaka', qualitiesKey: 'graha_mercury_qualities',
+    bodyKey: 'graha_mercury_body', ownSigns: 'Gemini (Mithuna), Virgo (Kanya)',
+    exaltation: 'Virgo (Kanya) – 15°', debilitation: 'Pisces (Meena) – 15°',
+    weekday: 'Wednesday', colour: 'Green', gemstone: 'Emerald (Panna)',
+    element: 'Earth (Prithvi)', guna: 'Rajas', deity: 'Budha',
+    mantra: 'Om Braam Breem Braum Sah Budhaya Namah',
+  ),
+  GrahaInfo(
+    id: 'jupiter', english: 'Jupiter', sanskrit: 'Guru / Brihaspati', hindi: 'गुरु / बृहस्पति', gujarati: 'ગુરુ / બૃહસ્પતિ',
+    symbol: '♃', color: Color(0xFFD2A64C),
+    summaryKey: 'graha_jupiter_summary', natureKey: 'graha_jupiter_nature',
+    karakaKey: 'graha_jupiter_karaka', qualitiesKey: 'graha_jupiter_qualities',
+    bodyKey: 'graha_jupiter_body', ownSigns: 'Sagittarius (Dhanu), Pisces (Meena)',
+    exaltation: 'Cancer (Karka) – 5°', debilitation: 'Capricorn (Makara) – 5°',
+    weekday: 'Thursday', colour: 'Yellow / golden', gemstone: 'Yellow Sapphire (Pukhraj)',
+    element: 'Ether / space (Akasha)', guna: 'Sattva', deity: 'Brihaspati',
+    mantra: 'Om Graam Greem Graum Sah Gurave Namah',
+  ),
+  GrahaInfo(
+    id: 'venus', english: 'Venus', sanskrit: 'Shukra', hindi: 'शुक्र', gujarati: 'શુક્ર',
+    symbol: '♀', color: Color(0xFFB77AAB),
+    summaryKey: 'graha_venus_summary', natureKey: 'graha_venus_nature',
+    karakaKey: 'graha_venus_karaka', qualitiesKey: 'graha_venus_qualities',
+    bodyKey: 'graha_venus_body', ownSigns: 'Taurus (Vrishabha), Libra (Tula)',
+    exaltation: 'Pisces (Meena) – 27°', debilitation: 'Virgo (Kanya) – 27°',
+    weekday: 'Friday', colour: 'White / pastel shades', gemstone: 'Diamond (Heera)',
+    element: 'Water (Jala)', guna: 'Rajas', deity: 'Shukra / Shukracharya',
+    mantra: 'Om Draam Dreem Draum Sah Shukraya Namah',
+  ),
+  GrahaInfo(
+    id: 'saturn', english: 'Saturn', sanskrit: 'Shani', hindi: 'शनि', gujarati: 'શનિ',
+    symbol: '♄', color: Color(0xFF596A8C),
+    summaryKey: 'graha_saturn_summary', natureKey: 'graha_saturn_nature',
+    karakaKey: 'graha_saturn_karaka', qualitiesKey: 'graha_saturn_qualities',
+    bodyKey: 'graha_saturn_body', ownSigns: 'Capricorn (Makara), Aquarius (Kumbha)',
+    exaltation: 'Libra (Tula) – 20°', debilitation: 'Aries (Mesha) – 20°',
+    weekday: 'Saturday', colour: 'Dark blue / black', gemstone: 'Blue Sapphire (Neelam)',
+    element: 'Air (Vayu)', guna: 'Tamas', deity: 'Shani',
+    mantra: 'Om Praam Preem Praum Sah Shanaischaraya Namah',
+  ),
+  GrahaInfo(
+    id: 'rahu', english: 'Rahu', sanskrit: 'Rahu', hindi: 'राहु', gujarati: 'રાહુ',
+    symbol: '☊', color: Color(0xFF607D72),
+    summaryKey: 'graha_rahu_summary', natureKey: 'graha_rahu_nature',
+    karakaKey: 'graha_rahu_karaka', qualitiesKey: 'graha_rahu_qualities',
+    bodyKey: 'graha_rahu_body', ownSigns: 'No universally accepted own sign',
+    exaltation: 'Varies by tradition (often Taurus or Gemini)',
+    debilitation: 'Varies by tradition (often Scorpio or Sagittarius)',
+    weekday: 'Saturday (commonly associated)', colour: 'Smoky / dark shades',
+    gemstone: 'Hessonite (Gomed)', element: 'Air (Vayu; traditional association)',
+    guna: 'Tamas', deity: 'Rahu', mantra: 'Om Bhraam Bhreem Bhraum Sah Rahave Namah',
+  ),
+  GrahaInfo(
+    id: 'ketu', english: 'Ketu', sanskrit: 'Ketu', hindi: 'केतु', gujarati: 'કેતુ',
+    symbol: '☋', color: Color(0xFF9B8066),
+    summaryKey: 'graha_ketu_summary', natureKey: 'graha_ketu_nature',
+    karakaKey: 'graha_ketu_karaka', qualitiesKey: 'graha_ketu_qualities',
+    bodyKey: 'graha_ketu_body', ownSigns: 'No universally accepted own sign',
+    exaltation: 'Varies by tradition (often Scorpio or Sagittarius)',
+    debilitation: 'Varies by tradition (often Taurus or Gemini)',
+    weekday: 'Tuesday (commonly associated)', colour: 'Smoky / earthy shades',
+    gemstone: 'Cat’s Eye (Lehsunia)', element: 'Fire (Agni; traditional association)',
+    guna: 'Tamas', deity: 'Ketu', mantra: 'Om Sraam Sreem Sraum Sah Ketave Namah',
+  ),
+];
+
+String grahaDisplayName(GrahaInfo graha, String languageCode) => switch (languageCode) {
+  'hi' => graha.hindi,
+  'gu' => graha.gujarati,
+  _ => graha.english,
+};
