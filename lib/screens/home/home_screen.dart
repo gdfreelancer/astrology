@@ -20,6 +20,7 @@ import '../settings/settings_screen.dart';
 import '../library/offline_learning_screen.dart';
 import '../birth_profiles/profile_comparison_screen.dart';
 import '../kundali/transit_calendar_screen.dart';
+import '../remedies/remedies_home_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -246,6 +247,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         description: 'Compare two saved birth charts offline',
                         tint: const Color(0xFFE8F3FA),
                         onTap: () => _open(const ProfileComparisonScreen()),
+                      ),
+                      FeatureCard(
+                        emoji: '🪷',
+                        title: 'Remedies',
+                        description: 'Gemstones, mantras, yantras and traditional guidance',
+                        tint: const Color(0xFFF3EEF8),
+                        onTap: () => _open(const RemediesHomeScreen()),
                       ),
                       FeatureCard(
                         emoji: '📚',

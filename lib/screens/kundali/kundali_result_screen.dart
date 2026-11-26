@@ -16,6 +16,8 @@ import 'divisional_charts_screen.dart';
 import 'gochar_yogas_screen.dart';
 import 'advanced_chart_analysis_screen.dart';
 import 'ashtakavarga_screen.dart';
+import '../remedies/personalized_remedies_screen.dart';
+import '../remedies/remedies_home_screen.dart';
 
 
 String _localizedRashi(int index) {
@@ -169,6 +171,25 @@ class KundaliResultScreen extends StatelessWidget {
                 builder: (_) => GocharYogasScreen(chart: birthResult.kundaliChart, siderealMoonLongitude: birthResult.siderealMoonLongitude, birthDate: birthResult.birthLocal),
               )),
             ),
+            const SizedBox(height: 8),
+            _AnalysisShortcut(
+              icon: Icons.auto_awesome,
+              title: 'Personalized remedy assessment',
+              subtitle: 'Review the 12 remedy-selection factors for a saved Kundali',
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => const PersonalizedRemediesScreen(),
+              )),
+            ),
+            const SizedBox(height: 8),
+            _AnalysisShortcut(
+              icon: Icons.spa_outlined,
+              title: 'Traditional remedies library',
+              subtitle: 'Gemstones, mantras, yantras and Dosha references',
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => const RemediesHomeScreen(),
+              )),
+            ),
+            const SizedBox(height: 8),
             const SizedBox(height: 8),
             _AnalysisShortcut(
               icon: Icons.grid_view_rounded,
