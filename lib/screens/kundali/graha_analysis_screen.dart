@@ -4,6 +4,8 @@ import '../../data/nakshatra_data.dart';
 import '../../l10n/app_locale.dart';
 import '../../models/kundali/kundali_graha.dart';
 import '../../theme/app_theme.dart';
+import '../graha/graha_data.dart' as reference_data;
+import '../graha/graha_detail_screen.dart';
 
 class GrahaAnalysisScreen extends StatelessWidget {
   const GrahaAnalysisScreen({super.key, required this.chart});
@@ -85,6 +87,22 @@ class _GrahaCard extends StatelessWidget {
           Expanded(child: _Metric(label: context.tr('daily_motion'), value: '${graha.dailyMotion.toStringAsFixed(4)}°/day')),
           Expanded(child: _Metric(label: context.tr('motion'), value: graha.isRetrograde ? context.tr('retrograde') : context.tr('direct'))),
         ]),
+        const SizedBox(height: 8),
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton.icon(
+            onPressed: () {
+              final id = graha.name.toLowerCase();
+              final matches = reference_data.grahas.where((item) => item.id == id);
+              if (matches.isEmpty) return;
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => GrahaDetailScreen(graha: matches.first),
+              ));
+            },
+            icon: const Icon(Icons.open_in_new_rounded, size: 14),
+            label: const Text('Full Graha Phala & remedies', style: TextStyle(fontSize: 10)),
+          ),
+        ),
       ]),
     );
   }
