@@ -19,6 +19,7 @@ import '../graha/graha_list_screen.dart';
 import '../settings/settings_screen.dart';
 import '../library/offline_learning_screen.dart';
 import '../birth_profiles/profile_comparison_screen.dart';
+import '../kundali/transit_calendar_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -231,6 +232,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         description: context.tr('muhurat_desc'),
                         tint: const Color(0xFFE8F3FA),
                         onTap: () => _open(const MuhuratScreen()),
+                      ),
+                      FeatureCard(
+                        emoji: '🪐',
+                        title: 'Transit Calendar',
+                        description: 'Upcoming sign changes and retrograde stations',
+                        tint: const Color(0xFFE9F3F6),
+                        onTap: () => _open(const TransitCalendarScreen()),
                       ),
                       FeatureCard(
                         emoji: '⚖️',
