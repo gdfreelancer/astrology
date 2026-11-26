@@ -51,7 +51,7 @@ class AdvancedChartAnalysisService {
     return chart.grahas.map((g) {
       final d=g.longitude%30;
       const ages=['Bala','Kumara','Yuva','Vriddha','Mrita'];
-      final segment=(d/6).floor().clamp(0,4);
+      final segment=(d/6).floor().clamp(0,4).toInt();
       final age=ages[g.signIndex.isEven?segment:4-segment];
       final dignity=_exalt[g.name]==g.signIndex?'Exalted':
         _debil[g.name]==g.signIndex?'Debilitated':
