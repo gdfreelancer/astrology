@@ -30,11 +30,11 @@ class _AshtakavargaScreenState extends State<AshtakavargaScreen> {
         ],onChanged:(v){if(v!=null)setState(()=>_selected=v);}),
         const SizedBox(height:10),
         _ScoreCard(title:_selected+' BAV',total:result.total(_selected),child:Column(children:[
-          for(var i=0;i<12;i++) _ScoreRow(sign:i,points:points[i],selected:widget.chart.grahas.firstWhere((g)=>g.name==_selected).signIndex),
+          for(var i=0;i<12;i++) _ScoreRow(sign:i,points:points[i],selected:widget.chart.grahas.firstWhere((g)=>g.name==_selected).signIndex,max:8),
         ])),
         const SizedBox(height:12),
         _ScoreCard(title:'Sarvashtakavarga (SAV)',total:337,child:Column(children:[
-          for(var i=0;i<12;i++) _ScoreRow(sign:i,points:result.sarva[i],selected:widget.chart.ascendantSignIndex),
+          for(var i=0;i<12;i++) _ScoreRow(sign:i,points:result.sarva[i],selected:widget.chart.ascendantSignIndex,max:56),
         ])),
         const SizedBox(height:12),
         const _Notice('These are unreduced classical BAV and SAV bindu counts. Rahu and Ketu do not participate. Some published traditions differ in a few Moon and Venus table entries; this implementation uses one documented Parashari table set and checks fixed totals (48, 49, 39, 54, 56, 52, 39; SAV 337). Bindus are supporting indicators, not standalone predictions.'),
@@ -50,13 +50,13 @@ class _ScoreCard extends StatelessWidget {
   ]));
 }
 class _ScoreRow extends StatelessWidget {
-  const _ScoreRow({required this.sign,required this.points,required this.selected});
-  final int sign,points,selected;
+  const _ScoreRow({required this.sign,required this.points,required this.selected,required this.max});
+  final int sign,points,selected,max;
   static const names=['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
   @override Widget build(BuildContext context)=>Padding(padding:const EdgeInsets.symmetric(vertical:5),child:Row(children:[
     SizedBox(width:22,child:Text((sign+1).toString().padLeft(2,'0'),style:const TextStyle(fontSize:9,color:AppTheme.muted))),
     Expanded(child:Text(names[sign],style:TextStyle(fontSize:10,fontWeight:sign==selected?FontWeight.w900:FontWeight.w500,color:sign==selected?AppTheme.plum:AppTheme.ink))),
-    SizedBox(width:100,child:ClipRRect(borderRadius:BorderRadius.circular(5),child:LinearProgressIndicator(value:points/(sign<12?8:56),minHeight:7,backgroundColor:const Color(0xFFF0ECF3),color:AppTheme.plum))),
+    SizedBox(width:100,child:ClipRRect(borderRadius:BorderRadius.circular(5),child:LinearProgressIndicator(value:points/max,minHeight:7,backgroundColor:const Color(0xFFF0ECF3),color:AppTheme.plum))),
     const SizedBox(width:10),SizedBox(width:22,child:Text(points.toString(),textAlign:TextAlign.end,style:const TextStyle(fontSize:11,fontWeight:FontWeight.w800))),
   ]));
 }
