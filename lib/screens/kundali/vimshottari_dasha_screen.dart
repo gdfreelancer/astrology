@@ -107,12 +107,20 @@ class VimshottariDashaScreen extends StatelessWidget {
               final currentPratyantar = VimshottariSubperiodService.children(currentAntar).where((p) => p.contains(now)).firstOrNull;
               if (currentPratyantar == null) return const SizedBox.shrink();
               final sookshma = VimshottariSubperiodService.children(currentPratyantar);
+              final currentSookshma = sookshma.where((p) => p.contains(now)).firstOrNull;
               return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 const SizedBox(height: 14),
                 Text('Sookshma Dasha', style: const TextStyle(color: AppTheme.ink, fontSize: 15, fontWeight: FontWeight.w800)),
                 const SizedBox(height: 8),
                 for (final period in sookshma)
                   _PeriodTile(period: period, isCurrent: period.contains(now), title: _planet(context, period.planet)),
+                if (currentSookshma != null) ...[
+                  const SizedBox(height: 14),
+                  Text('Prana Dasha', style: const TextStyle(color: AppTheme.ink, fontSize: 15, fontWeight: FontWeight.w800)),
+                  const SizedBox(height: 8),
+                  for (final period in VimshottariSubperiodService.children(currentSookshma))
+                    _PeriodTile(period: period, isCurrent: period.contains(now), title: _planet(context, period.planet)),
+                ],
               ]);
             }),
           ],

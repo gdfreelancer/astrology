@@ -1099,5 +1099,8 @@
   "graha_dosha": "ग्रह दोष एवं पीड़ा",
   "graha_dosha_subtitle": "प्रचलित योग, दोष और उनकी व्याख्या संबंधी सावधानियाँ",
   "graha_mantra_when": "इस मंत्र का जाप कब करें",
-  "graha_mantra_when_subtitle": "पारंपरिक भक्ति-विधि; निश्चित उपाय नहीं"
+  "graha_mantra_when_subtitle": "पारंपरिक भक्ति-विधि; निश्चित उपाय नहीं",
+  "dhaiya_title": "शनि ढैय्या",
+  "dhaiya_active": "ढैय्या का संकेत मौजूद है",
+  "dhaiya_inactive": "चुनी गई तारीख पर ढैय्या का संकेत नहीं है"
 }

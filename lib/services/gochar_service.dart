@@ -18,11 +18,14 @@ class DetectedYoga {
 }
 
 class SadeSatiStatus {
-  const SadeSatiStatus({required this.isActive, required this.phase, required this.saturnSignIndex, required this.moonSignIndex});
+  const SadeSatiStatus({required this.isActive, required this.phase, required this.saturnSignIndex, required this.moonSignIndex, required this.dhaiyaHouse});
   final bool isActive;
   /// 0 = rising (12th), 1 = peak (same sign), 2 = setting (2nd).
   final int? phase;
   final int saturnSignIndex, moonSignIndex;
+  /// Saturn in the 4th or 8th sign from natal Moon (common Dhaiya convention).
+  final int? dhaiyaHouse;
+  bool get isDhaiya => dhaiyaHouse != null;
 }
 
 class GocharReport {
@@ -112,7 +115,9 @@ class GocharService {
   static SadeSatiStatus sadeSati({required int natalMoonSignIndex, required int transitSaturnSignIndex}) {
     final distance = (transitSaturnSignIndex - natalMoonSignIndex + 12) % 12;
     final phase = distance == 11 ? 0 : distance == 0 ? 1 : distance == 1 ? 2 : null;
-    return SadeSatiStatus(isActive:phase != null,phase:phase,saturnSignIndex:transitSaturnSignIndex,moonSignIndex:natalMoonSignIndex);
+    final house = distance + 1;
+    final dhaiyaHouse = phase == null && (house == 4 || house == 8) ? house : null;
+    return SadeSatiStatus(isActive:phase != null,phase:phase,saturnSignIndex:transitSaturnSignIndex,moonSignIndex:natalMoonSignIndex,dhaiyaHouse:dhaiyaHouse);
   }
 
   static List<DetectedYoga> detectYogas(KundaliChart chart) {

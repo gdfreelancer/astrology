@@ -1099,5 +1099,8 @@
   "graha_dosha": "Graha Dosha & afflictions",
   "graha_dosha_subtitle": "Commonly discussed combinations and interpretive cautions",
   "graha_mantra_when": "When to use this mantra",
-  "graha_mantra_when_subtitle": "Traditional devotional context; not a guaranteed remedy"
+  "graha_mantra_when_subtitle": "Traditional devotional context; not a guaranteed remedy",
+  "dhaiya_title": "Saturn Dhaiya",
+  "dhaiya_active": "Dhaiya indicator present",
+  "dhaiya_inactive": "No Dhaiya indicator on selected date"
 }

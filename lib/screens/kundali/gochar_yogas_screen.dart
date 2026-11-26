@@ -58,6 +58,16 @@ class _GocharYogasScreenState extends State<GocharYogasScreen> {
           const SizedBox(height:8),
           Text('${context.tr('natal_moon')}: ${context.tr(_rashiKey(report.sadeSati.moonSignIndex))}  ·  ${context.tr('transit_saturn')}: ${context.tr(_rashiKey(saturn.signIndex))}',style:const TextStyle(fontSize:10,fontWeight:FontWeight.w700,color:AppTheme.plum))
         ])),
+        const SizedBox(height:12),
+        Text('Saturn Dhaiya',style:const TextStyle(fontSize:15,fontWeight:FontWeight.w800,color:AppTheme.ink)),
+        const SizedBox(height:8),
+        Container(padding:const EdgeInsets.all(14),decoration:BoxDecoration(color:report.sadeSati.isDhaiya?const Color(0xFFFFF6E8):Colors.white,borderRadius:BorderRadius.circular(15),border:Border.all(color:const Color(0xFFEAE5EF))),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+          Text(report.sadeSati.isDhaiya?'Dhaiya indicator present':'No Dhaiya indicator on selected date',style:const TextStyle(fontSize:12,fontWeight:FontWeight.w800,color:AppTheme.ink)),
+          const SizedBox(height:4),
+          Text(report.sadeSati.dhaiyaHouse==null?'Saturn is not in the 4th or 8th sign from the natal Moon on this date.':'Saturn is in the ${report.sadeSati.dhaiyaHouse}th sign from the natal Moon.',style:const TextStyle(fontSize:10,height:1.4,color:AppTheme.muted)),
+          const SizedBox(height:5),
+          const Text('This is a sign-based traditional indicator, not a prediction or a full Saturn transit timeline.',style:TextStyle(fontSize:9.5,color:AppTheme.muted)),
+        ])),
         const SizedBox(height:18),
         Text(context.tr('detected_yogas'),style:const TextStyle(fontSize:15,fontWeight:FontWeight.w800,color:AppTheme.ink)),
         const SizedBox(height:8),
