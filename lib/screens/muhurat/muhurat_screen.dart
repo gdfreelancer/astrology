@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:timezone/data/latest.dart' as timezone_data;
+import 'package:timezone/timezone.dart' as tz;
 
 import '../../l10n/app_locale.dart';
-
 import '../../theme/app_theme.dart';
 import '../../services/settings/app_preferences_service.dart';
 import '../../models/panchang_data.dart';
-import '../../services/panchang_service.dart';
-import 'package:timezone/data/latest.dart' as timezone_data;
-import 'package:timezone/timezone.dart' as tz;
+import '../../services/muhurat_service.dart';
 
 class MuhuratScreen extends StatefulWidget {
   const MuhuratScreen({super.key});
@@ -26,177 +25,294 @@ class _MuhuratScreenState extends State<MuhuratScreen> {
     _MuhuratActivity('🧳', 'activity_journey', 'activity_journey_desc'),
     _MuhuratActivity('📚', 'activity_learning', 'activity_learning_desc'),
   ];
+
   int _selectedActivity = 0;
-  DateTime _selectedDate = DateUtils.dateOnly(DateTime.now());
+  late int _selectedYear;
   final _placeController = TextEditingController();
-  bool _showNotice = false;
-  bool _calculating = false;
   PanchangLocation? _location;
-  PanchangData? _panchang;
-  String? _calculationError;
+  List<MuhuratCandidate> _candidates = const [];
+  bool _loadingLocation = true;
+  bool _calculating = false;
+  String? _error;
 
   @override
   void initState() {
     super.initState();
+    _selectedYear = DateTime.now().year;
     timezone_data.initializeTimeZones();
     _loadDefaultLocation();
   }
 
   Future<void> _loadDefaultLocation() async {
-    final saved = await AppPreferencesService.defaultLocation();
-    if (!mounted) return;
-    setState(() => _location = PanchangLocation(name: saved.name, latitude: saved.latitude, longitude: saved.longitude, timeZoneId: saved.timeZoneId));
-    if (_placeController.text.trim().isEmpty) _placeController.text = saved.name;
+    try {
+      final saved = await AppPreferencesService.defaultLocation();
+      if (!mounted) return;
+      setState(() {
+        _location = PanchangLocation(name: saved.name, latitude: saved.latitude, longitude: saved.longitude, timeZoneId: saved.timeZoneId);
+        _placeController.text = saved.name;
+        _loadingLocation = false;
+      });
+      await _loadDates();
+    } catch (error) {
+      if (!mounted) return;
+      setState(() { _loadingLocation = false; _error = error.toString(); });
+    }
   }
 
   @override
-  void dispose() { _placeController.dispose(); super.dispose(); }
-
-  Future<void> _pickDate() async {
-    final picked = await showDatePicker(context: context, initialDate: _selectedDate, firstDate: DateUtils.dateOnly(DateTime.now().subtract(const Duration(days: 1))), lastDate: DateTime.now().add(const Duration(days: 730)));
-    if (picked != null) setState(() { _selectedDate = DateUtils.dateOnly(picked); _showNotice = false; _panchang = null; _calculationError = null; });
+  void dispose() {
+    _placeController.dispose();
+    super.dispose();
   }
 
-  Future<void> _calculate() async {
+  Future<void> _loadDates() async {
     final location = _location;
     if (location == null || _calculating) return;
-    setState(() { _calculating = true; _calculationError = null; _panchang = null; _showNotice = true; });
+    setState(() { _calculating = true; _error = null; _candidates = const []; });
     try {
-      final data = await Future<PanchangData>(() => PanchangService.calculate(date: _selectedDate, location: location));
+      final now = DateTime.now();
+      final dates = await MuhuratService.findDates(
+        from: DateTime(now.year, now.month, now.day),
+        through: DateTime(_selectedYear + 1, 12, 31),
+        location: location,
+        activityKey: _activities[_selectedActivity].title,
+      );
       if (!mounted) return;
-      setState(() => _panchang = data);
+      setState(() => _candidates = dates);
     } catch (error) {
       if (!mounted) return;
-      setState(() => _calculationError = error.toString());
+      setState(() => _error = error.toString());
     } finally {
       if (mounted) setState(() => _calculating = false);
     }
   }
 
-  String _localTime(DateTime value) {
-    final data = _panchang;
-    if (data == null) return '';
-    final local = tz.TZDateTime.from(value, tz.getLocation(data.location.timeZoneId));
+  void _selectActivity(int index) {
+    if (_selectedActivity == index) return;
+    setState(() => _selectedActivity = index);
+    _loadDates();
+  }
+
+  void _selectYear(int year) {
+    if (_selectedYear != year) setState(() => _selectedYear = year);
+  }
+
+  String _time(DateTime value) {
+    final location = _location;
+    if (location == null) return '';
+    final local = tz.TZDateTime.from(value, tz.getLocation(location.timeZoneId));
     final minute = local.minute.toString().padLeft(2, '0');
     if (AppPreferencesService.cachedUse24HourTime) return '${local.hour.toString().padLeft(2, '0')}:$minute';
     final hour = local.hour % 12 == 0 ? 12 : local.hour % 12;
     return '$hour:$minute ${local.hour >= 12 ? 'PM' : 'AM'}';
   }
 
+  String _weekday(int index) => context.tr([
+    'weekday_sunday', 'weekday_monday', 'weekday_tuesday', 'weekday_wednesday',
+    'weekday_thursday', 'weekday_friday', 'weekday_saturday',
+  ][index]);
+
+  String _month(int month) => AppLocale.text('month_$month');
+
   @override
   Widget build(BuildContext context) {
-    final activity = _activities[_selectedActivity];
+    final yearDates = _candidates.where((item) => item.date.year == _selectedYear).toList();
     return Scaffold(
-      appBar: AppBar(title: Text(context.tr('muhurat'), style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18))),
+      appBar: AppBar(title: Text(context.tr('muhurat'), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18))),
       body: SafeArea(child: ListView(padding: const EdgeInsets.fromLTRB(20, 8, 20, 28), children: [
-        _hero(context),
+        _hero(),
         const SizedBox(height: 22),
-        Text(context.tr('muhurat_question'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+        Text(context.tr('muhurat_question'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppTheme.ink)),
         const SizedBox(height: 4),
-        Text(context.tr('choose_activity_help'), style: TextStyle(fontSize: 10, color: AppTheme.muted)),
+        Text(context.tr('choose_activity_help'), style: const TextStyle(fontSize: 10, color: AppTheme.muted)),
         const SizedBox(height: 13),
-        GridView.builder(shrinkWrap: true, physics: const NeverScrollableScrollPhysics(), itemCount: _activities.length, gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 11, mainAxisSpacing: 11, childAspectRatio: 1.42), itemBuilder: (context, index) {
-          final item = _activities[index]; final selected = index == _selectedActivity;
-          return Material(color: selected ? const Color(0xFFF2EDF9) : Colors.white, borderRadius: BorderRadius.circular(17), child: InkWell(onTap: () => setState(() { _selectedActivity = index; _showNotice = false; }), borderRadius: BorderRadius.circular(17), child: Container(padding: const EdgeInsets.all(13), decoration: BoxDecoration(borderRadius: BorderRadius.circular(17), border: Border.all(color: selected ? AppTheme.plum : const Color(0xFFEDE7E1), width: selected ? 1.4 : 1)), child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
-            Row(children: [Text(item.emoji, style: const TextStyle(fontSize: 23)), const Spacer(), if (selected) const Icon(Icons.check_circle_rounded, color: AppTheme.plum, size: 17)]),
-            const SizedBox(height: 8), Text(context.tr(item.title), maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppTheme.ink)),
-            const SizedBox(height: 3), Text(context.tr(item.subtitle), maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 9, height: 1.35, color: AppTheme.muted)),
-          ]))));
-        }),
+        GridView.builder(
+          shrinkWrap: true, physics: const NeverScrollableScrollPhysics(), itemCount: _activities.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 11, mainAxisSpacing: 11, childAspectRatio: 1.42),
+          itemBuilder: (context, index) {
+            final item = _activities[index]; final selected = index == _selectedActivity;
+            return Material(
+              color: selected ? const Color(0xFFF2EDF9) : Colors.white,
+              borderRadius: BorderRadius.circular(17),
+              child: InkWell(
+                onTap: () => _selectActivity(index), borderRadius: BorderRadius.circular(17),
+                child: Container(
+                  padding: const EdgeInsets.all(13),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(17), border: Border.all(color: selected ? AppTheme.plum : const Color(0xFFEDE7E1), width: selected ? 1.4 : 1)),
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
+                    Row(children: [Text(item.emoji, style: const TextStyle(fontSize: 23)), const Spacer(), if (selected) const Icon(Icons.check_circle_rounded, color: AppTheme.plum, size: 17)]),
+                    const SizedBox(height: 8),
+                    Text(context.tr(item.title), maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+                    const SizedBox(height: 3),
+                    Text(context.tr(item.subtitle), maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 9, height: 1.35, color: AppTheme.muted)),
+                  ]),
+                ),
+              ),
+            );
+          },
+        ),
         const SizedBox(height: 22),
-        Text(context.tr('preferred_date_place'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+        Text(context.tr('muhurat_dates_for'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+        const SizedBox(height: 5),
+        Text(context.tr('muhurat_years_description'), style: const TextStyle(fontSize: 10, height: 1.45, color: AppTheme.muted)),
         const SizedBox(height: 12),
-        _dateField(),
-        const SizedBox(height: 11),
-        TextField(controller: _placeController, readOnly: true, onTap: () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Change the saved Panchang location in Settings.'))), textCapitalization: TextCapitalization.words, keyboardType: TextInputType.streetAddress, decoration: InputDecoration(prefixIcon: const Icon(Icons.location_on_outlined, color: AppTheme.plum, size: 20), hintText: context.tr('event_location'), hintStyle: const TextStyle(fontSize: 11, color: AppTheme.muted), filled: true, fillColor: Colors.white, contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15), border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: Color(0xFFEDE7E1))), enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: Color(0xFFEDE7E1))))),
-        const SizedBox(height: 16),
-        SizedBox(height: 52, child: FilledButton.icon(onPressed: _calculating || _location == null ? null : _calculate, icon: _calculating ? const SizedBox(width:16,height:16,child:CircularProgressIndicator(strokeWidth:2,color:Colors.white)) : const Icon(Icons.auto_awesome_rounded, size: 18), label: Text(context.tr('explore_muhurat'), style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800)), style: FilledButton.styleFrom(backgroundColor: AppTheme.plum, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))))),
-        if (_showNotice) ...[const SizedBox(height: 16), if (_calculating) const Center(child:CircularProgressIndicator(color:AppTheme.plum)) else if (_calculationError != null) _errorCard() else if (_panchang != null) _calculatedCard(activity)],
-        const SizedBox(height: 18), _howItWorks(),
+        TextField(
+          controller: _placeController, readOnly: true,
+          onTap: () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('muhurat_location_settings_hint')))),
+          decoration: InputDecoration(
+            prefixIcon: const Icon(Icons.location_on_outlined, color: AppTheme.plum, size: 20),
+            hintText: context.tr('event_location'), filled: true, fillColor: Colors.white,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: Color(0xFFEDE7E1))),
+            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: Color(0xFFEDE7E1))),
+          ),
+        ),
+        const SizedBox(height: 14),
+        Row(children: [
+          for (final year in [_selectedYear, _selectedYear + 1])
+            Padding(padding: const EdgeInsets.only(right: 9), child: ChoiceChip(
+              label: Text('$year'), selected: _selectedYear == year, onSelected: (_) => _selectYear(year),
+              selectedColor: const Color(0xFFF2EDF9),
+              labelStyle: TextStyle(color: _selectedYear == year ? AppTheme.plum : AppTheme.ink, fontWeight: FontWeight.w800, fontSize: 12),
+              side: BorderSide(color: _selectedYear == year ? AppTheme.plum : const Color(0xFFEDE7E1)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            )),
+          const Spacer(),
+          if (!_calculating && !_loadingLocation) IconButton(onPressed: _loadDates, icon: const Icon(Icons.refresh_rounded, color: AppTheme.plum)),
+        ]),
+        const SizedBox(height: 5),
+        if (_loadingLocation || _calculating) _loadingCard()
+        else if (_error != null) _errorCard()
+        else if (yearDates.isEmpty) _emptyCard()
+        else ...[
+          Row(children: [
+            Text(context.tr('muhurat_candidate_days'), style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+            const Spacer(),
+            Text('${yearDates.length} ${context.tr('dates_found')}', style: const TextStyle(fontSize: 10, color: AppTheme.muted)),
+          ]),
+          const SizedBox(height: 10),
+          for (final candidate in yearDates) _candidateCard(candidate),
+        ],
+        const SizedBox(height: 12),
+        _disclaimer(),
+        const SizedBox(height: 18),
+        _howItWorks(),
       ])),
     );
   }
 
-  Widget _hero(BuildContext context) => Container(padding: const EdgeInsets.all(19), decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFF526F8E), Color(0xFF344C6A)], begin: Alignment.topLeft, end: Alignment.bottomRight), borderRadius: BorderRadius.circular(23)), child: Row(children: [
-    Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(context.tr('auspicious_moments'), style: TextStyle(color: Color(0xFFDCE8F5), fontSize: 9, letterSpacing: 1.3, fontWeight: FontWeight.w800)),
-      SizedBox(height: 8), Text(context.tr('choose_time_tradition'), style: TextStyle(color: Colors.white, fontSize: 20, height: 1.2, fontWeight: FontWeight.w800)),
-      SizedBox(height: 6), Text(context.tr('explore_muhurat_guidance'), style: TextStyle(color: Color(0xFFDCE8F5), fontSize: 10)),
-    ])), SizedBox(width: 12), Text('🕉️', style: TextStyle(fontSize: 48)),
-  ]));
-
-  Widget _dateField() => InkWell(onTap: _pickDate, borderRadius: BorderRadius.circular(15), child: Container(padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15), decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15), border: Border.all(color: const Color(0xFFEDE7E1))), child: Row(children: [
-    const Icon(Icons.calendar_month_rounded, color: AppTheme.plum, size: 20), const SizedBox(width: 11),
-    Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(context.tr('selected_date'), style: TextStyle(fontSize: 8, letterSpacing: 1, fontWeight: FontWeight.w800, color: AppTheme.muted)),
-      const SizedBox(height: 3), Text(_dateLabel(_selectedDate), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppTheme.ink)),
-    ])), const Icon(Icons.keyboard_arrow_down_rounded, color: AppTheme.muted),
-  ])));
-
-  Widget _errorCard() => Container(
-    padding: const EdgeInsets.all(14),
-    decoration: BoxDecoration(color: const Color(0xFFFFEEEE), borderRadius: BorderRadius.circular(14)),
-    child: Text('Could not calculate Panchang for this date and location. $_calculationError', style: const TextStyle(fontSize:10,color:Color(0xFF9B3F3F))),
+  Widget _hero() => Container(
+    padding: const EdgeInsets.all(19),
+    decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFF526F8E), Color(0xFF344C6A)], begin: Alignment.topLeft, end: Alignment.bottomRight), borderRadius: BorderRadius.circular(23)),
+    child: Row(children: [
+      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(context.tr('auspicious_moments'), style: const TextStyle(color: Color(0xFFDCE8F5), fontSize: 9, letterSpacing: 1.3, fontWeight: FontWeight.w800)),
+        const SizedBox(height: 8),
+        Text(context.tr('muhurat_annual_title'), style: const TextStyle(color: Colors.white, fontSize: 20, height: 1.2, fontWeight: FontWeight.w800)),
+        const SizedBox(height: 6),
+        Text(context.tr('muhurat_annual_subtitle'), style: const TextStyle(color: Color(0xFFDCE8F5), fontSize: 10)),
+      ])),
+      const SizedBox(width: 12), const Text('🕉️', style: TextStyle(fontSize: 48)),
+    ]),
   );
 
-  Widget _calculatedCard(_MuhuratActivity activity) {
-    final data = _panchang!;
-    final favourable = <PanchangPeriod>[...data.choghadiyaDay, ...data.choghadiyaNight]
-      .where((p) => ['Amrit','Shubh','Labh','Char'].contains(p.name))
-      .where((p) => p.end.isBefore(data.rahuKaal.start) || p.start.isAfter(data.rahuKaal.end))
-      .toList();
-    return Container(
-      padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(17),border: Border.all(color: const Color(0xFFEAE5EF))),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start,children:[
-        Text(context.tr(activity.title),style:const TextStyle(fontSize:14,fontWeight:FontWeight.w800,color:AppTheme.ink)),
-        const SizedBox(height:3),
-        Text(data.location.name+' · '+_dateLabel(_selectedDate),style:const TextStyle(fontSize:10,color:AppTheme.muted)),
-        const Divider(height:18),
-        for(final item in data.elements.where((e)=>['Tithi','Nakshatra','Yoga','Karana'].contains(e.name)))
-          Padding(padding:const EdgeInsets.symmetric(vertical:4),child:Row(children:[
-            Expanded(child:Text(item.name,style:const TextStyle(fontSize:10,color:AppTheme.muted))),
-            Text(item.value,style:const TextStyle(fontSize:10,fontWeight:FontWeight.w800,color:AppTheme.ink)),
-          ])),
-        const Divider(height:18),
-        Text('Potentially supportive Choghadiya windows',style:const TextStyle(fontSize:11,fontWeight:FontWeight.w800,color:AppTheme.plum)),
-        const SizedBox(height:5),
-        if(favourable.isEmpty) const Text('No windows passed this simple screen.',style:TextStyle(fontSize:10,color:AppTheme.muted))
-        else for(final period in favourable.take(12))
-          Padding(padding:const EdgeInsets.symmetric(vertical:3),child:Row(children:[
-            Expanded(child:Text(period.name,style:const TextStyle(fontSize:10,fontWeight:FontWeight.w700))),
-            Text(_localTime(period.start)+' – '+_localTime(period.end),style:const TextStyle(fontSize:10,color:AppTheme.ink)),
-          ])),
-        const SizedBox(height:8),
-        Text('Rahu Kaal: ${_localTime(data.rahuKaal.start)} – ${_localTime(data.rahuKaal.end)}',style:const TextStyle(fontSize:10,color:Color(0xFF9B5A3D),fontWeight:FontWeight.w700)),
-        const SizedBox(height:9),
-        const Text('This is a local Panchang and Choghadiya screening, not a complete event-specific Muhurat. Marriage, Griha Pravesh and other ceremonies require additional regional rules, Tara Bala, Chandra Bala, Lagna and family tradition. Verify with a knowledgeable practitioner before fixing an important ceremony.',style:TextStyle(fontSize:9.5,height:1.5,color:AppTheme.muted)),
+  Widget _loadingCard() => Container(
+    padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 18),
+    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(17), border: Border.all(color: const Color(0xFFEAE5EF))),
+    child: Column(children: [
+      const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2.5, color: AppTheme.plum)),
+      const SizedBox(height: 12),
+      Text(context.tr('calculating_annual_muhurat'), style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppTheme.ink)),
+      const SizedBox(height: 4),
+      Text(context.tr('muhurat_scan_wait'), textAlign: TextAlign.center, style: const TextStyle(fontSize: 9, color: AppTheme.muted)),
+    ]),
+  );
+
+  Widget _errorCard() => Container(
+    padding: const EdgeInsets.all(14), decoration: BoxDecoration(color: const Color(0xFFFFEEEE), borderRadius: BorderRadius.circular(14)),
+    child: Text('${context.tr('muhurat_calculation_error')} $_error', style: const TextStyle(fontSize: 10, color: Color(0xFF9B3F3F))),
+  );
+
+  Widget _emptyCard() => Container(
+    padding: const EdgeInsets.all(18), decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: const Color(0xFFEAE5EF))),
+    child: Column(children: [
+      const Icon(Icons.event_busy_rounded, size: 27, color: AppTheme.muted), const SizedBox(height: 8),
+      Text(context.tr('no_muhurat_dates'), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+      const SizedBox(height: 4),
+      Text(context.tr('no_muhurat_dates_hint'), textAlign: TextAlign.center, style: const TextStyle(fontSize: 10, height: 1.4, color: AppTheme.muted)),
+    ]),
+  );
+
+  Widget _candidateCard(MuhuratCandidate candidate) => Container(
+    margin: const EdgeInsets.only(bottom: 10), padding: const EdgeInsets.all(13),
+    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: const Color(0xFFEAE5EF))),
+    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Row(children: [
+        Container(
+          width: 43, height: 43, alignment: Alignment.center,
+          decoration: BoxDecoration(color: const Color(0xFFF2EDF9), borderRadius: BorderRadius.circular(12)),
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Text('${candidate.date.day}', style: const TextStyle(fontSize: 17, height: 1, fontWeight: FontWeight.w900, color: AppTheme.plum)),
+            const SizedBox(height: 3),
+            Text(_month(candidate.date.month).substring(0, 3), style: const TextStyle(fontSize: 8, fontWeight: FontWeight.w800, color: AppTheme.plum)),
+          ]),
+        ),
+        const SizedBox(width: 11),
+        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('${_weekday(candidate.weekdayIndex)}, ${candidate.date.day} ${_month(candidate.date.month)} ${candidate.date.year}', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+          const SizedBox(height: 4),
+          Text('${candidate.tithi} · ${candidate.nakshatra}', style: const TextStyle(fontSize: 9, color: AppTheme.muted)),
+        ])),
+        const Icon(Icons.check_circle_rounded, color: Color(0xFF43866B), size: 18),
       ]),
-    );
-  }
+      const Padding(padding: EdgeInsets.symmetric(vertical: 10), child: Divider(height: 1, color: Color(0xFFF0EBE5))),
+      Text(context.tr('available_time_windows'), style: const TextStyle(fontSize: 9, fontWeight: FontWeight.w800, color: AppTheme.plum)),
+      const SizedBox(height: 7),
+      Wrap(spacing: 7, runSpacing: 7, children: candidate.windows.map((window) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 7),
+        decoration: BoxDecoration(color: const Color(0xFFF7F5FA), borderRadius: BorderRadius.circular(9)),
+        child: Text('${window.name}  ${_time(window.start)} – ${_time(window.end)}', style: const TextStyle(fontSize: 9, fontWeight: FontWeight.w700, color: AppTheme.ink)),
+      )).toList()),
+    ]),
+  );
 
+  Widget _disclaimer() => Container(
+    padding: const EdgeInsets.all(13),
+    decoration: BoxDecoration(color: const Color(0xFFFFF8ED), borderRadius: BorderRadius.circular(14), border: Border.all(color: const Color(0xFFF2E6D3))),
+    child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      const Icon(Icons.info_outline_rounded, color: Color(0xFF9B7041), size: 17), const SizedBox(width: 8),
+      Expanded(child: Text(context.tr('muhurat_annual_disclaimer'), style: const TextStyle(fontSize: 9, height: 1.5, color: Color(0xFF806B51)))),
+    ]),
+  );
 
-  Widget _howItWorks() => Container(padding: const EdgeInsets.all(16), decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18), border: Border.all(color: const Color(0xFFF0EBE5))), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    Text(context.tr('what_is_considered'), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppTheme.ink)),
-    const SizedBox(height: 10),
-    _factor('🌙', context.tr('tithi_paksha'), 'Lunar day and waxing / waning phase'),
-    _factor('⭐', context.tr('nakshatra_yoga'), context.tr('lunar_mansion_daily_combination')),
-    _factor('☀️', context.tr('local_sunrise_weekday'), context.tr('calculated_selected_location')),
-    _factor('⏳', context.tr('rahu_other_periods'), context.tr('periods_avoided')),
-  ]));
+  Widget _howItWorks() => Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18), border: Border.all(color: const Color(0xFFF0EBE5))),
+    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(context.tr('what_is_considered'), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+      const SizedBox(height: 10),
+      _factor('🌙', context.tr('tithi_paksha'), context.tr('muhurat_filter_tithi')),
+      _factor('⭐', context.tr('nakshatra_yoga'), context.tr('muhurat_filter_nakshatra')),
+      _factor('☀️', context.tr('local_sunrise_weekday'), context.tr('calculated_selected_location')),
+      _factor('⏳', context.tr('rahu_other_periods'), context.tr('periods_avoided')),
+    ]),
+  );
 
-  Widget _factor(String emoji, String title, String subtitle) => Padding(padding: const EdgeInsets.only(top: 8), child: Row(children: [
-    Text(emoji, style: const TextStyle(fontSize: 18)), const SizedBox(width: 10),
-    Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(title, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: AppTheme.ink)),
-      Text(subtitle, style: const TextStyle(fontSize: 9, color: AppTheme.muted)),
-    ])),
-  ]));
-  String _dateLabel(DateTime date) => '${_month(date.month)} ${date.day}, ${date.year}';
-  String _month(int month) => AppLocale.text('month_$month');
+  Widget _factor(String emoji, String title, String subtitle) => Padding(
+    padding: const EdgeInsets.only(top: 8),
+    child: Row(children: [
+      Text(emoji, style: const TextStyle(fontSize: 18)), const SizedBox(width: 10),
+      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(title, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+        Text(subtitle, style: const TextStyle(fontSize: 9, color: AppTheme.muted)),
+      ])),
+    ]),
+  );
 }
 
 class _MuhuratActivity {
   const _MuhuratActivity(this.emoji, this.title, this.subtitle);
-  final String emoji, title, subtitle;
+  final String emoji;
+  final String title;
+  final String subtitle;
 }
