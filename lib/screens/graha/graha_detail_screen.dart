@@ -5,6 +5,7 @@ import '../../theme/app_theme.dart';
 import 'graha_data.dart';
 import 'graha_extended_data.dart';
 import '../remedies/remedy_library_screen.dart';
+import '../remedies/remedy_data.dart';
 
 class GrahaDetailScreen extends StatelessWidget {
   const GrahaDetailScreen({super.key, required this.graha});
@@ -172,7 +173,7 @@ class GrahaDetailScreen extends StatelessWidget {
                 const SizedBox(height: 20),
                 _sectionTitle('Traditional remedies', 'Source-based reference · not a personal prescription'),
                 const SizedBox(height: 10),
-                _infoCard('Associated deities: ${graha.deity}. Graha gemstone reference: ${graha.gemstone}. These associations do not establish personal suitability.'),
+                _infoCard('Traditional associations in the uploaded source: ${remedyGrahas.firstWhere((item) => item.id == graha.id).lifeAreas}. Associated deities: ${remedyGrahas.firstWhere((item) => item.id == graha.id).deities}. Suggested worship references: ${remedyGrahas.firstWhere((item) => item.id == graha.id).remedies.join(', ')}. These are traditional associations, not predictions or diagnoses.'),
                 const SizedBox(height: 8),
                 Row(children: [
                   Expanded(child: OutlinedButton.icon(

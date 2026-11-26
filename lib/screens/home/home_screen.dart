@@ -250,8 +250,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       FeatureCard(
                         emoji: '🪷',
-                        title: 'Remedies',
-                        description: 'Gemstones, mantras, yantras and traditional guidance',
+                        title: context.tr('remedies'),
+                        description: context.tr('remedy_card_desc'),
                         tint: const Color(0xFFF3EEF8),
                         onTap: () => _open(const RemediesHomeScreen()),
                       ),

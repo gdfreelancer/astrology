@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../../services/remedy_database_service.dart';
 
 import '../../theme/app_theme.dart';
+import '../../l10n/app_locale.dart';
 import 'remedy_data.dart';
 
 enum RemedyLibrarySection { gemstones, mantras, yantras, rudraksha, navagraha, shani, kaalSarp }
@@ -15,38 +16,46 @@ class RemedyLibraryScreen extends StatefulWidget {
 
 class _RemedyLibraryScreenState extends State<RemedyLibraryScreen> {
   final Map<String,int> _progress = {};
+  final Map<String,int> _todayCounts = {};
   final Set<String> _favourites = {};
   bool _loading = true;
-  String _language = 'en';
 
   @override void initState() { super.initState(); _load(); }
   Future<void> _load() async {
-    final p = await SharedPreferences.getInstance();
+    final db = RemedyDatabaseService.instance;
+    final progress = await db.getProgress();
+    final favourites = await db.getFavourites();
+    final daily = await db.getDailyCounts();
     for (final g in remedyGrahas) {
-      _progress[g.id] = p.getInt('remedy_mantra_count_${g.id}') ?? 0;
-      if (p.getBool('remedy_mantra_fav_${g.id}') ?? false) _favourites.add(g.id);
+      _progress[g.id] = progress[g.id] ?? 0;
     }
+    _favourites.addAll(favourites);
+    _todayCounts.addAll(daily);
     if (mounted) setState(() => _loading = false);
   }
   Future<void> _setCount(String id, int value) async {
-    final count = value.clamp(0, 100000000);
-    setState(() => _progress[id] = count);
-    final p = await SharedPreferences.getInstance();
-    await p.setInt('remedy_mantra_count_$id', count);
+    final previous = _progress[id] ?? 0;
+    final count = value.clamp(0, 100000000).toInt();
+    final delta = count - previous;
+    setState(() { _progress[id] = count; _todayCounts[id] = ((_todayCounts[id] ?? 0) + delta).clamp(0, 100000000).toInt(); });
+    final graha = remedyGrahas.firstWhere((g) => g.id == id);
+    await RemedyDatabaseService.instance.setProgress(
+      id: id, target: graha.count, completed: count, dailyDelta: delta,
+    );
   }
   Future<void> _toggleFavourite(String id) async {
-    setState(() => _favourites.contains(id) ? _favourites.remove(id) : _favourites.add(id));
-    final p = await SharedPreferences.getInstance();
-    await p.setBool('remedy_mantra_fav_$id', _favourites.contains(id));
+    final next = !_favourites.contains(id);
+    setState(() { if (next) { _favourites.add(id); } else { _favourites.remove(id); } });
+    await RemedyDatabaseService.instance.setFavourite(id, next);
   }
   String get _title => switch(widget.section) {
-    RemedyLibrarySection.gemstones => 'Gemstone Guide',
-    RemedyLibrarySection.mantras => 'Mantra Library',
-    RemedyLibrarySection.yantras => 'Yantra Library',
-    RemedyLibrarySection.rudraksha => 'Rudraksha Guide',
-    RemedyLibrarySection.navagraha => 'Navagraha Worship',
-    RemedyLibrarySection.shani => 'Shani Dhaiya Remedies',
-    RemedyLibrarySection.kaalSarp => 'Kaal Sarp Yoga Remedies',
+    RemedyLibrarySection.gemstones => context.tr('gemstone_guide'),
+    RemedyLibrarySection.mantras => context.tr('mantra_library'),
+    RemedyLibrarySection.yantras => context.tr('yantra_library'),
+    RemedyLibrarySection.rudraksha => context.tr('rudraksha_guide'),
+    RemedyLibrarySection.navagraha => context.tr('navagraha_worship'),
+    RemedyLibrarySection.shani => context.tr('shani_dhaiya'),
+    RemedyLibrarySection.kaalSarp => context.tr('kaal_sarp_remedies'),
   };
 
   @override Widget build(BuildContext context) {
@@ -109,6 +118,31 @@ class _RemedyLibraryScreenState extends State<RemedyLibraryScreen> {
       ]),
     ),
     const SizedBox(height:8),
+    ExpansionTile(
+      tilePadding: const EdgeInsets.symmetric(horizontal:12),
+      backgroundColor: Colors.white,
+      collapsedBackgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(13),side:const BorderSide(color:Color(0xFFEAE5EF))),
+      collapsedShape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(13),side:const BorderSide(color:Color(0xFFEAE5EF))),
+      title: const Text('Worked example: Aries Lagna',style:TextStyle(fontSize:12,fontWeight:FontWeight.w800)),
+      subtitle: const Text('Source discussion on PDF pages 17–18',style:TextStyle(fontSize:9,color:AppTheme.muted)),
+      childrenPadding: const EdgeInsets.fromLTRB(13,0,13,13),
+      children: const [
+        Text('Ruby (Sun): the source treats the Sun as fifth-house lord and notes its friendship with Mars. Pearl (Moon): the Moon is fourth-house lord and described as friendly to Mars. Red Coral (Mars): Mars is Lagnesh and is called the Jeevan Ratna in this example.',
+          style:TextStyle(fontSize:10,height:1.5,color:AppTheme.ink)),
+        SizedBox(height:7),
+        Text('Emerald (Mercury): Mercury rules the 3rd and 6th houses and is described cautiously. Yellow Sapphire (Jupiter): Jupiter rules the 9th and 12th; the source considers it auspicious in this example. Diamond (Venus): Venus rules the 2nd and 7th and is described as a strong Maraka, with conditional exceptions. Blue Sapphire (Saturn): Saturn rules the 10th and 11th; the source makes its favourable interpretation conditional on house placement and Dasha.',
+          style:TextStyle(fontSize:10,height:1.5,color:AppTheme.ink)),
+        SizedBox(height:7),
+        Text('This is one source-specific Aries example, not a complete rule for other Lagnas. The PDF also warns against Maraka, Badhaka, debilitated or inauspicious gemstones.',
+          style:TextStyle(fontSize:10,height:1.5,color:Color(0xFF795D36))),
+      ],
+    ),
+    const SizedBox(height:8),
+    _notice('Traditional wearing principles · PDF page 19','The source advises checking Lagna, planetary rise/set, Dasha–Antardasha, aspects, exaltation/debilitation and sign friendship before selecting a gemstone. It says men should wear on the left hand and women on the right hand in a specific traditional context; this is not a universal rule. Always use the designated finger and seek tradition-specific guidance.'),
+    const SizedBox(height:8),
+    _notice('Finger reference · PDF page 16','Index finger: Yellow Sapphire. Middle finger: Blue Sapphire and Hessonite. Ring finger: Ruby, Red Coral and Cat’s Eye. Little finger: Pearl, Emerald and Diamond. Follow the individual stone entry and tradition-specific advice.'),
+    const SizedBox(height:8),
     _card(title:'Navratna arrangement',subtitle:'Nine-stone arrangement shown on PDF page 15',icon:Icons.grid_3x3,onTap:()=>_showNavratna()),
   ]);
   Widget _kv(String k,String v)=>Padding(padding:const EdgeInsets.symmetric(vertical:2),child:Row(children:[Expanded(child:Text(k,style:const TextStyle(fontSize:10,color:AppTheme.muted))),Text(v,style:const TextStyle(fontSize:10,fontWeight:FontWeight.w700,color:AppTheme.ink))]));
@@ -149,10 +183,82 @@ class _RemedyLibraryScreenState extends State<RemedyLibraryScreen> {
       SelectableText(g.mantra,textAlign:TextAlign.center,style:const TextStyle(fontSize:17,height:1.5,fontWeight:FontWeight.w800,color:AppTheme.plum)),
       const SizedBox(height:5),Text('Traditional count: ${g.count.toString()} · ${g.weekday}',style:const TextStyle(fontSize:10,color:AppTheme.muted)),
       const SizedBox(height:8),LinearProgressIndicator(value:(done/g.count).clamp(0,1).toDouble(),minHeight:5,backgroundColor:const Color(0xFFEDE7F2),color:AppTheme.plum,borderRadius:BorderRadius.circular(8)),
-      const SizedBox(height:6),Row(children:[Expanded(child:Text('$done / ${g.count} completed',style:const TextStyle(fontSize:10,fontWeight:FontWeight.w700))),IconButton(tooltip:'Undo one',onPressed:done==0?null:()=>_setCount(g.id,done-1),icon:const Icon(Icons.remove_circle_outline,size:19)),IconButton(tooltip:'Add one',onPressed:()=>_setCount(g.id,done+1),icon:const Icon(Icons.add_circle_outline,size:19)),TextButton(onPressed:()=>_customCount(g.id,done),child:const Text('Add count'))]),
+      const SizedBox(height:6),Row(children:[Expanded(child:Text('${_todayCounts[g.id]??0} today · $done / ${g.count} total',style:const TextStyle(fontSize:10,fontWeight:FontWeight.w700))),IconButton(tooltip:'Undo one',onPressed:done==0?null:()=>_setCount(g.id,done-1),icon:const Icon(Icons.remove_circle_outline,size:19)),IconButton(tooltip:'Add one',onPressed:()=>_setCount(g.id,done+1),icon:const Icon(Icons.add_circle_outline,size:19)),TextButton(onPressed:()=>_customCount(g.id,done),child:const Text('Add count'))]),
+      _goalSection(g),
       Align(alignment:Alignment.centerRight,child:TextButton(onPressed:()=>_resetCount(g.id),child:const Text('Reset progress',style:TextStyle(fontSize:10)))),
     ]));
   }
+  Widget _goalSection(RemedyGraha mantra) => FutureBuilder<List<Map<String,Object?>>>(
+    future: RemedyDatabaseService.instance.getGoals(mantra.id),
+    builder: (context, snapshot) {
+      final goals = snapshot.data ?? const <Map<String,Object?>>[];
+      return Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+        const Divider(height:16),
+        Row(children:[
+          const Expanded(child:Text('My chanting goals',style:TextStyle(fontSize:10,fontWeight:FontWeight.w800))),
+          TextButton.icon(onPressed:()=>_createGoal(mantra.id),icon:const Icon(Icons.add,size:14),label:const Text('Add goal',style:TextStyle(fontSize:10))),
+        ]),
+        if(snapshot.connectionState==ConnectionState.waiting)
+          const Padding(padding:EdgeInsets.all(6),child:LinearProgressIndicator(minHeight:2))
+        else if(goals.isEmpty)
+          const Text('Create separate personal targets in addition to the source count.',style:TextStyle(fontSize:9,color:AppTheme.muted))
+        else
+          for(final goal in goals) _goalTile(goal),
+      ]);
+    },
+  );
+
+  Widget _goalTile(Map<String,Object?> goal) {
+    final id=goal['id'] as int;
+    final title=goal['title'] as String;
+    final target=goal['target_count'] as int;
+    final completed=goal['completed_count'] as int;
+    return Padding(padding:const EdgeInsets.only(bottom:7),child:Row(children:[
+      Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+        Text(title,style:const TextStyle(fontSize:10,fontWeight:FontWeight.w700)),
+        const SizedBox(height:3),
+        LinearProgressIndicator(value:(completed/target).clamp(0,1).toDouble(),minHeight:4,backgroundColor:const Color(0xFFEDE7F2),color:AppTheme.plum),
+        const SizedBox(height:2),
+        Text('$completed / $target',style:const TextStyle(fontSize:9,color:AppTheme.muted)),
+      ])),
+      IconButton(visualDensity:VisualDensity.compact,onPressed:()=>_changeGoal(id,completed+1),icon:const Icon(Icons.add_circle_outline,size:18)),
+      IconButton(visualDensity:VisualDensity.compact,onPressed:()=>_deleteGoal(id),icon:const Icon(Icons.delete_outline,size:17,color:AppTheme.muted)),
+    ]));
+  }
+
+  Future<void> _createGoal(String mantraId) async {
+    final title=TextEditingController();
+    final target=TextEditingController(text:'108');
+    final result=await showDialog<(String,int)>(context:context,builder:(ctx)=>AlertDialog(
+      title:const Text('Create chanting goal'),
+      content:Column(mainAxisSize:MainAxisSize.min,children:[
+        TextField(controller:title,decoration:const InputDecoration(labelText:'Goal name')),
+        TextField(controller:target,keyboardType:TextInputType.number,decoration:const InputDecoration(labelText:'Target repetitions')),
+      ]),
+      actions:[
+        TextButton(onPressed:()=>Navigator.pop(ctx),child:const Text('Cancel')),
+        FilledButton(onPressed:(){
+          final count=int.tryParse(target.text);
+          if(title.text.trim().isNotEmpty&&count!=null&&count>0)Navigator.pop(ctx,(title.text.trim(),count));
+        },child:const Text('Save')),
+      ],
+    ));
+    title.dispose();target.dispose();
+    if(result==null)return;
+    await RemedyDatabaseService.instance.addGoal(mantraId:mantraId,title:result.$1,target:result.$2);
+    if(mounted)setState((){});
+  }
+
+  Future<void> _changeGoal(int id,int completed) async {
+    await RemedyDatabaseService.instance.updateGoal(id,completed);
+    if(mounted)setState((){});
+  }
+
+  Future<void> _deleteGoal(int id) async {
+    await RemedyDatabaseService.instance.deleteGoal(id);
+    if(mounted)setState((){});
+  }
+
   Future<void> _customCount(String id,int current) async {
     final c=TextEditingController(text:'108');
     final value=await showDialog<int>(context:context,builder:(ctx)=>AlertDialog(title:const Text('Add chanting count'),content:TextField(controller:c,keyboardType:TextInputType.number,decoration:const InputDecoration(labelText:'Repetitions')),actions:[TextButton(onPressed:()=>Navigator.pop(ctx),child:const Text('Cancel')),FilledButton(onPressed:()=>Navigator.pop(ctx,int.tryParse(c.text)),child:const Text('Add'))]));
@@ -169,7 +275,7 @@ class _RemedyLibraryScreenState extends State<RemedyLibraryScreen> {
   ]))));
   Widget _yantraList()=>Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
     _card(title:'Navagraha Yantra',subtitle:'The PDF includes a Navagraha Yantra illustration on page 8',icon:Icons.grid_on,onTap:()=>_showText('Navagraha Yantra','The source describes yantras on paper, Bhojpatra, copper, gold or silver. It says mantra, suitable Nakshatra, Tithi and Yoga are considered in preparation and purification. The supplied PDF image should be used as the reference artwork.')),
-    _notice('Content limitation','The PDF does not supply nine complete individual Graha Yantra diagrams with verified inscriptions. This library therefore does not invent missing diagrams or yantra grids.'),
+    _notice('Source illustration note','PDF page 8 contains a plate of nine Yantra illustrations. The embedded page image is low resolution and its individual inscriptions are not reliably legible, so the app does not recreate or relabel the yantra grids. PDF page 7 provides the general material and preparation notes.'),
   ]);
   Widget _rudrakshaList()=>Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
     const Text('Rudraksha catalogue',style:TextStyle(fontSize:15,fontWeight:FontWeight.w800)),
@@ -200,6 +306,8 @@ class _RemedyLibraryScreenState extends State<RemedyLibraryScreen> {
     for(final item in shaniRemedies) _card(title:item,subtitle:'Traditional reference · PDF page 22',icon:Icons.spa_outlined,onTap:()=>_showText(item,'This remedy is listed on PDF page 22. It is a traditional religious practice, not a guaranteed way to change transit outcomes. The PDF’s Blue Sapphire suggestion is conditional on Shani being Yogakaraka; do not use it as an automatic recommendation.')),
   ]);
   Widget _kaalSarp()=>Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+    _notice('Traditional effects described in the PDF','The source mentions delayed or incomplete results of effort, marriage delay or marital stress, delays relating to children, physical or mental weakness, and fear of untimely death. These are beliefs printed in the source, not predictions, diagnoses or evidence about any individual.'),
+    const SizedBox(height:8),
     _notice('About this reference','PDF page 23 lists traditional beliefs about Kaal Sarp Yoga. These effects are not predictions and should not be used to label a person or cause fear. Detection rules vary by tradition and require validation.'),
     const SizedBox(height:10),const Text('Remedies listed by the PDF',style:TextStyle(fontSize:14,fontWeight:FontWeight.w800)),
     for(final item in kaalSarpRemedies) _card(title:item,subtitle:'Traditional reference · PDF page 24',icon:Icons.spa_outlined,onTap:()=>_showText(item,'This item is transcribed or summarized from PDF page 24. It is a traditional devotional reference, not a guaranteed remedy. The source mentions feeding milk to snakes; this app does not endorse approaching or feeding wild animals.')),

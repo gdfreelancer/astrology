@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class RemedyGraha {
   const RemedyGraha(this.id, this.name, this.mantra, this.count, this.deities,
       this.gem, this.weekday, this.lifeAreas, this.remedies);
@@ -91,10 +89,18 @@ const rudrakshaNames = <String>[
 ];
 
 const shaniRemedies = <String>[
-  'Shani worship','Shani mantra chanting','Shani Yantra worship',
-  'Shani Peeda Nivarak Yantra reference','Rudraksha reference',
-  'Shiva worship and “ॐ नमः शिवाय” chanting','Hanuman worship',
-  'Prayer and responsible conduct','Avoid harmful or unethical actions',
+  'Shani worship',
+  'Shani mantra chanting',
+  'Shani Yantra worship',
+  'Shani Graha Peeda Nivarak Yantra worship',
+  'Only if Shani is judged Yogakaraka in the complete chart: the source mentions Blue Sapphire or an iron ring on the middle finger. This is not an automatic recommendation.',
+  'Rudraksha reference',
+  'Shiva worship and “ॐ नमः शिवाय” chanting',
+  'Hanuman worship',
+  'Prayer and devotion to God',
+  'The source advises abstaining from meat and alcohol; present this as a tradition-specific observance, not a universal rule.',
+  'The source advises avoiding extramarital relationships; display as a traditional ethical instruction.',
+  'The source advises avoiding harmful or unethical actions.',
 ];
 
 const kaalSarpRemedies = <String>[
@@ -102,7 +108,7 @@ const kaalSarpRemedies = <String>[
   'The PDF describes lighting a sesame-oil lamp before a Kaal Sarp Yantra and chanting “ॐ नमः शिवाय” 21,000 times.',
   'Krishna worship and “ॐ नमो भगवते वासुदेवाय” 108 times daily',
   'Nav Nag Stotra recitation','Shiva worship and offering water to the Shivling',
-  'Sixteen Monday observances','Nag Panchami worship',
+  'Sixteen Monday observances','The source mentions snake worship and feeding milk to snakes. Do not approach or feed wild snakes; choose safe symbolic worship instead.','Nag Panchami worship',
   'Shravan month Shiva Abhishek',
 ];
 
