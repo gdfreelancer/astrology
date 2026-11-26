@@ -1,6 +1,7 @@
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import '../models/birth_chart_result.dart';
+import '../models/kundali/kundali_graha.dart';
 
 class KundaliPdfService {
   KundaliPdfService._();
