@@ -23,6 +23,7 @@ class GrahaInfo {
     required this.element,
     required this.guna,
     required this.deity,
+    required this.dashaYears,
     required this.mantra,
   });
 
@@ -31,6 +32,7 @@ class GrahaInfo {
   final String summaryKey, natureKey, karakaKey, qualitiesKey, bodyKey;
   final String ownSigns, exaltation, debilitation, weekday, colour, gemstone;
   final String element, guna, deity, mantra;
+  final int dashaYears;
 }
 
 const grahas = <GrahaInfo>[
@@ -42,7 +44,8 @@ const grahas = <GrahaInfo>[
     bodyKey: 'graha_sun_body', ownSigns: 'Leo (Simha)', exaltation: 'Aries (Mesha) – 10°',
     debilitation: 'Libra (Tula) – 10°', weekday: 'Sunday', colour: 'Ruby red / saffron',
     gemstone: 'Ruby (Manikya)', element: 'Fire (Agni)', guna: 'Sattva',
-    deity: 'Surya / Aditya', mantra: 'Om Hraam Hreem Hraum Sah Suryaya Namah',
+    deity: 'Surya / Aditya', dashaYears: 6,
+    mantra: 'Om Hraam Hreem Hraum Sah Suryaya Namah',
   ),
   GrahaInfo(
     id: 'moon', english: 'Moon', sanskrit: 'Chandra', hindi: 'चंद्र', gujarati: 'ચંદ્ર',
@@ -52,7 +55,8 @@ const grahas = <GrahaInfo>[
     bodyKey: 'graha_moon_body', ownSigns: 'Cancer (Karka)', exaltation: 'Taurus (Vrishabha) – 3°',
     debilitation: 'Scorpio (Vrishchika) – 3°', weekday: 'Monday', colour: 'White / pearl',
     gemstone: 'Pearl (Moti)', element: 'Water (Jala)', guna: 'Sattva',
-    deity: 'Chandra / Soma', mantra: 'Om Shraam Shreem Shraum Sah Chandraya Namah',
+    deity: 'Chandra / Soma', dashaYears: 10,
+    mantra: 'Om Shraam Shreem Shraum Sah Chandraya Namah',
   ),
   GrahaInfo(
     id: 'mars', english: 'Mars', sanskrit: 'Mangala', hindi: 'मंगल', gujarati: 'મંગળ',
@@ -63,6 +67,7 @@ const grahas = <GrahaInfo>[
     exaltation: 'Capricorn (Makara) – 28°', debilitation: 'Cancer (Karka) – 28°',
     weekday: 'Tuesday', colour: 'Red', gemstone: 'Red Coral (Moonga)',
     element: 'Fire (Agni)', guna: 'Tamas', deity: 'Mangala / Skanda',
+    dashaYears: 7,
     mantra: 'Om Kraam Kreem Kraum Sah Bhaumaya Namah',
   ),
   GrahaInfo(
@@ -74,6 +79,7 @@ const grahas = <GrahaInfo>[
     exaltation: 'Virgo (Kanya) – 15°', debilitation: 'Pisces (Meena) – 15°',
     weekday: 'Wednesday', colour: 'Green', gemstone: 'Emerald (Panna)',
     element: 'Earth (Prithvi)', guna: 'Rajas', deity: 'Budha',
+    dashaYears: 17,
     mantra: 'Om Braam Breem Braum Sah Budhaya Namah',
   ),
   GrahaInfo(
@@ -85,6 +91,7 @@ const grahas = <GrahaInfo>[
     exaltation: 'Cancer (Karka) – 5°', debilitation: 'Capricorn (Makara) – 5°',
     weekday: 'Thursday', colour: 'Yellow / golden', gemstone: 'Yellow Sapphire (Pukhraj)',
     element: 'Ether / space (Akasha)', guna: 'Sattva', deity: 'Brihaspati',
+    dashaYears: 16,
     mantra: 'Om Graam Greem Graum Sah Gurave Namah',
   ),
   GrahaInfo(
@@ -96,6 +103,7 @@ const grahas = <GrahaInfo>[
     exaltation: 'Pisces (Meena) – 27°', debilitation: 'Virgo (Kanya) – 27°',
     weekday: 'Friday', colour: 'White / pastel shades', gemstone: 'Diamond (Heera)',
     element: 'Water (Jala)', guna: 'Rajas', deity: 'Shukra / Shukracharya',
+    dashaYears: 20,
     mantra: 'Om Draam Dreem Draum Sah Shukraya Namah',
   ),
   GrahaInfo(
@@ -107,6 +115,7 @@ const grahas = <GrahaInfo>[
     exaltation: 'Libra (Tula) – 20°', debilitation: 'Aries (Mesha) – 20°',
     weekday: 'Saturday', colour: 'Dark blue / black', gemstone: 'Blue Sapphire (Neelam)',
     element: 'Air (Vayu)', guna: 'Tamas', deity: 'Shani',
+    dashaYears: 19,
     mantra: 'Om Praam Preem Praum Sah Shanaischaraya Namah',
   ),
   GrahaInfo(
@@ -119,7 +128,8 @@ const grahas = <GrahaInfo>[
     debilitation: 'Varies by tradition (often Scorpio or Sagittarius)',
     weekday: 'Saturday (commonly associated)', colour: 'Smoky / dark shades',
     gemstone: 'Hessonite (Gomed)', element: 'Air (Vayu; traditional association)',
-    guna: 'Tamas', deity: 'Rahu', mantra: 'Om Bhraam Bhreem Bhraum Sah Rahave Namah',
+    guna: 'Tamas', deity: 'Rahu', dashaYears: 18,
+    mantra: 'Om Bhraam Bhreem Bhraum Sah Rahave Namah',
   ),
   GrahaInfo(
     id: 'ketu', english: 'Ketu', sanskrit: 'Ketu', hindi: 'केतु', gujarati: 'કેતુ',
@@ -131,7 +141,8 @@ const grahas = <GrahaInfo>[
     debilitation: 'Varies by tradition (often Taurus or Gemini)',
     weekday: 'Tuesday (commonly associated)', colour: 'Smoky / earthy shades',
     gemstone: 'Cat’s Eye (Lehsunia)', element: 'Fire (Agni; traditional association)',
-    guna: 'Tamas', deity: 'Ketu', mantra: 'Om Sraam Sreem Sraum Sah Ketave Namah',
+    guna: 'Tamas', deity: 'Ketu', dashaYears: 7,
+    mantra: 'Om Sraam Sreem Sraum Sah Ketave Namah',
   ),
 ];
 
