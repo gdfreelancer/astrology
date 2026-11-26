@@ -218,6 +218,18 @@ class KundaliChartView extends StatelessWidget {
           Text('House $house · ${_rashi(sign)}', style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w900, color: AppTheme.ink)),
           const SizedBox(height: 5),
           Text('Rashi lord: ${_planet(lords[sign])}', style: const TextStyle(fontSize: 11, color: AppTheme.plum, fontWeight: FontWeight.w800)),
+          Builder(builder: (context) {
+            final lord = chart.grahas.where((g) => g.name == lords[sign]);
+            if (lord.isEmpty) return const SizedBox.shrink();
+            final placement = lord.first;
+            return Padding(
+              padding: const EdgeInsets.only(top: 5),
+              child: Text(
+                'Lord placement: House ${placement.houseNumber} · Bhava Chalit ${placement.bhavaNumber} · ${_degree(placement.longitude)}',
+                style: const TextStyle(fontSize: 10, color: AppTheme.muted),
+              ),
+            );
+          }),
           const SizedBox(height: 12),
           Text('Planetary placements', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
           const SizedBox(height: 7),
