@@ -39,10 +39,6 @@ class MuhuratCandidate {
 /// substitute for a complete ceremony Muhurat with Lagna, Tara Bala,
 /// Chandra Bala, family horoscope and regional rules.
 class MuhuratService {
-  static const _weekdays = <String>[
-    'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday',
-  ];
-
   static const _tithis = <String>[
     'Pratipada', 'Dwitiya', 'Tritiya', 'Chaturthi', 'Panchami',
     'Shashthi', 'Saptami', 'Ashtami', 'Navami', 'Dashami',
@@ -125,14 +121,6 @@ class MuhuratService {
       );
       if (set == null) continue;
       final sunset = set.date;
-      final nextLocalMidnight = tz.TZDateTime(
-        zone, date.year, date.month, date.day + 1,
-      );
-      final nextRise = astro.searchRiseSet(
-        astro.Body.Sun, observer, 1, nextLocalMidnight.toUtc(), 1.0,
-      );
-      if (nextRise == null) continue;
-
       final weekday = tz.TZDateTime.from(sunrise, zone).weekday % 7;
       if (!rule.weekdays.contains(weekday)) continue;
 
