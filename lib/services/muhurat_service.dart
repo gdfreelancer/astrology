@@ -1,10 +1,6 @@
-import 'package:geoengine/geoengine.dart' as astro;
-import 'package:timezone/timezone.dart' as tz;
-
-import '../data/nakshatra_data.dart';
+import '../models/muhurat_activity.dart';
 import '../models/panchang_data.dart';
-import 'astrology/ayanamsha_service.dart';
-import '../utils/astrology_math.dart';
+import 'panchang_service.dart';
 
 class MuhuratTimeWindow {
   const MuhuratTimeWindow({
@@ -35,30 +31,14 @@ class MuhuratCandidate {
   final List<MuhuratTimeWindow> windows;
 }
 
-/// Produces a preliminary, location-specific date shortlist. This is not a
-/// substitute for a complete ceremony Muhurat with Lagna, Tara Bala,
-/// Chandra Bala, family horoscope and regional rules.
+/// A location-specific preliminary shortlist. It reuses the app's Panchang
+/// calculation so sunrise, Tithi, Nakshatra, Choghadiya and inauspicious
+/// periods come from one calculation path.
 class MuhuratService {
-  static const _tithis = <String>[
-    'Pratipada', 'Dwitiya', 'Tritiya', 'Chaturthi', 'Panchami',
-    'Shashthi', 'Saptami', 'Ashtami', 'Navami', 'Dashami',
-    'Ekadashi', 'Dwadashi', 'Trayodashi', 'Chaturdashi', 'Purnima',
-    'Pratipada', 'Dwitiya', 'Tritiya', 'Chaturthi', 'Panchami',
-    'Shashthi', 'Saptami', 'Ashtami', 'Navami', 'Dashami',
-    'Ekadashi', 'Dwadashi', 'Trayodashi', 'Chaturdashi', 'Amavasya',
-  ];
-
-  static const _dayChoghadiya = <List<String>>[
-    ['Udveg', 'Char', 'Labh', 'Amrit', 'Kaal', 'Shubh', 'Rog', 'Udveg'],
-    ['Amrit', 'Kaal', 'Shubh', 'Rog', 'Udveg', 'Char', 'Labh', 'Amrit'],
-    ['Rog', 'Udveg', 'Char', 'Labh', 'Amrit', 'Kaal', 'Shubh', 'Rog'],
-    ['Labh', 'Amrit', 'Kaal', 'Shubh', 'Rog', 'Udveg', 'Char', 'Labh'],
-    ['Shubh', 'Rog', 'Udveg', 'Char', 'Labh', 'Amrit', 'Kaal', 'Shubh'],
-    ['Char', 'Labh', 'Amrit', 'Kaal', 'Shubh', 'Rog', 'Udveg', 'Char'],
-    ['Kaal', 'Shubh', 'Rog', 'Udveg', 'Char', 'Labh', 'Amrit', 'Kaal'],
-  ];
-
-  static const _allowedTithis = <int>{1, 2, 4, 6, 9, 10, 12};
+  static const _allowedTithis = <String>{
+    'Dwitiya', 'Tritiya', 'Panchami', 'Saptami',
+    'Dashami', 'Ekadashi', 'Trayodashi',
+  };
 
   static const _activityRules = <String, _ActivityRule>{
     'activity_marriage': _ActivityRule(
@@ -101,139 +81,124 @@ class MuhuratService {
     required PanchangLocation location,
     required String activityKey,
   }) async {
-    final rule = _activityRules[activityKey] ?? _activityRules['activity_business']!;
-    final zone = tz.getLocation(location.timeZoneId);
-    final observer = astro.Observer(location.latitude, location.longitude, 0);
+    final rule = _activityRules[activityKey];
+    if (rule == null) {
+      throw ArgumentError.value(activityKey, 'activityKey', 'Unknown Muhurat activity');
+    }
+
     final results = <MuhuratCandidate>[];
-    final start = DateTime(from.year, from.month, from.day);
-    final end = DateTime(through.year, through.month, through.day);
+    final first = DateTime(from.year, from.month, from.day);
+    final last = DateTime(through.year, through.month, through.day);
 
-    for (var date = start; !date.isAfter(end); date = date.add(const Duration(days: 1))) {
-      final localMidnight = tz.TZDateTime(zone, date.year, date.month, date.day);
-      final rise = astro.searchRiseSet(
-        astro.Body.Sun, observer, 1, localMidnight.toUtc(), 1.0,
-      );
-      if (rise == null) continue;
-      final sunrise = rise.date;
-      final set = astro.searchRiseSet(
-        astro.Body.Sun, observer, -1,
-        sunrise.add(const Duration(seconds: 1)), 1.0,
-      );
-      if (set == null) continue;
-      final sunset = set.date;
-      final weekday = tz.TZDateTime.from(sunrise, zone).weekday % 7;
-      if (!rule.weekdays.contains(weekday)) continue;
+    for (var date = first; !date.isAfter(last); date = date.add(const Duration(days: 1))) {
+      PanchangData panchang;
+      try {
+        panchang = PanchangService.calculate(date: date, location: location);
+      } catch (_) {
+        // Polar/no-sunrise dates or invalid location data cannot be assigned
+        // a reliable local Panchang day, so they are never shown as suitable.
+        continue;
+      }
 
-      final phase = _phase(sunrise);
-      final tithiIndex = (phase / 12).floor().clamp(0, 29);
-      final tithiInPaksha = tithiIndex % 15;
-      if (!_allowedTithis.contains(tithiInPaksha)) continue;
+      final weekdayIndex = _weekdayIndex(panchang.weekday);
+      if (weekdayIndex == null || !rule.weekdays.contains(weekdayIndex)) continue;
 
-      final nakshatraIndex = (_moon(sunrise) / (360 / 27)).floor().clamp(0, 26);
-      final nakshatra = nakshatras[nakshatraIndex].name;
-      if (!rule.nakshatras.contains(nakshatra)) continue;
+      final tithiElement = panchang.element('Tithi');
+      final nakshatraElement = panchang.element('Nakshatra');
+      if (!_allowedTithis.contains(tithiElement.value)) continue;
+      if (!rule.nakshatras.contains(nakshatraElement.value)) continue;
 
-      // Keep displayed windows inside the Tithi and Nakshatra that qualified the date at local sunrise.
-      final tithiEnd = _nextBoundary(sunrise, _phase, 12);
-      final nakshatraEnd = _nextBoundary(sunrise, _moon, 360 / 27);
-      final panchangValidityEnd = tithiEnd.isBefore(nakshatraEnd) ? tithiEnd : nakshatraEnd;
-      final daylight = sunset.difference(sunrise);
-      final rahu = _dayPeriod(sunrise, daylight, const [8, 2, 7, 5, 6, 4, 3][weekday]);
-      final yama = _dayPeriod(sunrise, daylight, const [5, 4, 3, 2, 1, 7, 6][weekday]);
-      final gulika = _dayPeriod(sunrise, daylight, const [7, 6, 5, 4, 3, 2, 1][weekday]);
-      final excluded = [rahu, yama, gulika];
-      final segmentLength = daylight.inMicroseconds / 8;
+      final blockedPeriods = <PanchangPeriod>[
+        panchang.rahuKaal,
+        panchang.yamaganda,
+        panchang.gulika,
+      ];
       final windows = <MuhuratTimeWindow>[];
 
-      for (var i = 0; i < 8; i++) {
-        final name = _dayChoghadiya[weekday][i];
-        if (!const {'Amrit', 'Shubh', 'Labh', 'Char'}.contains(name)) continue;
-        final windowStart = sunrise.add(Duration(
-          microseconds: (segmentLength * i).round(),
-        ));
-        final segmentEnd = sunrise.add(Duration(
-          microseconds: (segmentLength * (i + 1)).round(),
-        ));
-        final windowEnd = segmentEnd.isBefore(panchangValidityEnd) ? segmentEnd : panchangValidityEnd;
-        if (!windowEnd.isAfter(windowStart) || windowEnd.difference(windowStart) < const Duration(minutes: 15)) continue;
-        final blocked = excluded.any((period) => windowStart.isBefore(period.end) && windowEnd.isAfter(period.start));
-        if (!blocked) windows.add(MuhuratTimeWindow(name: name, start: windowStart, end: windowEnd));
+      for (final choghadiya in panchang.choghadiyaDay) {
+        if (choghadiya.category != 'Favourable') continue;
+
+        // A favourable Choghadiya is usable only while both the Tithi and
+        // Nakshatra that qualified the date are still in effect.
+        final start = _laterOf(
+          choghadiya.start,
+          _laterOf(tithiElement.start, nakshatraElement.start),
+        );
+        final end = _earlierOf(
+          choghadiya.end,
+          _earlierOf(tithiElement.end, nakshatraElement.end),
+        );
+        if (!end.isAfter(start)) continue;
+
+        var available = <_TimeRange>[_TimeRange(start, end)];
+        for (final blocked in blockedPeriods) {
+          available = available.expand((range) => _subtract(range, blocked)).toList();
+        }
+
+        for (final range in available) {
+          if (range.end.difference(range.start) < const Duration(minutes: 15)) continue;
+          windows.add(MuhuratTimeWindow(
+            name: choghadiya.name,
+            start: range.start,
+            end: range.end,
+          ));
+        }
       }
 
       if (windows.isNotEmpty) {
+        windows.sort((a, b) => a.start.compareTo(b.start));
         results.add(MuhuratCandidate(
-          date: date,
-          weekdayIndex: weekday,
-          tithi: _tithis[tithiIndex],
-          nakshatra: nakshatra,
-          windows: windows,
+          date: panchang.date,
+          weekdayIndex: weekdayIndex,
+          tithi: tithiElement.value,
+          nakshatra: nakshatraElement.value,
+          windows: List.unmodifiable(windows),
         ));
       }
 
-      // Yield periodically so the annual scan does not freeze the screen.
-      if (date.day % 5 == 0) {
-        await Future<void>.delayed(Duration.zero);
-      }
+      await Future<void>.delayed(Duration.zero);
     }
-    return results;
+    return List.unmodifiable(results);
   }
 
-  static PanchangPeriod _dayPeriod(DateTime start, Duration duration, int segment) {
-    final segmentLength = duration.inMicroseconds / 8;
-    final from = start.add(Duration(
-      microseconds: (segmentLength * (segment - 1)).round(),
-    ));
-    return PanchangPeriod(
-      name: '',
-      start: from,
-      end: from.add(Duration(microseconds: segmentLength.round())),
-    );
+  static int? _weekdayIndex(String weekday) {
+    const weekdays = [
+      'Sunday', 'Monday', 'Tuesday', 'Wednesday',
+      'Thursday', 'Friday', 'Saturday',
+    ];
+    final index = weekdays.indexOf(weekday);
+    return index < 0 ? null : index;
   }
 
+  static DateTime _laterOf(DateTime a, DateTime b) =>
+      a.isAfter(b) ? a : b;
 
-  static DateTime _nextBoundary(
-    DateTime start,
-    double Function(DateTime) angleAt,
-    double segmentSize,
-  ) {
-    final initialIndex = (angleAt(start) / segmentSize).floor();
-    var left = start;
-    for (var step = 1; step <= 96; step++) {
-      final right = start.add(Duration(minutes: 30 * step));
-      if ((angleAt(right) / segmentSize).floor() != initialIndex) {
-        var low = left;
-        var high = right;
-        for (var iteration = 0; iteration < 28; iteration++) {
-          final middle = low.add(Duration(microseconds: high.difference(low).inMicroseconds ~/ 2));
-          if ((angleAt(middle) / segmentSize).floor() == initialIndex) {
-            low = middle;
-          } else {
-            high = middle;
-          }
-        }
-        return high;
-      }
-      left = right;
+  static DateTime _earlierOf(DateTime a, DateTime b) =>
+      a.isBefore(b) ? a : b;
+
+  static List<_TimeRange> _subtract(_TimeRange source, PanchangPeriod blocked) {
+    if (!source.start.isBefore(blocked.end) || !source.end.isAfter(blocked.start)) {
+      return [source];
     }
-    return start.add(const Duration(hours: 48));
+    final ranges = <_TimeRange>[];
+    if (blocked.start.isAfter(source.start)) {
+      ranges.add(_TimeRange(source.start, _earlierOf(source.end, blocked.start)));
+    }
+    if (blocked.end.isBefore(source.end)) {
+      ranges.add(_TimeRange(_laterOf(source.start, blocked.end), source.end));
+    }
+    return ranges.where((range) => range.end.isAfter(range.start)).toList();
   }
-
-  static double _phase(DateTime date) =>
-      AstrologyMath.angularSeparation(_sun(date), _moon(date));
-
-  static double _moon(DateTime date) => AstrologyMath.toSiderealLongitude(
-    tropicalLongitude: astro.eclipticGeoMoon(date).lon,
-    ayanamsha: AyanamshaService.lahiri(date),
-  );
-
-  static double _sun(DateTime date) => AstrologyMath.toSiderealLongitude(
-    tropicalLongitude: astro.sunPosition(date).eLon,
-    ayanamsha: AyanamshaService.lahiri(date),
-  );
 }
 
 class _ActivityRule {
   const _ActivityRule({required this.weekdays, required this.nakshatras});
   final Set<int> weekdays;
   final Set<String> nakshatras;
+}
+
+class _TimeRange {
+  const _TimeRange(this.start, this.end);
+  final DateTime start;
+  final DateTime end;
 }
