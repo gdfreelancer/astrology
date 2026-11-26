@@ -26,7 +26,7 @@ class KundaliPdfService {
         pw.Text('• ' + 'Janma Rashi: ${result.rashi}'),
         pw.Text('• ' + 'Nakshatra: ${result.nakshatra} · Pada ${result.pada}'),
         pw.Text('• ' + 'Naming syllable: ${result.namingSyllable}'),
-        pw.Text('• ' + 'Ayanamsha (approx.): ${result.ayanamsha.toStringAsFixed(4)}°'),
+        pw.Text('• ' + 'Ayanamsha (approx.): ${result.ayanamsa.toStringAsFixed(4)}°'),
         pw.SizedBox(height:12),
         pw.Text('D1 planetary placements',style:pw.TextStyle(fontSize:14,fontWeight:pw.FontWeight.bold)),
         pw.TableHelper.fromTextArray(
