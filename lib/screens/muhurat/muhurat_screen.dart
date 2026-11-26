@@ -4,6 +4,10 @@ import '../../l10n/app_locale.dart';
 
 import '../../theme/app_theme.dart';
 import '../../services/settings/app_preferences_service.dart';
+import '../../models/panchang_data.dart';
+import '../../services/panchang_service.dart';
+import 'package:timezone/data/latest.dart' as timezone_data;
+import 'package:timezone/timezone.dart' as tz;
 
 class MuhuratScreen extends StatefulWidget {
   const MuhuratScreen({super.key});
@@ -26,16 +30,23 @@ class _MuhuratScreenState extends State<MuhuratScreen> {
   DateTime _selectedDate = DateUtils.dateOnly(DateTime.now());
   final _placeController = TextEditingController();
   bool _showNotice = false;
+  bool _calculating = false;
+  PanchangLocation? _location;
+  PanchangData? _panchang;
+  String? _calculationError;
 
   @override
   void initState() {
     super.initState();
+    timezone_data.initializeTimeZones();
     _loadDefaultLocation();
   }
 
   Future<void> _loadDefaultLocation() async {
     final saved = await AppPreferencesService.defaultLocation();
-    if (mounted && _placeController.text.trim().isEmpty) _placeController.text = saved.name;
+    if (!mounted) return;
+    setState(() => _location = PanchangLocation(name: saved.name, latitude: saved.latitude, longitude: saved.longitude, timeZoneId: saved.timeZoneId));
+    if (_placeController.text.trim().isEmpty) _placeController.text = saved.name;
   }
 
   @override
@@ -43,7 +54,33 @@ class _MuhuratScreenState extends State<MuhuratScreen> {
 
   Future<void> _pickDate() async {
     final picked = await showDatePicker(context: context, initialDate: _selectedDate, firstDate: DateUtils.dateOnly(DateTime.now().subtract(const Duration(days: 1))), lastDate: DateTime.now().add(const Duration(days: 730)));
-    if (picked != null) setState(() { _selectedDate = DateUtils.dateOnly(picked); _showNotice = false; });
+    if (picked != null) setState(() { _selectedDate = DateUtils.dateOnly(picked); _showNotice = false; _panchang = null; _calculationError = null; });
+  }
+
+  Future<void> _calculate() async {
+    final location = _location;
+    if (location == null || _calculating) return;
+    setState(() { _calculating = true; _calculationError = null; _panchang = null; _showNotice = true; });
+    try {
+      final data = await Future<PanchangData>(() => PanchangService.calculate(date: _selectedDate, location: location));
+      if (!mounted) return;
+      setState(() => _panchang = data);
+    } catch (error) {
+      if (!mounted) return;
+      setState(() => _calculationError = error.toString());
+    } finally {
+      if (mounted) setState(() => _calculating = false);
+    }
+  }
+
+  String _localTime(DateTime value) {
+    final data = _panchang;
+    if (data == null) return '';
+    final local = tz.TZDateTime.from(value, tz.getLocation(data.location.timeZoneId));
+    final minute = local.minute.toString().padLeft(2, '0');
+    if (AppPreferencesService.cachedUse24HourTime) return '${local.hour.toString().padLeft(2, '0')}:$minute';
+    final hour = local.hour % 12 == 0 ? 12 : local.hour % 12;
+    return '$hour:$minute ${local.hour >= 12 ? 'PM' : 'AM'}';
   }
 
   @override
@@ -73,8 +110,8 @@ class _MuhuratScreenState extends State<MuhuratScreen> {
         const SizedBox(height: 11),
         TextField(controller: _placeController, textCapitalization: TextCapitalization.words, keyboardType: TextInputType.streetAddress, decoration: InputDecoration(prefixIcon: const Icon(Icons.location_on_outlined, color: AppTheme.plum, size: 20), hintText: context.tr('event_location'), hintStyle: const TextStyle(fontSize: 11, color: AppTheme.muted), filled: true, fillColor: Colors.white, contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15), border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: Color(0xFFEDE7E1))), enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: Color(0xFFEDE7E1))))),
         const SizedBox(height: 16),
-        SizedBox(height: 52, child: FilledButton.icon(onPressed: () => setState(() => _showNotice = true), icon: const Icon(Icons.auto_awesome_rounded, size: 18), label: Text(context.tr('explore_muhurat'), style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800)), style: FilledButton.styleFrom(backgroundColor: AppTheme.plum, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))))),
-        if (_showNotice) ...[const SizedBox(height: 16), _calculationNotice(activity)],
+        SizedBox(height: 52, child: FilledButton.icon(onPressed: _calculating ? null : _calculate, icon: _calculating ? const SizedBox(width:16,height:16,child:CircularProgressIndicator(strokeWidth:2,color:Colors.white)) : const Icon(Icons.auto_awesome_rounded, size: 18), label: Text(context.tr('explore_muhurat'), style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800)), style: FilledButton.styleFrom(backgroundColor: AppTheme.plum, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))))),
+        if (_showNotice) ...[const SizedBox(height: 16), if (_calculating) const Center(child:CircularProgressIndicator(color:AppTheme.plum)) else if (_calculationError != null) _errorCard() else if (_panchang != null) _calculatedCard(activity)],
         const SizedBox(height: 18), _howItWorks(),
       ])),
     );
@@ -96,13 +133,48 @@ class _MuhuratScreenState extends State<MuhuratScreen> {
     ])), const Icon(Icons.keyboard_arrow_down_rounded, color: AppTheme.muted),
   ])));
 
-  Widget _calculationNotice(_MuhuratActivity activity) => Container(padding: const EdgeInsets.all(16), decoration: BoxDecoration(color: const Color(0xFFFFF5E4), borderRadius: BorderRadius.circular(17), border: Border.all(color: const Color(0xFFF0DFBE)),), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    Row(children: [const Icon(Icons.info_outline_rounded, color: Color(0xFF9B6B25), size: 19), const SizedBox(width: 8), Expanded(child: Text(context.tr('muhurat_preparing'), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppTheme.ink)))]),
-    const SizedBox(height: 8),
-    Text('${context.tr('your_selection')}: ${context.tr(activity.title)} on ${_dateLabel(_selectedDate)}${_placeController.text.trim().isEmpty ? '' : ' at ${_placeController.text.trim()}'}', style: const TextStyle(fontSize: 10, height: 1.5, color: AppTheme.ink)),
-    const SizedBox(height: 7),
-    Text(context.tr('muhurat_not_ready'), style: TextStyle(fontSize: 10, height: 1.5, color: AppTheme.muted)),
-  ]));
+  Widget _errorCard() => Container(
+    padding: const EdgeInsets.all(14),
+    decoration: BoxDecoration(color: const Color(0xFFFFEEEE), borderRadius: BorderRadius.circular(14)),
+    child: Text('Could not calculate Panchang for this date and location. $_calculationError', style: const TextStyle(fontSize:10,color:Color(0xFF9B3F3F))),
+  );
+
+  Widget _calculatedCard(_MuhuratActivity activity) {
+    final data = _panchang!;
+    final favourable = <PanchangPeriod>[...data.choghadiyaDay, ...data.choghadiyaNight]
+      .where((p) => ['Amrit','Shubh','Labh','Char'].contains(p.name))
+      .where((p) => p.end.isBefore(data.rahuKaal.start) || p.start.isAfter(data.rahuKaal.end))
+      .toList();
+    return Container(
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(17),border: Border.all(color: const Color(0xFFEAE5EF))),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start,children:[
+        Text(context.tr(activity.title),style:const TextStyle(fontSize:14,fontWeight:FontWeight.w800,color:AppTheme.ink)),
+        const SizedBox(height:3),
+        Text(data.location.name+' · '+_dateLabel(_selectedDate),style:const TextStyle(fontSize:10,color:AppTheme.muted)),
+        const Divider(height:18),
+        for(final item in data.elements.where((e)=>['Tithi','Nakshatra','Yoga','Karana'].contains(e.name)))
+          Padding(padding:const EdgeInsets.symmetric(vertical:4),child:Row(children:[
+            Expanded(child:Text(item.name,style:const TextStyle(fontSize:10,color:AppTheme.muted))),
+            Text(item.value,style:const TextStyle(fontSize:10,fontWeight:FontWeight.w800,color:AppTheme.ink)),
+          ])),
+        const Divider(height:18),
+        Text('Potentially supportive Choghadiya windows',style:const TextStyle(fontSize:11,fontWeight:FontWeight.w800,color:AppTheme.plum)),
+        const SizedBox(height:5),
+        if(favourable.isEmpty) const Text('No windows passed this simple screen.',style:TextStyle(fontSize:10,color:AppTheme.muted))
+        else for(final period in favourable.take(12))
+          Padding(padding:const EdgeInsets.symmetric(vertical:3),child:Row(children:[
+            Expanded(child:Text(period.name,style:const TextStyle(fontSize:10,fontWeight:FontWeight.w700))),
+            Text(_localTime(period.start)+' – '+_localTime(period.end),style:const TextStyle(fontSize:10,color:AppTheme.ink)),
+          ])),
+        const SizedBox(height:8),
+        Text('Rahu Kaal: ${_localTime(data.rahuKaal.start)} – ${_localTime(data.rahuKaal.end)}',style:const TextStyle(fontSize:10,color:Color(0xFF9B5A3D),fontWeight:FontWeight.w700)),
+        const SizedBox(height:9),
+        const Text('This is a local Panchang and Choghadiya screening, not a complete event-specific Muhurat. Marriage, Griha Pravesh and other ceremonies require additional regional rules, Tara Bala, Chandra Bala, Lagna and family tradition. Verify with a knowledgeable practitioner before fixing an important ceremony.',style:TextStyle(fontSize:9.5,height:1.5,color:AppTheme.muted)),
+      ]),
+    );
+  }
+
 
   Widget _howItWorks() => Container(padding: const EdgeInsets.all(16), decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18), border: Border.all(color: const Color(0xFFF0EBE5))), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
     Text(context.tr('what_is_considered'), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppTheme.ink)),
