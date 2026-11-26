@@ -7,7 +7,6 @@ import '../../models/birth_chart_result.dart';
 import '../../services/settings/app_preferences_service.dart';
 import '../../services/vimshottari_dasha_service.dart';
 import '../../models/kundali/kundali_chart_style.dart';
-import '../../models/kundali/kundali_graha.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/bhava_chalit_card.dart';
 import '../../widgets/kundali_chart_view.dart';
@@ -22,10 +21,6 @@ import '../remedies/personalized_remedies_screen.dart';
 import '../remedies/remedies_home_screen.dart';
 
 
-String _localizedRashi(int index) {
-  const keys = ['p_mesha','p_vrishabha','p_mithuna','p_karka','p_simha','p_kanya','p_tula','p_vrishchika','p_dhanu','p_makara','p_kumbha','p_meena'];
-  return AppLocale.text(keys[index]);
-}
 String _localizedGraha(String name) {
   const keys = {'Sun':'planet_sun','Moon':'planet_moon','Mars':'planet_mars','Mercury':'planet_mercury','Jupiter':'planet_jupiter','Venus':'planet_venus','Saturn':'planet_saturn','Rahu':'planet_rahu','Ketu':'planet_ketu'};
   final key = keys[name];
