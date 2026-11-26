@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_locale.dart';
@@ -13,18 +15,24 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  Timer? _navigationTimer;
+
   @override
   void initState() {
     super.initState();
-    _openHome();
+    _navigationTimer = Timer(const Duration(milliseconds: 2600), () {
+      if (!mounted) return;
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute<void>(builder: (_) => const HomeScreen()),
+      );
+    });
   }
 
-  Future<void> _openHome() async {
-    await Future<void>.delayed(const Duration(milliseconds: 2600));
-    if (!mounted) return;
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(builder: (_) => const HomeScreen()),
-    );
+  @override
+  void dispose() {
+    _navigationTimer?.cancel();
+    _navigationTimer = null;
+    super.dispose();
   }
 
   @override
