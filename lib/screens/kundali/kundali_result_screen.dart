@@ -422,7 +422,7 @@ class _AnalysisShortcut extends StatelessWidget {
 
 class _GrahaPlacementList extends StatelessWidget {
   const _GrahaPlacementList({required this.chart});
-  final dynamic chart;
+  final KundaliChart chart;
 
   @override
   Widget build(BuildContext context) => Container(
