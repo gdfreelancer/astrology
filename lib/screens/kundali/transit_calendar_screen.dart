@@ -40,8 +40,8 @@ class _TransitCalendarScreenState extends State<TransitCalendarScreen>{
   late Future<List<_TransitCalendarEvent>> _events;
   @override void initState(){super.initState();_load();}
   void _load(){
-    final now=DateTime.now().toUtc();
-    final start=DateTime.utc(now.year,now.month,now.day);
+    final now=DateTime.now();
+    final start=DateTime(now.year,now.month,now.day,12).toUtc();
     _events=Isolate.run(()=>_calculateTransitEvents(start));
   }
   @override Widget build(BuildContext context)=>Scaffold(
