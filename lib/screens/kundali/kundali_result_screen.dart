@@ -6,6 +6,7 @@ import '../../l10n/app_locale.dart';
 import '../../models/birth_chart_result.dart';
 import '../../services/settings/app_preferences_service.dart';
 import '../../services/vimshottari_dasha_service.dart';
+import '../../models/kundali/kundali_graha.dart';
 import '../../models/kundali/kundali_chart_style.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/bhava_chalit_card.dart';
@@ -296,4 +297,178 @@ class _DetailLine extends StatelessWidget {
       Flexible(child: Text(value, textAlign: TextAlign.end, style: const TextStyle(color: AppTheme.ink, fontSize: 10, fontWeight: FontWeight.w700))),
     ]),
   );
+}
+
+
+class _CurrentDashaSummary extends StatelessWidget {
+  const _CurrentDashaSummary({
+    required this.siderealMoonLongitude,
+    required this.birthDate,
+  });
+
+  final double siderealMoonLongitude;
+  final DateTime birthDate;
+
+  @override
+  Widget build(BuildContext context) {
+    final timeline = VimshottariDashaService.calculate(
+      siderealMoonLongitude: siderealMoonLongitude,
+      birthDate: birthDate,
+    );
+    final now = DateTime.now();
+    final maha = timeline.mahadashaAt(now);
+    final antar = timeline.antardashaAt(now);
+
+    return Container(
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF4EFF9),
+        borderRadius: BorderRadius.circular(17),
+        border: Border.all(color: const Color(0xFFE5D9F0)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.auto_awesome, color: AppTheme.plum, size: 22),
+          const SizedBox(width: 11),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Current Vimshottari Dasha',
+                    style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+                const SizedBox(height: 5),
+                Text(
+                  maha == null
+                      ? 'Current period is outside the calculated 120-year timeline'
+                      : '${maha.planet} Mahadasha'
+                          '${antar == null ? '' : ' · ${antar.planet} Antardasha'}',
+                  style: const TextStyle(fontSize: 12, color: AppTheme.plum, fontWeight: FontWeight.w800),
+                ),
+                if (maha != null) ...[
+                  const SizedBox(height: 3),
+                  Text(
+                    '${_shortDate(maha.start)} – ${_shortDate(maha.end)}',
+                    style: const TextStyle(fontSize: 9, color: AppTheme.muted),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static String _shortDate(DateTime date) =>
+      '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+}
+
+class _AnalysisShortcut extends StatelessWidget {
+  const _AnalysisShortcut({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => Material(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(15),
+          child: Container(
+            padding: const EdgeInsets.all(13),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(color: const Color(0xFFEAE5EF)),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 36,
+                  height: 36,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF4EFF9),
+                    borderRadius: BorderRadius.circular(11),
+                  ),
+                  child: Icon(icon, color: AppTheme.plum, size: 18),
+                ),
+                const SizedBox(width: 11),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(title, style: const TextStyle(color: AppTheme.ink, fontSize: 11, fontWeight: FontWeight.w800)),
+                      const SizedBox(height: 3),
+                      Text(subtitle, style: const TextStyle(color: AppTheme.muted, fontSize: 9)),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.chevron_right_rounded, color: AppTheme.plum, size: 20),
+              ],
+            ),
+          ),
+        ),
+      );
+}
+
+class _GrahaPlacementList extends StatelessWidget {
+  const _GrahaPlacementList({required this.chart});
+  final dynamic chart;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(17),
+          border: Border.all(color: const Color(0xFFEAE5EF)),
+        ),
+        child: Column(
+          children: [
+            for (var i = 0; i < chart.grahas.length; i++) ...[
+              if (i > 0) const Divider(height: 1, indent: 14, endIndent: 14, color: Color(0xFFF0ECF3)),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 10),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 32,
+                      height: 32,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(color: const Color(0xFFF4EFF9), borderRadius: BorderRadius.circular(10)),
+                      child: Text(chart.grahas[i].symbol, style: const TextStyle(color: AppTheme.plum, fontSize: 11, fontWeight: FontWeight.w900)),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(_localizedGraha(chart.grahas[i].name), style: const TextStyle(fontSize: 11, color: AppTheme.ink, fontWeight: FontWeight.w800)),
+                          Text('${_localizedAstroName(kundaliRashiNames[chart.grahas[i].signIndex])} · ${_degree(chart.grahas[i].longitude)}', style: const TextStyle(fontSize: 9, color: AppTheme.muted)),
+                        ],
+                      ),
+                    ),
+                    Text(context.tr('house_number').replaceAll('{n}', '${chart.grahas[i].houseNumber}'), style: const TextStyle(fontSize: 10, color: AppTheme.plum, fontWeight: FontWeight.w800)),
+                  ],
+                ),
+              ),
+            ],
+          ],
+        ),
+      );
+}
+
+String _degree(double longitude) {
+  final withinSign = longitude % 30;
+  final degrees = withinSign.floor();
+  final minutes = ((withinSign - degrees) * 60).round();
+  return '${degrees}° ${minutes.toString().padLeft(2, '0')}′';
 }
