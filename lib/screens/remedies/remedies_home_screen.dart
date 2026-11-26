@@ -47,7 +47,7 @@ class RemediesHomeScreen extends StatelessWidget {
       const SizedBox(height:9),
       _tile(context,'gemstone_guide','gemstone_guide_desc',Icons.diamond_outlined,RemedyLibrarySection.gemstones),
       _tile(context,'mantra_library','mantra_library_desc',Icons.self_improvement,RemedyLibrarySection.mantras),
-      _tile(context,'navagraha_worship','navagraha_worship_desc',Icons.temple_outlined,RemedyLibrarySection.navagraha),
+      _tile(context,'navagraha_worship','navagraha_worship_desc',Icons.account_balance_outlined,RemedyLibrarySection.navagraha),
       _tile(context,'yantra_library','yantra_library_desc',Icons.grid_on,RemedyLibrarySection.yantras),
       _tile(context,'rudraksha_guide','rudraksha_guide_desc',Icons.circle_outlined,RemedyLibrarySection.rudraksha),
       _tile(context,'shani_dhaiya','shani_dhaiya_desc',Icons.nights_stay_outlined,RemedyLibrarySection.shani),
