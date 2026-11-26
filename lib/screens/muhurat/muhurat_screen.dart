@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../l10n/app_locale.dart';
 import '../../models/muhurat_activity.dart';
-import '../../screens/muhurat/muhurat_listing_screen.dart';
+import 'muhurat_listing_screen.dart';
 import '../../theme/app_theme.dart';
 
 class MuhuratScreen extends StatelessWidget {
