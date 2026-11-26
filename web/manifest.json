@@ -1,11 +1,11 @@
 {
-    "name": "astrology",
-    "short_name": "astrology",
+    "name": "Saral Jyotish",
+    "short_name": "Saral Jyotish",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Vedic astrology, Kundali, Panchang and horoscope companion.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

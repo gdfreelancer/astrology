@@ -13,7 +13,7 @@ class AstrologyApp extends StatelessWidget {
     return ValueListenableBuilder<Locale>(
       valueListenable: AppLocale.locale,
       builder: (context, locale, _) => MaterialApp(
-        title: 'Astrology',
+        title: 'Saral Jyotish',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light,
         locale: locale,

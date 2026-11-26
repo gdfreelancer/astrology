@@ -128,3 +128,20 @@ class PanchangCalendarDay {
   final String paksha;
   final bool isObservance;
 }
+
+class PanchangLunarEvent {
+  const PanchangLunarEvent({
+    required this.time,
+    required this.titleKey,
+    required this.detailKey,
+    required this.categoryKey,
+    this.rashiIndex,
+  });
+
+  /// Exact UTC instant found by numerical boundary search.
+  final DateTime time;
+  final String titleKey;
+  final String detailKey;
+  final String categoryKey;
+  final int? rashiIndex;
+}

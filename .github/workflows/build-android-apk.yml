@@ -30,13 +30,16 @@ jobs:
       - name: Get Flutter dependencies
         run: flutter pub get
 
+      - name: Run static analysis
+        run: flutter analyze --no-fatal-infos
+
       - name: Build release APK
         run: flutter build apk --release
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: astrology-release-apk
+          name: saral-jyotish-release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
           retention-days: 14

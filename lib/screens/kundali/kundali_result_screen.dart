@@ -6,6 +6,12 @@ import '../../services/settings/app_preferences_service.dart';
 import '../../models/kundali/kundali_chart_style.dart';
 import '../../models/kundali/kundali_graha.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/bhava_chalit_card.dart';
+import 'graha_analysis_screen.dart';
+import 'rashi_bhava_analysis_screen.dart';
+import 'vimshottari_dasha_screen.dart';
+import 'divisional_charts_screen.dart';
+import 'gochar_yogas_screen.dart';
 
 
 String _localizedRashi(int index) {
@@ -97,12 +103,63 @@ class KundaliResultScreen extends StatelessWidget {
             ),
             const SizedBox(height: 11),
             _KundaliHouseGrid(chart: birthResult.kundaliChart),
+            const SizedBox(height: 16),
+            BhavaChalitCard(chart: birthResult.kundaliChart),
+            const SizedBox(height: 12),
+            _AnalysisShortcut(
+              icon: Icons.account_tree_outlined,
+              title: context.tr('rashi_bhava_analysis'),
+              subtitle: context.tr('rashi_bhava_analysis_short'),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => RashiBhavaAnalysisScreen(chart: birthResult.kundaliChart),
+              )),
+            ),
+            const SizedBox(height: 8),
+            _AnalysisShortcut(
+              icon: Icons.auto_awesome_outlined,
+              title: context.tr('vimshottari_dasha'),
+              subtitle: context.tr('vimshottari_dasha_short'),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => VimshottariDashaScreen(
+                  siderealMoonLongitude: birthResult.siderealMoonLongitude,
+                  birthDate: birthResult.birthLocal,
+                ),
+              )),
+            ),
+            const SizedBox(height: 8),
+            _AnalysisShortcut(
+              icon: Icons.auto_graph_rounded,
+              title: context.tr('gochar_yogas'),
+              subtitle: context.tr('gochar_yogas_short'),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => GocharYogasScreen(chart: birthResult.kundaliChart),
+              )),
+            ),
+            const SizedBox(height: 8),
+            _AnalysisShortcut(
+              icon: Icons.grid_view_rounded,
+              title: context.tr('divisional_charts'),
+              subtitle: context.tr('divisional_charts_short'),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => DivisionalChartsScreen(chart: birthResult.kundaliChart),
+              )),
+            ),
             const SizedBox(height: 20),
             Text(context.tr('graha_placements'), style: TextStyle(fontSize: 15, color: AppTheme.ink, fontWeight: FontWeight.w800)),
             const SizedBox(height: 5),
             Text(context.tr('graha_placements_help'), style: TextStyle(fontSize: 10, color: AppTheme.muted)),
             const SizedBox(height: 10),
             _GrahaPlacementList(chart: birthResult.kundaliChart),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton.icon(
+                onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => GrahaAnalysisScreen(chart: birthResult.kundaliChart),
+                )),
+                icon: const Icon(Icons.analytics_outlined, size: 16),
+                label: Text(context.tr('view_graha_analysis')),
+              ),
+            ),
             const SizedBox(height: 19),
             Container(
               padding: const EdgeInsets.all(16),
@@ -321,4 +378,43 @@ String _degree(double longitude) {
   final degrees = withinSign.floor();
   final minutes = ((withinSign - degrees) * 60).round();
   return '${degrees}° ${minutes.toString().padLeft(2, '0')}′';
+}
+
+class _AnalysisShortcut extends StatelessWidget {
+  const _AnalysisShortcut({
+    required this.icon, required this.title, required this.subtitle,
+    required this.onTap,
+  });
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+  @override
+  Widget build(BuildContext context) => Material(
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(15),
+    child: InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(15),
+      child: Container(
+        padding: const EdgeInsets.all(13),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(color: const Color(0xFFEAE5EF)),
+        ),
+        child: Row(children: [
+          Container(width: 36, height: 36, alignment: Alignment.center,
+            decoration: BoxDecoration(color: const Color(0xFFF4EFF9), borderRadius: BorderRadius.circular(11)),
+            child: Icon(icon, color: AppTheme.plum, size: 18)),
+          const SizedBox(width: 11),
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(title, style: const TextStyle(color: AppTheme.ink, fontSize: 11, fontWeight: FontWeight.w800)),
+            const SizedBox(height: 3),
+            Text(subtitle, style: const TextStyle(color: AppTheme.muted, fontSize: 9)),
+          ])),
+          const Icon(Icons.chevron_right_rounded, color: AppTheme.plum, size: 20),
+        ]),
+      ),
+    ),
+  );
 }
