@@ -128,6 +128,7 @@ class GrahaDetailScreen extends StatelessWidget {
                   (context.tr('graha_element'), graha.element, '✧'),
                   (context.tr('graha_guna'), graha.guna, '◈'),
                   (context.tr('graha_deity'), graha.deity, 'ॐ'),
+                  (context.tr('graha_dasha_period'), '${graha.dashaYears} ${context.tr('graha_years')}', '◷'),
                 ]),
                 const SizedBox(height: 20),
                 _sectionTitle(context.tr('graha_mantra'),
