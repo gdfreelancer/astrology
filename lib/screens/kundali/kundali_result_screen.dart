@@ -9,6 +9,7 @@ import '../../models/kundali/kundali_chart_style.dart';
 import '../../models/kundali/kundali_graha.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/bhava_chalit_card.dart';
+import '../../widgets/kundali_chart_view.dart';
 import 'graha_analysis_screen.dart';
 import 'rashi_bhava_analysis_screen.dart';
 import 'vimshottari_dasha_screen.dart';
@@ -120,7 +121,7 @@ class KundaliResultScreen extends StatelessWidget {
               style: const TextStyle(fontSize: 10, color: AppTheme.muted),
             ),
             const SizedBox(height: 11),
-            _KundaliHouseGrid(chart: birthResult.kundaliChart),
+            KundaliChartView(chart: birthResult.kundaliChart, style: chartStyle),
             const SizedBox(height: 16),
             BhavaChalitCard(chart: birthResult.kundaliChart),
             const SizedBox(height: 12),
