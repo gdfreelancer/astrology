@@ -391,7 +391,7 @@ class _SouthIndianPoruthamSection extends StatelessWidget {
         const SizedBox(width:8),Text('${item.score.toStringAsFixed(item.score%1==0?0:1)} / ${item.maximum.toStringAsFixed(0)}',style:const TextStyle(fontSize:10,fontWeight:FontWeight.w800,color:AppTheme.plum)),
       ])),
       const SizedBox(height:6),
-      const Text('This is one published Tamil-style rule set. Regional almanacs differ on Dina, Gana, Rasi, Vasya and other details. Scores are directional and not comparable to the North Indian 36-point score. Rajju and Vedha are displayed separately; no relationship verdict is inferred from the total.',style:TextStyle(fontSize:9.5,height:1.5,color:Color(0xFF795D36))),
+      const Text('This is a documented Tamil-style variant, not a universal almanac. Yoni uses a simplified same / neutral / enemy score; some Rasi exceptions and regional Gana, Dina and Vasya variants are not applied. Scores are directional and not comparable to the North Indian 36-point score. Rajju and Vedha are displayed separately; no relationship verdict is inferred from the total.',style:TextStyle(fontSize:9.5,height:1.5,color:Color(0xFF795D36))),
     ]);
   }
 }
