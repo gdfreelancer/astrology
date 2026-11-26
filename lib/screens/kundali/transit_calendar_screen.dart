@@ -9,7 +9,7 @@ class _TransitCalendarEvent {
   final DateTime date;
   final String planet,title,detail;
 }
-Future<List<_TransitCalendarEvent>> _calculateTransitEvents(DateTime start) async {
+List<_TransitCalendarEvent> _calculateTransitEvents(DateTime start) {
   final events=<_TransitCalendarEvent>[];
   var previous=GocharService.positionsAt(start);
   for(var day=1;day<=180;day++){
