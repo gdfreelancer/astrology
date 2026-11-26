@@ -27,7 +27,9 @@ class _MuhuratScreenState extends State<MuhuratScreen> {
   ];
 
   int _selectedActivity = 0;
+  late final int _baseYear;
   late int _selectedYear;
+  int _scanToken = 0;
   final _placeController = TextEditingController();
   PanchangLocation? _location;
   List<MuhuratCandidate> _candidates = const [];
@@ -38,7 +40,8 @@ class _MuhuratScreenState extends State<MuhuratScreen> {
   @override
   void initState() {
     super.initState();
-    _selectedYear = DateTime.now().year;
+    _baseYear = DateTime.now().year;
+    _selectedYear = _baseYear;
     timezone_data.initializeTimeZones();
     _loadDefaultLocation();
   }
@@ -67,23 +70,24 @@ class _MuhuratScreenState extends State<MuhuratScreen> {
 
   Future<void> _loadDates() async {
     final location = _location;
-    if (location == null || _calculating) return;
+    if (location == null) return;
+    final token = ++_scanToken;
     setState(() { _calculating = true; _error = null; _candidates = const []; });
     try {
       final now = DateTime.now();
       final dates = await MuhuratService.findDates(
         from: DateTime(now.year, now.month, now.day),
-        through: DateTime(_selectedYear + 1, 12, 31),
+        through: DateTime(_baseYear + 1, 12, 31),
         location: location,
         activityKey: _activities[_selectedActivity].title,
       );
-      if (!mounted) return;
+      if (!mounted || token != _scanToken) return;
       setState(() => _candidates = dates);
     } catch (error) {
-      if (!mounted) return;
+      if (!mounted || token != _scanToken) return;
       setState(() => _error = error.toString());
     } finally {
-      if (mounted) setState(() => _calculating = false);
+      if (mounted && token == _scanToken) setState(() => _calculating = false);
     }
   }
 
@@ -169,7 +173,7 @@ class _MuhuratScreenState extends State<MuhuratScreen> {
         ),
         const SizedBox(height: 14),
         Row(children: [
-          for (final year in [_selectedYear, _selectedYear + 1])
+          for (final year in [_baseYear, _baseYear + 1])
             Padding(padding: const EdgeInsets.only(right: 9), child: ChoiceChip(
               label: Text('$year'), selected: _selectedYear == year, onSelected: (_) => _selectYear(year),
               selectedColor: const Color(0xFFF2EDF9),
