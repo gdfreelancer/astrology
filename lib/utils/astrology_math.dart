@@ -41,7 +41,14 @@ class AstrologyMath {
   static int padaNumber(double siderealLongitude) {
     final withinNakshatra =
         normalizeDegrees(siderealLongitude) % degreesPerNakshatra;
-    return (withinNakshatra / degreesPerPada).floor().clamp(0, 3).toInt() + 1;
+    // A tiny angular epsilon prevents exact theoretical boundaries from being
+    // rounded down because of binary floating-point representation.
+    const boundaryEpsilon = 1e-10;
+    return ((withinNakshatra + boundaryEpsilon) / degreesPerPada)
+            .floor()
+            .clamp(0, 3)
+            .toInt() +
+        1;
   }
 
   /// Tithi index: 0..14 Shukla, 15..29 Krishna.
