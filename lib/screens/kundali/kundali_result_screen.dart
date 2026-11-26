@@ -5,6 +5,7 @@ import '../../services/kundali_pdf_service.dart';
 import '../../l10n/app_locale.dart';
 import '../../models/birth_chart_result.dart';
 import '../../services/settings/app_preferences_service.dart';
+import '../../services/vimshottari_dasha_service.dart';
 import '../../models/kundali/kundali_chart_style.dart';
 import '../../models/kundali/kundali_graha.dart';
 import '../../theme/app_theme.dart';
@@ -113,6 +114,11 @@ class KundaliResultScreen extends StatelessWidget {
               Expanded(child: _InfoCard(label: context.tr('naming_syllable'), value: birthResult.namingSyllable, symbol: 'ॐ')),
             ]),
 
+            const SizedBox(height: 12),
+            _CurrentDashaSummary(
+              siderealMoonLongitude: birthResult.siderealMoonLongitude,
+              birthDate: birthResult.birthLocal,
+            ),
             const SizedBox(height: 20),
             Text(context.tr('janma_kundali_d1'), style: TextStyle(fontSize: 15, color: AppTheme.ink, fontWeight: FontWeight.w800)),
             const SizedBox(height: 5),
@@ -473,4 +479,64 @@ class _AnalysisShortcut extends StatelessWidget {
       ),
     ),
   );
+}
+
+
+class _CurrentDashaSummary extends StatelessWidget {
+  const _CurrentDashaSummary({
+    required this.siderealMoonLongitude,
+    required this.birthDate,
+  });
+
+  final double siderealMoonLongitude;
+  final DateTime birthDate;
+
+  @override
+  Widget build(BuildContext context) {
+    final timeline = VimshottariDashaService.calculate(
+      siderealMoonLongitude: siderealMoonLongitude,
+      birthDate: birthDate,
+    );
+    final now = DateTime.now();
+    final maha = timeline.mahadashaAt(now);
+    final antar = timeline.antardashaAt(now);
+    String date(DateTime value) => '${value.day.toString().padLeft(2, '0')}/${value.month.toString().padLeft(2, '0')}/${value.year}';
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF4EFF9),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE2D8ED)),
+      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(children: [
+          const Icon(Icons.timelapse_rounded, color: AppTheme.plum, size: 17),
+          const SizedBox(width: 7),
+          Expanded(child: Text(context.tr('running_dasha'),
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: AppTheme.ink))),
+          const Text('VIMSHOTTARI', style: TextStyle(fontSize: 8, letterSpacing: .8, color: AppTheme.plum, fontWeight: FontWeight.w900)),
+        ]),
+        const SizedBox(height: 9),
+        if (maha != null && antar != null) ...[
+          Text('${_localizedGraha(maha.planet)} Mahadasha  ·  ${_localizedGraha(antar.planet)} Antardasha',
+            style: const TextStyle(fontSize: 13, color: AppTheme.plum, fontWeight: FontWeight.w900)),
+          const SizedBox(height: 5),
+          Text('${context.tr('period_start')}: ${date(antar.start)}   ·   ${context.tr('period_end')}: ${date(antar.end)}',
+            style: const TextStyle(fontSize: 9, color: AppTheme.muted)),
+        ] else
+          Text(context.tr('dasha_timeline_range_note'),
+            style: const TextStyle(fontSize: 10, color: AppTheme.muted, height: 1.4)),
+        const SizedBox(height: 7),
+        TextButton(
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => VimshottariDashaScreen(
+              siderealMoonLongitude: siderealMoonLongitude,
+              birthDate: birthDate,
+            ),
+          )),
+          child: Text(context.tr('mahadasha_timeline')),
+        ),
+      ]),
+    );
+  }
 }
