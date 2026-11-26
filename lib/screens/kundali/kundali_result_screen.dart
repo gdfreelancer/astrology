@@ -13,6 +13,7 @@ import 'vimshottari_dasha_screen.dart';
 import 'divisional_charts_screen.dart';
 import 'gochar_yogas_screen.dart';
 import 'advanced_chart_analysis_screen.dart';
+import 'ashtakavarga_screen.dart';
 
 
 String _localizedRashi(int index) {
@@ -113,6 +114,15 @@ class KundaliResultScreen extends StatelessWidget {
               subtitle: context.tr('rashi_bhava_analysis_short'),
               onTap: () => Navigator.of(context).push(MaterialPageRoute(
                 builder: (_) => RashiBhavaAnalysisScreen(chart: birthResult.kundaliChart),
+              )),
+            ),
+            const SizedBox(height: 8),
+            _AnalysisShortcut(
+              icon: Icons.grid_view_rounded,
+              title: 'Ashtakavarga analysis',
+              subtitle: 'Bhinnashtakavarga and Sarvashtakavarga bindu tables',
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => AshtakavargaScreen(chart: birthResult.kundaliChart),
               )),
             ),
             const SizedBox(height: 8),
