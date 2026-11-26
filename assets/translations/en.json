@@ -1091,5 +1091,13 @@
   "graha_ketu_qualities": "Insight, introspection, discernment, simplicity, spiritual curiosity, independence and the ability to let go.",
   "graha_ketu_body": "Some traditions associate Ketu with the feet, nervous sensitivity and subtle or hard-to-classify conditions. This is symbolic, not medical advice.",
   "graha_dasha_period": "Vimshottari period",
-  "graha_years": "years"
+  "graha_years": "years",
+  "graha_phala": "Graha Phala",
+  "graha_phala_subtitle": "General traditional results when the Graha is supported or afflicted",
+  "graha_rashi_phala": "Graha in the 12 Rashis",
+  "graha_rashi_phala_subtitle": "Select a Rashi to read its traditional indications",
+  "graha_dosha": "Graha Dosha & afflictions",
+  "graha_dosha_subtitle": "Commonly discussed combinations and interpretive cautions",
+  "graha_mantra_when": "When to use this mantra",
+  "graha_mantra_when_subtitle": "Traditional devotional context; not a guaranteed remedy"
 }
