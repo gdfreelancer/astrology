@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_locale.dart';
 import '../../models/kundali/kundali_graha.dart';
 import '../../services/gochar_service.dart';
+import '../../services/ashtakavarga_service.dart';
 import '../../theme/app_theme.dart';
 
 class GocharYogasScreen extends StatefulWidget {
@@ -20,6 +21,7 @@ class _GocharYogasScreenState extends State<GocharYogasScreen> {
   @override Widget build(BuildContext context) {
     final report=_report;
     final saturn=report.transits.firstWhere((p)=>p.name=='Saturn');
+    final ashtakavarga=AshtakavargaService.calculate(widget.chart);
     final phase=report.sadeSati.phase;
     final natalMoonSign=report.sadeSati.moonSignIndex;
     final natalLagnaSign=widget.chart.ascendantSignIndex;
@@ -43,6 +45,7 @@ class _GocharYogasScreenState extends State<GocharYogasScreen> {
               Column(crossAxisAlignment:CrossAxisAlignment.end,children:[
                 Text('${context.tr(_rashiKey(report.transits[i].signIndex))} · ${report.transits[i].degreeInSign.toStringAsFixed(1)}°',style:const TextStyle(fontSize:10,color:AppTheme.muted)),
                 Text('${context.tr('moon_house_short')} ${(report.transits[i].signIndex-natalMoonSign+12)%12+1}  ·  ${context.tr('lagna_house_short')} ${(report.transits[i].signIndex-natalLagnaSign+12)%12+1}',style:const TextStyle(fontSize:8,color:AppTheme.muted)),
+                if(AshtakavargaService.planets.contains(report.transits[i].name)) Text('BAV ${ashtakavarga.bhinna[report.transits[i].name]![report.transits[i].signIndex]}/8 · SAV ${ashtakavarga.sarva[report.transits[i].signIndex]}',style:const TextStyle(fontSize:8,color:AppTheme.plum,fontWeight:FontWeight.w700)),
               ]),
               if(report.transits[i].isRetrograde)const Padding(padding:EdgeInsets.only(left:5),child:Text('℞',style:TextStyle(color:Color(0xFFB56A32),fontWeight:FontWeight.w900)))
             ]))
