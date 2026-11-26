@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:printing/printing.dart';
 
 import '../../l10n/app_locale.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +11,7 @@ import '../../models/kundali/kundali_graha.dart';
 import '../../theme/app_theme.dart';
 import '../../services/matching/advanced_matching_service.dart';
 import '../../services/matching/south_indian_porutham_service.dart';
+import '../../services/matching/matching_pdf_service.dart';
 import '../../services/varga_chart_service.dart';
 
 
@@ -84,6 +86,18 @@ class MatchingResultScreen extends StatelessWidget {
         title: Text(context.tr('matching_report'), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
         actions: [
           IconButton(onPressed: () => _copySummary(context), tooltip: context.tr('copy_summary'), icon: const Icon(Icons.copy_rounded, color: AppTheme.plum)),
+          IconButton(
+            tooltip: 'Share matching PDF',
+            onPressed: () async {
+              try {
+                final bytes = await MatchingPdfService.build(report);
+                await Printing.sharePdf(bytes: bytes, filename: 'saral-jyotish-matching.pdf');
+              } catch (_) {
+                if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not create the matching PDF.')));
+              }
+            },
+            icon: const Icon(Icons.picture_as_pdf_outlined, color: AppTheme.plum),
+          ),
         ],
       ),
       body: SafeArea(
