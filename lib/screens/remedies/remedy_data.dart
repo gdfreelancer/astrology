@@ -20,15 +20,15 @@ class LagnaGemstones {
 }
 
 const remedyGrahas = <RemedyGraha>[
-  RemedyGraha('sun','Sun / Surya','ॐ घृणिः सूर्याय नमः',7000,'Agni · Vishnu','Ruby','Sunday','Father, authority, confidence and government matters',['Surya worship','Navagraha Shanti prayer','Sun mantra']),
-  RemedyGraha('moon','Moon / Chandra','ॐ सों सोमाय नमः',11000,'Varuna · Shiva','Pearl','Monday','Mother, emotional life and mental peace',['Chandra worship','Navagraha Shanti prayer','Moon mantra']),
-  RemedyGraha('mars','Mars / Mangala','ॐ अं अंगारकाय नमः',10000,'Subrahmanya','Red Coral','Tuesday','Siblings, courage, anger and action',['Mangala worship','Hanuman or Subrahmanya worship','Mars mantra']),
-  RemedyGraha('mercury','Mercury / Budha','ॐ बुं बुधाय नमः',9000,'Mahavishnu · Durga','Emerald','Wednesday','Education, intellect, speech and business',['Budha worship','Mercury mantra']),
-  RemedyGraha('jupiter','Jupiter / Guru','ॐ वृं बृहस्पतये नमः',19000,'Indra · Brahma','Yellow Sapphire','Thursday','Teachers, faith, finances, marriage and children',['Guru worship','Navagraha Shanti prayer','Jupiter mantra']),
-  RemedyGraha('venus','Venus / Shukra','ॐ शुं शुक्राय नमः',16000,'Shachi · Lakshmi','Diamond','Friday','Relationships, comforts, vehicles and refinement',['Shukra worship','Venus mantra']),
-  RemedyGraha('saturn','Saturn / Shani','ॐ शं शनैश्चराय नमः',23000,'Brahma · Bhairava','Blue Sapphire','Saturday','Work, service, responsibility and delays',['Shani worship','Shiva worship','Hanuman worship','Shani mantra']),
-  RemedyGraha('rahu','Rahu','ॐ रां राहवे नमः',18000,'Bhairava · Saraswati','Hessonite','Saturday','Unconventional matters, confusion and fears',['Rahu worship','Rahu mantra']),
-  RemedyGraha('ketu','Ketu','ॐ कें केतवे नमः',17000,'Ganesha','Cat’s Eye','Tuesday / Thursday','Detachment, spiritual practice and ancestral traditions',['Ketu worship','Ganesha worship','Ketu mantra']),
+  RemedyGraha('sun','Sun / Surya','ॐ घृणिः सूर्याय नमः',7000,['Agni · Vishnu'],'Ruby','Sunday',['Father, authority, confidence and government matters'],['Surya worship','Navagraha Shanti prayer','Sun mantra']),
+  RemedyGraha('moon','Moon / Chandra','ॐ सों सोमाय नमः',11000,['Varuna · Shiva'],'Pearl','Monday',['Mother, emotional life and mental peace'],['Chandra worship','Navagraha Shanti prayer','Moon mantra']),
+  RemedyGraha('mars','Mars / Mangala','ॐ अं अंगारकाय नमः',10000,['Subrahmanya'],'Red Coral','Tuesday',['Siblings, courage, anger and action'],['Mangala worship','Hanuman or Subrahmanya worship','Mars mantra']),
+  RemedyGraha('mercury','Mercury / Budha','ॐ बुं बुधाय नमः',9000,['Mahavishnu · Durga'],'Emerald','Wednesday',['Education, intellect, speech and business'],['Budha worship','Mercury mantra']),
+  RemedyGraha('jupiter','Jupiter / Guru','ॐ वृं बृहस्पतये नमः',19000,['Indra · Brahma'],'Yellow Sapphire','Thursday',['Teachers, faith, finances, marriage and children'],['Guru worship','Navagraha Shanti prayer','Jupiter mantra']),
+  RemedyGraha('venus','Venus / Shukra','ॐ शुं शुक्राय नमः',16000,['Shachi · Lakshmi'],'Diamond','Friday',['Relationships, comforts, vehicles and refinement'],['Shukra worship','Venus mantra']),
+  RemedyGraha('saturn','Saturn / Shani','ॐ शं शनैश्चराय नमः',23000,['Brahma · Bhairava'],'Blue Sapphire','Saturday',['Work, service, responsibility and delays'],['Shani worship','Shiva worship','Hanuman worship','Shani mantra']),
+  RemedyGraha('rahu','Rahu','ॐ रां राहवे नमः',18000,['Bhairava · Saraswati'],'Hessonite','Saturday',['Unconventional matters, confusion and fears'],['Rahu worship','Rahu mantra']),
+  RemedyGraha('ketu','Ketu','ॐ कें केतवे नमः',17000,['Ganesha'],'Cat’s Eye','Tuesday / Thursday',['Detachment, spiritual practice and ancestral traditions'],['Ketu worship','Ganesha worship','Ketu mantra']),
 ];
 
 const gemstones = <GemstoneInfo>[
