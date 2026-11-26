@@ -133,6 +133,10 @@ class MuhuratService {
       final nakshatra = nakshatras[nakshatraIndex].name;
       if (!rule.nakshatras.contains(nakshatra)) continue;
 
+      // Keep displayed windows inside the Tithi and Nakshatra that qualified the date at local sunrise.
+      final tithiEnd = _nextBoundary(sunrise, _phase, 12);
+      final nakshatraEnd = _nextBoundary(sunrise, _moon, 360 / 27);
+      final panchangValidityEnd = tithiEnd.isBefore(nakshatraEnd) ? tithiEnd : nakshatraEnd;
       final daylight = sunset.difference(sunrise);
       final rahu = _dayPeriod(sunrise, daylight, const [8, 2, 7, 5, 6, 4, 3][weekday]);
       final yama = _dayPeriod(sunrise, daylight, const [5, 4, 3, 2, 1, 7, 6][weekday]);
@@ -147,16 +151,13 @@ class MuhuratService {
         final windowStart = sunrise.add(Duration(
           microseconds: (segmentLength * i).round(),
         ));
-        final windowEnd = sunrise.add(Duration(
+        final segmentEnd = sunrise.add(Duration(
           microseconds: (segmentLength * (i + 1)).round(),
         ));
-        final blocked = excluded.any((period) =>
-            windowStart.isBefore(period.end) && windowEnd.isAfter(period.start));
-        if (!blocked) {
-          windows.add(MuhuratTimeWindow(
-            name: name, start: windowStart, end: windowEnd,
-          ));
-        }
+        final windowEnd = segmentEnd.isBefore(panchangValidityEnd) ? segmentEnd : panchangValidityEnd;
+        if (!windowEnd.isAfter(windowStart) || windowEnd.difference(windowStart) < const Duration(minutes: 15)) continue;
+        final blocked = excluded.any((period) => windowStart.isBefore(period.end) && windowEnd.isAfter(period.start));
+        if (!blocked) windows.add(MuhuratTimeWindow(name: name, start: windowStart, end: windowEnd));
       }
 
       if (windows.isNotEmpty) {
@@ -187,6 +188,34 @@ class MuhuratService {
       start: from,
       end: from.add(Duration(microseconds: segmentLength.round())),
     );
+  }
+
+
+  static DateTime _nextBoundary(
+    DateTime start,
+    double Function(DateTime) angleAt,
+    double segmentSize,
+  ) {
+    final initialIndex = (angleAt(start) / segmentSize).floor();
+    var left = start;
+    for (var step = 1; step <= 96; step++) {
+      final right = start.add(Duration(minutes: 30 * step));
+      if ((angleAt(right) / segmentSize).floor() != initialIndex) {
+        var low = left;
+        var high = right;
+        for (var iteration = 0; iteration < 28; iteration++) {
+          final middle = low.add(Duration(microseconds: high.difference(low).inMicroseconds ~/ 2));
+          if ((angleAt(middle) / segmentSize).floor() == initialIndex) {
+            low = middle;
+          } else {
+            high = middle;
+          }
+        }
+        return high;
+      }
+      left = right;
+    }
+    return start.add(const Duration(hours: 48));
   }
 
   static double _phase(DateTime date) =>
