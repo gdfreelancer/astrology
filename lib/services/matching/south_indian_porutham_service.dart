@@ -53,16 +53,16 @@ class SouthIndianPoruthamService {
     final vasya=(_vasya[ar]?.contains(br)??false), rajju=_rajju[a]!=_rajju[b], vedha=_vedha[a]!=b;
     final mahendra={4,7,10,13,16,19,22,25}.contains(count);
     return PoruthamReport(List.unmodifiable(<PoruthamItem>[
-      PoruthamItem('Dina',dina?3:0,3,'Bride-to-groom Nakshatra count: $count.'),
+      PoruthamItem('Dina',(dina?3:0).toDouble(),3,'Bride-to-groom Nakshatra count: $count.'),
       PoruthamItem('Gana',ganaScore.toDouble(),6,'$ganaA with $ganaB.'),
-      PoruthamItem('Mahendra',mahendra?2:0,2,'Bride-to-groom Nakshatra count: $count.'),
-      PoruthamItem('Stree Deergha',count>13?2:count>9?1:0,2,'Count $count; full agreement above 13, partial above 9 in this variant.'),
+      PoruthamItem('Mahendra',(mahendra?2:0).toDouble(),2,'Bride-to-groom Nakshatra count: $count.'),
+      PoruthamItem('Stree Deergha',(count>13?2:count>9?1:0).toDouble(),2,'Count $count; full agreement above 13, partial above 9 in this variant.'),
       PoruthamItem('Yoni',yoniScore.toDouble(),4,'$yA with $yB'+(hostile?' (traditional enemy pair)':'')),
       PoruthamItem('Rasi',rasiScore.toDouble(),2,'Groom Moon sign is $rasiCount from bride Moon sign.'),
       PoruthamItem('Rasi Athipathi',lordScore.toDouble(),5,'Rashi lords: $lordA and $lordB.'),
-      PoruthamItem('Vasya',vasya?2:0,2,vasya?'Groom sign appears in the selected bride-sign Vasya table.':'No match in the selected directional Vasya table.'),
-      PoruthamItem('Rajju',rajju?1:0,1,'${_rajju[a]} and ${_rajju[b]} Rajju.'),
-      PoruthamItem('Vedha',vedha?1:0,1,vedha?'No paired Vedha obstruction in the selected table.':'Traditional Vedha pair.'),
+      PoruthamItem('Vasya',(vasya?2:0).toDouble(),2,vasya?'Groom sign appears in the selected bride-sign Vasya table.':'No match in the selected directional Vasya table.'),
+      PoruthamItem('Rajju',(rajju?1:0).toDouble(),1,'${_rajju[a]} and ${_rajju[b]} Rajju.'),
+      PoruthamItem('Vedha',(vedha?1:0).toDouble(),1,vedha?'No paired Vedha obstruction in the selected table.':'Traditional Vedha pair.'),
     ]));
   }
 }
