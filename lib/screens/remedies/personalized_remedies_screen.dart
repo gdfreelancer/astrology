@@ -151,10 +151,12 @@ class _PersonalizedRemediesScreenState extends State<PersonalizedRemediesScreen>
       if (graha.name == 'Ketu') ketu = graha;
     }
     if (rahu == null || ketu == null) return false;
-    final span = (ketu.longitude - rahu.longitude + 360) % 360;
+    final rahuLongitude = rahu.longitude;
+    final ketuLongitude = ketu.longitude;
+    final span = (ketuLongitude - rahuLongitude + 360) % 360;
     final classical = chart.grahas.where((g) =>
       const {'Sun','Moon','Mars','Mercury','Jupiter','Venus','Saturn'}.contains(g.name));
-    final positions = classical.map((g) => (g.longitude - rahu.longitude + 360) % 360).toList();
+    final positions = classical.map((g) => (g.longitude - rahuLongitude + 360) % 360).toList();
     if (positions.length != 7) return false;
     return positions.every((p) => p <= span + 0.0001) ||
         positions.every((p) => p >= span - 0.0001);
