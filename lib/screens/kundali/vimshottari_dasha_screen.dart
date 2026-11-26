@@ -1,8 +1,10 @@
+import 'dart:collection';
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_locale.dart';
 import '../../models/vimshottari_timeline.dart';
 import '../../services/vimshottari_dasha_service.dart';
+import '../../services/vimshottari_subperiod_service.dart';
 import '../../theme/app_theme.dart';
 
 class VimshottariDashaScreen extends StatelessWidget {
@@ -96,6 +98,33 @@ class VimshottariDashaScreen extends StatelessWidget {
               (p.start.isBefore(currentMaha.end) && p.end.isAfter(currentMaha.start))).take(9))
             _PeriodTile(period: period, isCurrent: period.contains(now),
               title: _planet(context, period.planet)),
+          if (currentAntar != null) ...[
+            const SizedBox(height: 18),
+            Text('Pratyantardasha', style: const TextStyle(color: AppTheme.ink, fontSize: 15, fontWeight: FontWeight.w800)),
+            const SizedBox(height: 8),
+            for (final period in VimshottariSubperiodService.children(currentAntar))
+              _PeriodTile(period: period, isCurrent: period.contains(now), title: _planet(context, period.planet)),
+            Builder(builder: (context) {
+              final currentPratyantar = VimshottariSubperiodService.children(currentAntar).where((p) => p.contains(now)).firstOrNull;
+              if (currentPratyantar == null) return const SizedBox.shrink();
+              final sookshma = VimshottariSubperiodService.children(currentPratyantar);
+              final currentSookshma = sookshma.where((p) => p.contains(now)).firstOrNull;
+              return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const SizedBox(height: 14),
+                Text('Sookshma Dasha', style: const TextStyle(color: AppTheme.ink, fontSize: 15, fontWeight: FontWeight.w800)),
+                const SizedBox(height: 8),
+                for (final period in sookshma)
+                  _PeriodTile(period: period, isCurrent: period.contains(now), title: _planet(context, period.planet)),
+                if (currentSookshma != null) ...[
+                  const SizedBox(height: 14),
+                  Text('Prana Dasha', style: const TextStyle(color: AppTheme.ink, fontSize: 15, fontWeight: FontWeight.w800)),
+                  const SizedBox(height: 8),
+                  for (final period in VimshottariSubperiodService.children(currentSookshma))
+                    _PeriodTile(period: period, isCurrent: period.contains(now), title: _planet(context, period.planet)),
+                ],
+              ]);
+            }),
+          ],
           const SizedBox(height: 10),
           Container(
             padding: const EdgeInsets.all(13),

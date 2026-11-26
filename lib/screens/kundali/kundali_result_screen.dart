@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:printing/printing.dart';
+import '../../services/kundali_pdf_service.dart';
 
 import '../../l10n/app_locale.dart';
 import '../../models/birth_chart_result.dart';
@@ -12,6 +14,8 @@ import 'rashi_bhava_analysis_screen.dart';
 import 'vimshottari_dasha_screen.dart';
 import 'divisional_charts_screen.dart';
 import 'gochar_yogas_screen.dart';
+import 'advanced_chart_analysis_screen.dart';
+import 'ashtakavarga_screen.dart';
 
 
 String _localizedRashi(int index) {
@@ -50,6 +54,18 @@ class KundaliResultScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(context.tr('kundali_overview'), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
         actions: [
+          IconButton(
+            tooltip: 'Export Kundali PDF',
+            onPressed: () async {
+              try {
+                final bytes = await KundaliPdfService.build(name: name, result: birthResult);
+                await Printing.sharePdf(bytes: bytes, filename: 'saral-jyotish-kundali.pdf');
+              } catch (_) {
+                if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not create the Kundali PDF.')));
+              }
+            },
+            icon: const Icon(Icons.picture_as_pdf_outlined, color: AppTheme.plum),
+          ),
           IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(Icons.edit_outlined, color: AppTheme.plum), tooltip: context.tr('edit_birth_details')),
         ],
       ),
@@ -116,6 +132,24 @@ class KundaliResultScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             _AnalysisShortcut(
+              icon: Icons.grid_view_rounded,
+              title: 'Ashtakavarga analysis',
+              subtitle: 'Bhinnashtakavarga and Sarvashtakavarga bindu tables',
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => AshtakavargaScreen(chart: birthResult.kundaliChart),
+              )),
+            ),
+            const SizedBox(height: 8),
+            _AnalysisShortcut(
+              icon: Icons.insights_rounded,
+              title: 'Advanced chart analysis',
+              subtitle: 'Graha Drishti, Avastha and supported Yoga checks',
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => AdvancedChartAnalysisScreen(chart: birthResult.kundaliChart),
+              )),
+            ),
+            const SizedBox(height: 8),
+            _AnalysisShortcut(
               icon: Icons.auto_awesome_outlined,
               title: context.tr('vimshottari_dasha'),
               subtitle: context.tr('vimshottari_dasha_short'),
@@ -132,7 +166,7 @@ class KundaliResultScreen extends StatelessWidget {
               title: context.tr('gochar_yogas'),
               subtitle: context.tr('gochar_yogas_short'),
               onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => GocharYogasScreen(chart: birthResult.kundaliChart),
+                builder: (_) => GocharYogasScreen(chart: birthResult.kundaliChart, siderealMoonLongitude: birthResult.siderealMoonLongitude, birthDate: birthResult.birthLocal),
               )),
             ),
             const SizedBox(height: 8),

@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_locale.dart';
 import '../../models/kundali/kundali_graha.dart';
 import '../../services/gochar_service.dart';
+import '../../services/ashtakavarga_service.dart';
+import '../../services/vimshottari_dasha_service.dart';
 import '../../theme/app_theme.dart';
 
 class GocharYogasScreen extends StatefulWidget {
-  const GocharYogasScreen({super.key,required this.chart});
+  const GocharYogasScreen({super.key,required this.chart,required this.siderealMoonLongitude,required this.birthDate});
   final KundaliChart chart;
+  final double siderealMoonLongitude;
+  final DateTime birthDate;
   @override State<GocharYogasScreen> createState()=>_GocharYogasScreenState();
 }
 class _GocharYogasScreenState extends State<GocharYogasScreen> {
@@ -20,6 +24,10 @@ class _GocharYogasScreenState extends State<GocharYogasScreen> {
   @override Widget build(BuildContext context) {
     final report=_report;
     final saturn=report.transits.firstWhere((p)=>p.name=='Saturn');
+    final ashtakavarga=AshtakavargaService.calculate(widget.chart);
+    final dasha=VimshottariDashaService.calculate(siderealMoonLongitude:widget.siderealMoonLongitude,birthDate:widget.birthDate);
+    final currentMaha=dasha.mahadashaAt(_date);
+    final currentAntar=dasha.antardashaAt(_date);
     final phase=report.sadeSati.phase;
     final natalMoonSign=report.sadeSati.moonSignIndex;
     final natalLagnaSign=widget.chart.ascendantSignIndex;
@@ -30,6 +38,15 @@ class _GocharYogasScreenState extends State<GocharYogasScreen> {
           const Icon(Icons.calendar_month_rounded,color:AppTheme.plum),const SizedBox(width:10),
           Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(context.tr('transit_date'),style:const TextStyle(fontSize:10,color:AppTheme.muted)),Text('${_date.day.toString().padLeft(2,'0')}/${_date.month.toString().padLeft(2,'0')}/${_date.year}',style:const TextStyle(fontSize:15,fontWeight:FontWeight.w800,color:AppTheme.ink))])),
           TextButton(onPressed:_chooseDate,child:Text(context.tr('change_date')))
+        ])),
+        const SizedBox(height:14),
+        Container(padding:const EdgeInsets.all(14),decoration:BoxDecoration(color:const Color(0xFFF2EDF8),borderRadius:BorderRadius.circular(15)),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+          const Text('Dasha + Gochar context',style:TextStyle(fontSize:12,fontWeight:FontWeight.w900,color:AppTheme.plum)),
+          const SizedBox(height:6),
+          Text('Mahadasha: ${currentMaha?.planet??'Not available'}',style:const TextStyle(fontSize:11,fontWeight:FontWeight.w800,color:AppTheme.ink)),
+          Text('Antardasha: ${currentAntar?.planet??'Not available'}',style:const TextStyle(fontSize:10,color:AppTheme.muted)),
+          const SizedBox(height:4),
+          const Text('Use the running Dasha together with transit positions and Ashtakavarga support; this screen does not generate event predictions.',style:TextStyle(fontSize:9.5,height:1.4,color:AppTheme.muted)),
         ])),
         const SizedBox(height:16),
         Text(context.tr('transit_positions'),style:const TextStyle(fontSize:15,fontWeight:FontWeight.w800,color:AppTheme.ink)),
@@ -43,6 +60,7 @@ class _GocharYogasScreenState extends State<GocharYogasScreen> {
               Column(crossAxisAlignment:CrossAxisAlignment.end,children:[
                 Text('${context.tr(_rashiKey(report.transits[i].signIndex))} · ${report.transits[i].degreeInSign.toStringAsFixed(1)}°',style:const TextStyle(fontSize:10,color:AppTheme.muted)),
                 Text('${context.tr('moon_house_short')} ${(report.transits[i].signIndex-natalMoonSign+12)%12+1}  ·  ${context.tr('lagna_house_short')} ${(report.transits[i].signIndex-natalLagnaSign+12)%12+1}',style:const TextStyle(fontSize:8,color:AppTheme.muted)),
+                if(AshtakavargaService.planets.contains(report.transits[i].name)) Text('BAV ${ashtakavarga.bhinna[report.transits[i].name]![report.transits[i].signIndex]}/8 · SAV ${ashtakavarga.sarva[report.transits[i].signIndex]}',style:const TextStyle(fontSize:8,color:AppTheme.plum,fontWeight:FontWeight.w700)),
               ]),
               if(report.transits[i].isRetrograde)const Padding(padding:EdgeInsets.only(left:5),child:Text('℞',style:TextStyle(color:Color(0xFFB56A32),fontWeight:FontWeight.w900)))
             ]))
@@ -57,6 +75,16 @@ class _GocharYogasScreenState extends State<GocharYogasScreen> {
           Text(context.tr(phase==null?'sade_sati_inactive_desc':'sade_sati_phase_$phase'),style:const TextStyle(fontSize:11,height:1.45,color:AppTheme.muted)),
           const SizedBox(height:8),
           Text('${context.tr('natal_moon')}: ${context.tr(_rashiKey(report.sadeSati.moonSignIndex))}  ·  ${context.tr('transit_saturn')}: ${context.tr(_rashiKey(saturn.signIndex))}',style:const TextStyle(fontSize:10,fontWeight:FontWeight.w700,color:AppTheme.plum))
+        ])),
+        const SizedBox(height:12),
+        Text('Saturn Dhaiya',style:const TextStyle(fontSize:15,fontWeight:FontWeight.w800,color:AppTheme.ink)),
+        const SizedBox(height:8),
+        Container(padding:const EdgeInsets.all(14),decoration:BoxDecoration(color:report.sadeSati.isDhaiya?const Color(0xFFFFF6E8):Colors.white,borderRadius:BorderRadius.circular(15),border:Border.all(color:const Color(0xFFEAE5EF))),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+          Text(report.sadeSati.isDhaiya?'Dhaiya indicator present':'No Dhaiya indicator on selected date',style:const TextStyle(fontSize:12,fontWeight:FontWeight.w800,color:AppTheme.ink)),
+          const SizedBox(height:4),
+          Text(report.sadeSati.dhaiyaHouse==null?'Saturn is not in the 4th or 8th sign from the natal Moon on this date.':'Saturn is in the ${report.sadeSati.dhaiyaHouse}th sign from the natal Moon.',style:const TextStyle(fontSize:10,height:1.4,color:AppTheme.muted)),
+          const SizedBox(height:5),
+          const Text('This is a sign-based traditional indicator, not a prediction or a full Saturn transit timeline.',style:TextStyle(fontSize:9.5,color:AppTheme.muted)),
         ])),
         const SizedBox(height:18),
         Text(context.tr('detected_yogas'),style:const TextStyle(fontSize:15,fontWeight:FontWeight.w800,color:AppTheme.ink)),
