@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:printing/printing.dart';
+import '../../services/kundali_pdf_service.dart';
 
 import '../../l10n/app_locale.dart';
 import '../../models/birth_chart_result.dart';
@@ -52,6 +54,18 @@ class KundaliResultScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(context.tr('kundali_overview'), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
         actions: [
+          IconButton(
+            tooltip: 'Export Kundali PDF',
+            onPressed: () async {
+              try {
+                final bytes = await KundaliPdfService.build(name: name, result: birthResult);
+                await Printing.sharePdf(bytes: bytes, filename: 'saral-jyotish-kundali.pdf');
+              } catch (_) {
+                if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not create the Kundali PDF.')));
+              }
+            },
+            icon: const Icon(Icons.picture_as_pdf_outlined, color: AppTheme.plum),
+          ),
           IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(Icons.edit_outlined, color: AppTheme.plum), tooltip: context.tr('edit_birth_details')),
         ],
       ),
