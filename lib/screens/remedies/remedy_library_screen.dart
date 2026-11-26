@@ -101,6 +101,8 @@ class _RemedyLibraryScreenState extends State<RemedyLibraryScreen> {
 
   Widget _gemstoneList()=>Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
     const Text('Nine traditional Graha gemstones',style:TextStyle(fontSize:15,fontWeight:FontWeight.w800,color:AppTheme.ink)),
+    const SizedBox(height:5),
+    const Text('PDF page 11 gives a general guideline of at least 3 ratti and approximately 1 ratti per 10 kg body weight, with age considered. The gemstone-specific table on page 13 lists different minimums. Treat both as traditional source statements, not a sizing instruction.',style:TextStyle(fontSize:10,height:1.45,color:AppTheme.muted)),
     const SizedBox(height:8),
     for(final g in gemstones) _card(title:'${g.name} · ${g.hindi}',subtitle:'${g.graha} · ${g.colour}',icon:Icons.diamond_outlined,onTap:()=>_showGemstone(g)),
     const SizedBox(height:12),
@@ -166,6 +168,8 @@ class _RemedyLibraryScreenState extends State<RemedyLibraryScreen> {
       const Text('Navratna arrangement',style:TextStyle(fontSize:18,fontWeight:FontWeight.w900)),
       const SizedBox(height:6),const Text('Transcribed from PDF page 15. The source describes a nine-stone ring or pendant.',style:TextStyle(fontSize:10,color:AppTheme.muted)),
       const SizedBox(height:14),
+      const Text('The source recommends equal-weight stones in a gold or silver ring, ritual worship and wearing on the ring finger at an auspicious Muhurat; it also mentions a Navratna pendant. These are source-specific traditional directions, not a personal recommendation.',style:TextStyle(fontSize:10,height:1.5,color:AppTheme.muted)),
+      const SizedBox(height:10),
       for(final row in navratnaArrangement) Row(children:[for(final stone in row) Expanded(child:Container(margin:const EdgeInsets.all(3),padding:const EdgeInsets.symmetric(vertical:16,horizontal:4),decoration:BoxDecoration(color:const Color(0xFFF3EEF8),borderRadius:BorderRadius.circular(10)),child:Text(stone,textAlign:TextAlign.center,style:const TextStyle(fontSize:9,fontWeight:FontWeight.w700))))]),
     ])),
   ));
@@ -274,11 +278,13 @@ class _RemedyLibraryScreenState extends State<RemedyLibraryScreen> {
     const SizedBox(height:10),const Text(navagrahaMeaning,textAlign:TextAlign.center,style:TextStyle(fontSize:11,color:AppTheme.muted,height:1.5)),
   ]))));
   Widget _yantraList()=>Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-    _card(title:'Navagraha Yantra',subtitle:'The PDF includes a Navagraha Yantra illustration on page 8',icon:Icons.grid_on,onTap:()=>_showText('Navagraha Yantra','The source describes yantras on paper, Bhojpatra, copper, gold or silver. It says mantra, suitable Nakshatra, Tithi and Yoga are considered in preparation and purification. The supplied PDF image should be used as the reference artwork.')),
+    _card(title:'Nine Yantra source plate',subtitle:'Nine low-resolution Yantra illustrations appear on PDF page 8; original image is not bundled in this build',icon:Icons.grid_on,onTap:()=>_showText('Navagraha Yantra','The source describes yantras on paper, Bhojpatra, copper, gold or silver. It says mantra, suitable Nakshatra, Tithi and Yoga are considered in preparation and purification. The supplied PDF image should be used as the reference artwork.')),
     _notice('Source illustration note','PDF page 8 contains a plate of nine Yantra illustrations. The embedded page image is low resolution and its individual inscriptions are not reliably legible, so the app does not recreate or relabel the yantra grids. PDF page 7 provides the general material and preparation notes.'),
   ]);
   Widget _rudrakshaList()=>Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
     const Text('Rudraksha catalogue',style:TextStyle(fontSize:15,fontWeight:FontWeight.w800)),
+    const SizedBox(height:5),
+    const Text('The source illustration on PDF page 20 is not yet bundled as an in-app image. This list preserves its Gauri Shankar and 1–15 Mukhi labels without inventing descriptions.',style:TextStyle(fontSize:10,color:AppTheme.muted,height:1.45)),
     const SizedBox(height:5),const Text('The PDF page 20 illustrates Gauri Shankar and 1–15 Mukhi Rudraksha. It does not provide Mukhi-wise benefits or detailed wearing instructions.',style:TextStyle(fontSize:10,color:AppTheme.muted,height:1.5)),
     const SizedBox(height:10),
     for(final name in rudrakshaNames) _card(title:name,subtitle:'Illustrated in the source; detailed properties not supplied',icon:Icons.circle_outlined,onTap:()=>_showText(name,'The uploaded PDF shows this Rudraksha illustration but does not provide a detailed description, deity association or wearing rule for this entry. No additional benefit is inferred.')),

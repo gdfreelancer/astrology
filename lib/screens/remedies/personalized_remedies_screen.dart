@@ -119,6 +119,12 @@ class _PersonalizedRemediesScreenState extends State<PersonalizedRemediesScreen>
           Text(context.tr('remedy_assessment_explain'),style:TextStyle(fontSize:10,height:1.5,color:AppTheme.muted)),
           const SizedBox(height:9),
           for(var i=0;i<_factors.length;i++) _factorCard(i+1,_factors[i]),
+          const SizedBox(height:16),
+          const Text('Graha references in this Kundali',style:TextStyle(fontSize:14,fontWeight:FontWeight.w900,color:AppTheme.ink)),
+          const SizedBox(height:5),
+          const Text('These are chart-linked reference entries, not remedy prescriptions. Open the mantra and gemstone libraries to read the source material.',style:TextStyle(fontSize:10,height:1.45,color:AppTheme.muted)),
+          const SizedBox(height:8),
+          _grahaReferences(),
           const SizedBox(height:12),_recommendations(),
         ],
       ],
@@ -174,6 +180,31 @@ class _PersonalizedRemediesScreenState extends State<PersonalizedRemediesScreen>
           style: const TextStyle(fontSize: 10,height: 1.45,color: AppTheme.muted)),
       ]),
     );
+  }
+
+  Widget _grahaReferences() {
+    final chart = _chart!.kundaliChart;
+    return Column(children:[
+      for(final graha in chart.grahas) Builder(builder:(context) {
+        final id = graha.name.toLowerCase();
+        final reference = remedyGrahas.firstWhere((item)=>item.id==id);
+        final sign = kundaliRashiNames[graha.signIndex];
+        return Container(
+          margin: const EdgeInsets.only(bottom:7),
+          padding: const EdgeInsets.all(11),
+          decoration: BoxDecoration(color:Colors.white,borderRadius:BorderRadius.circular(12),border:Border.all(color:const Color(0xFFEAE5EF))),
+          child: Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+            Row(children:[
+              Expanded(child:Text(graha.name,style:const TextStyle(fontSize:11,fontWeight:FontWeight.w800))),
+              Text('$sign · House ${graha.houseNumber}',style:const TextStyle(fontSize:9,color:AppTheme.muted)),
+              if(graha.isRetrograde) const Padding(padding:EdgeInsets.only(left:5),child:Text('℞',style:TextStyle(fontWeight:FontWeight.w900,color:AppTheme.plum))),
+            ]),
+            const SizedBox(height:5),
+            Text('Mantra reference: ${reference.mantra} · PDF count: ${reference.count}',style:const TextStyle(fontSize:10,height:1.4,color:AppTheme.muted)),
+          ]),
+        );
+      }),
+    ]);
   }
 
   Widget _factorCard(int n,_AssessmentFactor f)=>Container(margin:const EdgeInsets.only(bottom:7),padding:const EdgeInsets.all(12),decoration:BoxDecoration(color:Colors.white,borderRadius:BorderRadius.circular(13),border:Border.all(color:const Color(0xFFEAE5EF))),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
