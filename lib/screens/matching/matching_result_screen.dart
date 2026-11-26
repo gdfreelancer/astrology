@@ -10,6 +10,7 @@ import '../../models/kundali/kundali_graha.dart';
 import '../../theme/app_theme.dart';
 import '../../services/matching/advanced_matching_service.dart';
 import '../../services/matching/south_indian_porutham_service.dart';
+import '../../services/varga_chart_service.dart';
 
 
 String _matchingRashi(int index) {
@@ -386,6 +387,8 @@ class _AdvancedCompatibilitySection extends StatelessWidget {
   final MatchingReport report;
   @override Widget build(BuildContext context) {
     final a=AdvancedMatchingService.calculate(bride:report.bride.kundaliChart,groom:report.groom.kundaliChart);
+    final brideD9=report.bride.kundaliChart==null?null:VargaChartService.calculate(report.bride.kundaliChart!,9);
+    final groomD9=report.groom.kundaliChart==null?null:VargaChartService.calculate(report.groom.kundaliChart!,9);
     return Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
       Text(context.tr('advanced_compatibility'),style:const TextStyle(fontSize:15,fontWeight:FontWeight.w800,color:AppTheme.ink)),
       const SizedBox(height:5),Text(context.tr('advanced_compatibility_help'),style:const TextStyle(fontSize:10,color:AppTheme.muted,height:1.45)),
@@ -393,11 +396,40 @@ class _AdvancedCompatibilitySection extends StatelessWidget {
       _AdvancedPersonCard(name:report.bride.name,assessment:a.brideManglik,profile:a.brideSeventhHouse),
       const SizedBox(height:8),
       _AdvancedPersonCard(name:report.groom.name,assessment:a.groomManglik,profile:a.groomSeventhHouse),
+      if(brideD9!=null&&groomD9!=null)...[
+        const SizedBox(height:14),
+        const Text('Navamsa (D9) comparison',style:TextStyle(fontSize:12,fontWeight:FontWeight.w800,color:AppTheme.plum)),
+        const SizedBox(height:7),
+        Row(crossAxisAlignment:CrossAxisAlignment.start,children:[
+          Expanded(child:_NavamsaCard(name:report.bride.name,chart:brideD9)),
+          const SizedBox(width:8),
+          Expanded(child:_NavamsaCard(name:report.groom.name,chart:groomD9)),
+        ]),
+      ],
       const SizedBox(height:9),
       Container(padding:const EdgeInsets.all(12),decoration:BoxDecoration(color:const Color(0xFFFFF6E8),borderRadius:BorderRadius.circular(14)),child:Text(context.tr('advanced_compatibility_note'),style:const TextStyle(fontSize:9.5,height:1.5,color:Color(0xFF795D36))))
     ]);
   }
 }
+class _NavamsaCard extends StatelessWidget {
+  const _NavamsaCard({required this.name,required this.chart});
+  final String name;final VargaChart chart;
+  @override Widget build(BuildContext context){
+    String sign(int i)=>_matchingRashi(i);
+    final venus=chart.planets.where((p)=>p.name=='Venus').firstOrNull;
+    final jupiter=chart.planets.where((p)=>p.name=='Jupiter').firstOrNull;
+    final seventh=chart.inHouse(7).map((p)=>p.name).join(', ');
+    return Container(padding:const EdgeInsets.all(11),decoration:BoxDecoration(color:Colors.white,borderRadius:BorderRadius.circular(13),border:Border.all(color:const Color(0xFFEAE5EF))),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+      Text(name,style:const TextStyle(fontSize:10,fontWeight:FontWeight.w800,color:AppTheme.ink)),
+      const SizedBox(height:7),
+      _AnalysisLine(label:'D9 Lagna',value:sign(chart.ascendantSignIndex)),
+      _AnalysisLine(label:'Venus',value:venus==null?'—':sign(venus.signIndex)),
+      _AnalysisLine(label:'Jupiter',value:jupiter==null?'—':sign(jupiter.signIndex)),
+      _AnalysisLine(label:'7th house',value:seventh.isEmpty?'—':seventh),
+    ]));
+  }
+}
+
 class _AdvancedPersonCard extends StatelessWidget {
   const _AdvancedPersonCard({required this.name,required this.assessment,required this.profile});
   final String name; final ManglikAssessment assessment; final HouseCompatibilityProfile profile;
