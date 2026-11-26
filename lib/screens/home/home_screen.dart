@@ -15,6 +15,7 @@ import '../muhurat/muhurat_screen.dart';
 import '../panchang/panchang_screen.dart';
 import '../kundali/create_kundali_screen.dart';
 import '../rashi/rashi_list_screen.dart';
+import '../graha/graha_list_screen.dart';
 import '../settings/settings_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -200,6 +201,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         description: context.tr('all_rashis_desc'),
                         tint: const Color(0xFFF0EAFE),
                         onTap: () => _open(const RashiListScreen()),
+                      ),
+                      FeatureCard(
+                        emoji: '☉',
+                        title: context.tr('all_grahas'),
+                        description: context.tr('all_grahas_desc'),
+                        tint: const Color(0xFFFFF0D9),
+                        onTap: () => _open(const GrahaListScreen()),
                       ),
                       FeatureCard(
                         emoji: '💞',
