@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_locale.dart';
 import '../../theme/app_theme.dart';
 import 'graha_data.dart';
+import 'graha_extended_data.dart';
 
 class GrahaDetailScreen extends StatelessWidget {
   const GrahaDetailScreen({super.key, required this.graha});
@@ -13,6 +14,7 @@ class GrahaDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final language = AppLocale.locale.value.languageCode;
     final name = grahaDisplayName(graha, language);
+    final extended = grahaExtendedInfo[graha.id]!;
 
     return Scaffold(
       body: CustomScrollView(
@@ -130,6 +132,47 @@ class GrahaDetailScreen extends StatelessWidget {
                   (context.tr('graha_deity'), graha.deity, 'ॐ'),
                   (context.tr('graha_dasha_period'), '${graha.dashaYears} ${context.tr('graha_years')}', '◷'),
                 ]),
+                const SizedBox(height: 22),
+                _sectionTitle(context.tr('graha_phala'),
+                    context.tr('graha_phala_subtitle')),
+                const SizedBox(height: 10),
+                _infoCard(extended.generalResults),
+                const SizedBox(height: 20),
+                _sectionTitle(context.tr('graha_rashi_phala'),
+                    context.tr('graha_rashi_phala_subtitle')),
+                const SizedBox(height: 8),
+                ...List.generate(12, (index) => Container(
+                  margin: const EdgeInsets.only(bottom: 7),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(13),
+                    border: Border.all(color: const Color(0xFFECE6F0)),
+                  ),
+                  child: ExpansionTile(
+                    tilePadding: const EdgeInsets.symmetric(horizontal: 14),
+                    childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
+                    dense: true,
+                    title: Text(grahaRashiNames[index],
+                      style: const TextStyle(fontSize: 12,
+                        fontWeight: FontWeight.w700, color: AppTheme.ink)),
+                    children: [Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(extended.signResults[index],
+                        style: const TextStyle(fontSize: 12,
+                          height: 1.55, color: AppTheme.ink)),
+                    )],
+                  ),
+                )),
+                const SizedBox(height: 14),
+                _sectionTitle(context.tr('graha_dosha'),
+                    context.tr('graha_dosha_subtitle')),
+                const SizedBox(height: 10),
+                _infoCard(extended.afflictions),
+                const SizedBox(height: 20),
+                _sectionTitle(context.tr('graha_mantra_when'),
+                    context.tr('graha_mantra_when_subtitle')),
+                const SizedBox(height: 10),
+                _infoCard(extended.mantraUse),
                 const SizedBox(height: 20),
                 _sectionTitle(context.tr('graha_mantra'),
                     context.tr('graha_mantra_subtitle')),
