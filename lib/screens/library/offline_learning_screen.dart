@@ -30,7 +30,7 @@ class _OfflineLearningScreenState extends State<OfflineLearningScreen> {
     (title:'Panchang basics',body:'Panchang combines Tithi, Vara, Nakshatra, Yoga and Karana. Their transitions are time- and location-dependent, especially when a day is judged from local sunrise.'),
     (title:'Yoga and Dosha',body:'Yogas are combinations with specific conditions; Dosha rules vary across schools. Check dignity, lordship, aspects, strength, cancellation and divisional charts before drawing conclusions.'),
   ];
-  static const _mantras=<({String planet,String mantra,String use,String note})>[
+  static const _mantraItems=<({String planet,String mantra,String use,String note})>[
     (planet:'Surya',mantra:'ॐ घृणिः सूर्याय नमः',use:'Traditionally recited at sunrise for Surya upasana, gratitude and discipline.',note:'Face the morning Sun only when comfortable; never look directly at the Sun.'),
     (planet:'Chandra',mantra:'ॐ सोमाय नमः',use:'Traditionally used on Mondays or during Chandra worship for calmness and emotional steadiness.',note:'A devotional practice; not a medical treatment.'),
     (planet:'Mangala',mantra:'ॐ अं अंगारकाय नमः',use:'Traditionally recited on Tuesdays for courage, patience and disciplined action.',note:'Choose a simple, consistent practice rather than fear-based remedies.'),
@@ -96,7 +96,7 @@ class _OfflineLearningScreenState extends State<OfflineLearningScreen> {
     const Text('Traditional mantra reference',style:TextStyle(fontSize:17,fontWeight:FontWeight.w800,color:AppTheme.ink)),
     const SizedBox(height:5),const Text('Common devotional options and customary contexts. Mantra traditions and pronunciation may differ.',style:TextStyle(fontSize:11,color:AppTheme.muted)),
     const SizedBox(height:12),
-    for(final item in _mantras) Card(elevation:0,color:Colors.white,shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(14),side:const BorderSide(color:Color(0xFFEAE5EF))),child:ExpansionTile(title:Text(item.planet,style:const TextStyle(fontSize:12,fontWeight:FontWeight.w800)),subtitle:Text(item.mantra,style:const TextStyle(fontSize:13,color:AppTheme.plum)),childrenPadding:const EdgeInsets.fromLTRB(15,0,15,15),children:[
+    for(final item in _mantraItems) Card(elevation:0,color:Colors.white,shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(14),side:const BorderSide(color:Color(0xFFEAE5EF))),child:ExpansionTile(title:Text(item.planet,style:const TextStyle(fontSize:12,fontWeight:FontWeight.w800)),subtitle:Text(item.mantra,style:const TextStyle(fontSize:13,color:AppTheme.plum)),childrenPadding:const EdgeInsets.fromLTRB(15,0,15,15),children:[
       Align(alignment:Alignment.centerLeft,child:Text('When traditionally used',style:TextStyle(fontSize:10,fontWeight:FontWeight.w800,color:AppTheme.ink))),
       const SizedBox(height:4),Text(item.use,style:const TextStyle(fontSize:11,height:1.45,color:AppTheme.muted)),
       const SizedBox(height:8),Text(item.note,style:const TextStyle(fontSize:10,height:1.4,color:Color(0xFF8B6A3C))),
