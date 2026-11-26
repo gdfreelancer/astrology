@@ -11,17 +11,33 @@ class AdvancedChartAnalysisScreen extends StatelessWidget {
     final aspects=AdvancedChartAnalysisService.aspects(chart);
     final conditions=AdvancedChartAnalysisService.conditions(chart);
     final yogas=AdvancedChartAnalysisService.yogas(chart);
-    return DefaultTabController(length:3,child:Scaffold(
+    final strength=AdvancedChartAnalysisService.strengthIndicators(chart);
+    return DefaultTabController(length:4,child:Scaffold(
       appBar:AppBar(title:const Text('Advanced chart analysis',style:TextStyle(fontSize:17,fontWeight:FontWeight.w800)),
         bottom:const TabBar(isScrollable:true,labelColor:AppTheme.plum,tabs:[
-          Tab(text:'Graha Drishti'),Tab(text:'Avastha & dignity'),Tab(text:'Yoga checks'),
+          Tab(text:'Graha Drishti'),Tab(text:'Avastha & dignity'),Tab(text:'Yoga checks'),Tab(text:'Strength indicators'),
         ])),
       body:TabBarView(children:[
-        _AspectList(aspects:aspects),_ConditionList(conditions:conditions),_YogaList(yogas:yogas),
+        _AspectList(aspects:aspects),_ConditionList(conditions:conditions),_YogaList(yogas:yogas),_StrengthList(strength:strength),
       ]),
     ));
   }
 }
+class _StrengthList extends StatelessWidget {
+  const _StrengthList({required this.strength});
+  final List<GrahaStrengthIndicator> strength;
+  @override Widget build(BuildContext context)=>ListView(padding:const EdgeInsets.all(16),children:[
+    const _Notice('This is a partial strength reference, not a calculated Shadbala report. It shows classical Naisargika Bala constants, a coarse house-based Dig Bala direction indicator and motion status. Full Shadbala requires exact house midpoints, divisional dignity, birth-time factors, declination, planetary war and aspect geometry; no total or ranking is fabricated.'),
+    const SizedBox(height:10),
+    for(final item in strength) Container(margin:const EdgeInsets.only(bottom:9),padding:const EdgeInsets.all(14),decoration:BoxDecoration(color:Colors.white,borderRadius:BorderRadius.circular(15),border:Border.all(color:const Color(0xFFEAE5EF))),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+      Row(children:[Text(item.planet.symbol,style:const TextStyle(fontSize:18,color:AppTheme.plum,fontWeight:FontWeight.w900)),const SizedBox(width:9),Expanded(child:Text(item.planet.name,style:const TextStyle(fontSize:12,fontWeight:FontWeight.w800))),Text(item.naisargikaVirupa.toStringAsFixed(2)+' virupa',style:const TextStyle(fontSize:10,color:AppTheme.plum,fontWeight:FontWeight.w800))]),
+      const SizedBox(height:7),Text('Naisargika Bala · directional peak: House ${item.directionalPeakHouse}',style:const TextStyle(fontSize:10,fontWeight:FontWeight.w700,color:AppTheme.ink)),
+      const SizedBox(height:4),Text(item.directionalNote,style:const TextStyle(fontSize:9.5,color:AppTheme.muted)),
+      const SizedBox(height:5),Text(item.motionNote,style:const TextStyle(fontSize:9.5,color:AppTheme.muted)),
+    ])),
+  ]);
+}
+
 class _AspectList extends StatelessWidget {
   const _AspectList({required this.aspects});
   final List<GrahaAspect> aspects;
