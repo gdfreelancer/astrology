@@ -75,7 +75,52 @@ class AdvancedChartAnalysisService {
       final gap=((jupiter.houseNumber-moon.houseNumber+12)%12)+1;
       if([1,4,7,10].contains(gap)) result.add(const YogaFinding('Gajakesari Yoga','Jupiter occupies a Kendra from the Moon.','This is only the basic condition; classical strength, dignity, affliction and cancellation rules are not fully evaluated.'));
     }
-    if(result.isEmpty) result.add(const YogaFinding('No supported placement yoga detected','No supported basic conjunction or Moon-Jupiter Kendra condition was found.','This is not a complete yoga scan; absence here does not mean the chart has no yogas.'));
+    final signLords=['Mars','Venus','Mercury','Moon','Sun','Mercury','Venus','Mars','Jupiter','Saturn','Saturn','Jupiter'];
+    int houseSign(int house)=>(chart.ascendantSignIndex+house-1)%12;
+    KundaliGraha? lordForHouse(int house)=>p(signLords[houseSign(house)]);
+    bool linked(KundaliGraha? first,KundaliGraha? second) {
+      if(first==null||second==null)return false;
+      if(first.name==second.name||first.signIndex==second.signIndex)return true;
+      final found=aspects(chart);
+      return found.any((a)=>a.planet.name==first.name&&a.occupants.any((g)=>g.name==second.name))||
+        found.any((a)=>a.planet.name==second.name&&a.occupants.any((g)=>g.name==first.name));
+    }
+    var rajYoga=false;
+    for(final kendra in [1,4,7,10]) {
+      for(final trikona in [5,9]) {
+        if(linked(lordForHouse(kendra),lordForHouse(trikona)))rajYoga=true;
+      }
+    }
+    if(rajYoga) result.add(const YogaFinding('Raja Yoga (basic lord connection)','A Kendra lord and a Trikona lord are conjunct, in the same sign or mutually connected by supported whole-sign aspects.','A preliminary connection scan only. Functional beneficence, exact exchange, dignity, strength, combustion and cancellation are not fully judged.'));
+    var dhanaYoga=false;
+    for(final wealthHouse in [2,11]) {
+      for(final fortuneHouse in [5,9]) {
+        if(linked(lordForHouse(wealthHouse),lordForHouse(fortuneHouse)))dhanaYoga=true;
+      }
+    }
+    if(dhanaYoga) result.add(const YogaFinding('Dhana Yoga (basic lord connection)','A 2nd/11th lord is connected with a 5th/9th lord by conjunction, same sign or supported aspect.','This does not estimate wealth or guarantee financial outcomes; house strength and the full chart must be assessed.'));
+    for(final dusthana in [6,8,12]) {
+      final lord=lordForHouse(dusthana);
+      if(lord!=null&&[6,8,12].contains(lord.houseNumber)) {
+        final name=switch(dusthana){6=>'Harsha Yoga',8=>'Sarala Yoga',_=>'Vimala Yoga'};
+        result.add(YogaFinding('Possible $name','The $dusthana-th house lord is placed in a 6th, 8th or 12th house.','A basic Vipreet Raja Yoga placement condition. Check the exact house lord, dignity, associations and classical exceptions before interpretation.'));
+      }
+    }
+    final moonSign=moon?.signIndex;
+    for(final graha in chart.grahas) {
+      final debilSign=_debil[graha.name];
+      if(debilSign==null||graha.signIndex!=debilSign)continue;
+      final debilLord=p(signLords[debilSign]);
+      final exaltSign=_exalt[graha.name]!;
+      final exaltLord=p(signLords[exaltSign]);
+      bool kendraFrom(int sign)=>[1,4,7,10].contains(((sign-chart.ascendantSignIndex+12)%12)+1);
+      bool kendraFromMoon(int sign)=>moonSign!=null&&[1,4,7,10].contains(((sign-moonSign+12)%12)+1);
+      if((debilLord!=null&&(kendraFrom(debilLord.signIndex)||kendraFromMoon(debilLord.signIndex)))||
+         (exaltLord!=null&&(kendraFrom(exaltLord.signIndex)||kendraFromMoon(exaltLord.signIndex)))) {
+        result.add(YogaFinding('Possible Neecha Bhanga','${graha.name} is in its debilitation sign and a cancellation-related lord is in a Kendra from Lagna or Moon.','This checks two commonly cited cancellation conditions only. Neecha Bhanga Raja Yoga has additional rules and strength requirements.'));
+      }
+    }
+    if(result.isEmpty) result.add(const YogaFinding('No supported placement yoga detected','No supported placement combination was found by this limited scan.','This is not a complete yoga scan; absence here does not mean the chart has no yogas.'));
     return result;
   }
   static double _distance(double a,double b){final d=(a-b).abs()%360;return math.min(d,360-d);}
