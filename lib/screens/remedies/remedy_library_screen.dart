@@ -294,7 +294,7 @@ class _RemedyLibraryScreenState extends State<RemedyLibraryScreen> {
     const SizedBox(height:10),_card(title:'Shanti Shloka',subtitle:'Sanskrit verse and meaning',icon:Icons.self_improvement,onTap:()=>_showShloka()),
     _notice('Traditional worship sequence','PDF page 6 describes Graha worship, mantra japa, Dashansh Homa, Tarpan, Marjan and Brahmin Bhojan as a traditional sequence. These are not mandatory steps for every user; ritual practice should be guided by a knowledgeable practitioner.'),
     const SizedBox(height:10),
-    for(final g in remedyGrahas) _card(title:g.name,subtitle:'Deity associations: ${g.deities}',icon:Icons.temple_outlined,onTap:()=>_showText(g.name,'Associated deities listed by the source: ${g.deities}. The PDF labels this as a traditional source-specific association, including Lal Kitab references.')),
+    for(final g in remedyGrahas) _card(title:g.name,subtitle:'Deity associations: ${g.deities}',icon:Icons.account_balance_outlined,onTap:()=>_showText(g.name,'Associated deities listed by the source: ${g.deities}. The PDF labels this as a traditional source-specific association, including Lal Kitab references.')),
   ]);
   Widget _shani()=>Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
     const Text('Three-phase traditional reference',style:TextStyle(fontSize:15,fontWeight:FontWeight.w800)),
