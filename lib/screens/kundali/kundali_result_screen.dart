@@ -166,7 +166,7 @@ class KundaliResultScreen extends StatelessWidget {
               title: context.tr('gochar_yogas'),
               subtitle: context.tr('gochar_yogas_short'),
               onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => GocharYogasScreen(chart: birthResult.kundaliChart),
+                builder: (_) => GocharYogasScreen(chart: birthResult.kundaliChart, siderealMoonLongitude: birthResult.siderealMoonLongitude, birthDate: birthResult.birthLocal),
               )),
             ),
             const SizedBox(height: 8),

@@ -3,11 +3,14 @@ import '../../l10n/app_locale.dart';
 import '../../models/kundali/kundali_graha.dart';
 import '../../services/gochar_service.dart';
 import '../../services/ashtakavarga_service.dart';
+import '../../services/vimshottari_dasha_service.dart';
 import '../../theme/app_theme.dart';
 
 class GocharYogasScreen extends StatefulWidget {
-  const GocharYogasScreen({super.key,required this.chart});
+  const GocharYogasScreen({super.key,required this.chart,required this.siderealMoonLongitude,required this.birthDate});
   final KundaliChart chart;
+  final double siderealMoonLongitude;
+  final DateTime birthDate;
   @override State<GocharYogasScreen> createState()=>_GocharYogasScreenState();
 }
 class _GocharYogasScreenState extends State<GocharYogasScreen> {
@@ -22,6 +25,9 @@ class _GocharYogasScreenState extends State<GocharYogasScreen> {
     final report=_report;
     final saturn=report.transits.firstWhere((p)=>p.name=='Saturn');
     final ashtakavarga=AshtakavargaService.calculate(widget.chart);
+    final dasha=VimshottariDashaService.calculate(siderealMoonLongitude:widget.siderealMoonLongitude,birthDate:widget.birthDate);
+    final currentMaha=dasha.mahadashaAt(_date);
+    final currentAntar=dasha.antardashaAt(_date);
     final phase=report.sadeSati.phase;
     final natalMoonSign=report.sadeSati.moonSignIndex;
     final natalLagnaSign=widget.chart.ascendantSignIndex;
@@ -32,6 +38,15 @@ class _GocharYogasScreenState extends State<GocharYogasScreen> {
           const Icon(Icons.calendar_month_rounded,color:AppTheme.plum),const SizedBox(width:10),
           Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(context.tr('transit_date'),style:const TextStyle(fontSize:10,color:AppTheme.muted)),Text('${_date.day.toString().padLeft(2,'0')}/${_date.month.toString().padLeft(2,'0')}/${_date.year}',style:const TextStyle(fontSize:15,fontWeight:FontWeight.w800,color:AppTheme.ink))])),
           TextButton(onPressed:_chooseDate,child:Text(context.tr('change_date')))
+        ])),
+        const SizedBox(height:14),
+        Container(padding:const EdgeInsets.all(14),decoration:BoxDecoration(color:const Color(0xFFF2EDF8),borderRadius:BorderRadius.circular(15)),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+          const Text('Dasha + Gochar context',style:TextStyle(fontSize:12,fontWeight:FontWeight.w900,color:AppTheme.plum)),
+          const SizedBox(height:6),
+          Text('Mahadasha: ${currentMaha?.planet??'Not available'}',style:const TextStyle(fontSize:11,fontWeight:FontWeight.w800,color:AppTheme.ink)),
+          Text('Antardasha: ${currentAntar?.planet??'Not available'}',style:const TextStyle(fontSize:10,color:AppTheme.muted)),
+          const SizedBox(height:4),
+          const Text('Use the running Dasha together with transit positions and Ashtakavarga support; this screen does not generate event predictions.',style:TextStyle(fontSize:9.5,height:1.4,color:AppTheme.muted)),
         ])),
         const SizedBox(height:16),
         Text(context.tr('transit_positions'),style:const TextStyle(fontSize:15,fontWeight:FontWeight.w800,color:AppTheme.ink)),
