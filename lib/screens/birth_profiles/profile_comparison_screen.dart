@@ -11,23 +11,25 @@ class ProfileComparisonScreen extends StatefulWidget {
 }
 class _ProfileComparisonScreenState extends State<ProfileComparisonScreen> {
   List<BirthProfile> _profiles=[];
+  final Map<String,BirthChartResult?> _charts={};
   String? _first,_second;
   bool _loading=true;
   @override void initState(){super.initState();_load();}
   Future<void> _load()async{
     final items=await BirthProfileService.getAll();
     if(!mounted)return;
+    for(final p in items){
+      try{
+        _charts[p.id]=BirthChartService.calculate(
+          birthDate:p.birthDate,hour:p.hour,minute:p.minute,timeZoneId:p.timeZoneId,
+          placeName:p.placeName,latitude:p.latitude,longitude:p.longitude,gender:p.gender,
+        );
+      }catch(_){_charts[p.id]=null;}
+    }
+    if(!mounted)return;
     setState((){_profiles=items;_loading=false;if(items.length>1){_first=items[0].id;_second=items[1].id;}else if(items.isNotEmpty){_first=items[0].id;}});
   }
-  BirthChartResult? _chart(String? id){
-    if(id==null)return null;
-    final p=_profiles.where((x)=>x.id==id).firstOrNull;
-    if(p==null)return null;
-    try{return BirthChartService.calculate(
-      birthDate:p.birthDate,hour:p.hour,minute:p.minute,timeZoneId:p.timeZoneId,
-      placeName:p.placeName,latitude:p.latitude,longitude:p.longitude,gender:p.gender,
-    );}catch(_){return null;}
-  }
+  BirthChartResult? _chart(String? id)=>id==null?null:_charts[id];
   @override Widget build(BuildContext context){
     final a=_chart(_first),b=_chart(_second);
     return Scaffold(appBar:AppBar(title:const Text('Kundali comparison',style:TextStyle(fontSize:17,fontWeight:FontWeight.w800))),
