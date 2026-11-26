@@ -23,9 +23,18 @@ void main() {
     test('maps Nakshatra and Pada boundaries', () {
       expect(AstrologyMath.nakshatraIndex(0), 0);
       expect(AstrologyMath.nakshatraIndex(360), 0);
-      expect(AstrologyMath.nakshatraIndex(13 + 1 / 3), 1);
+      expect(
+        AstrologyMath.nakshatraIndex(
+          AstrologyMath.degreesPerNakshatra - 1e-9,
+        ),
+        0,
+      );
+      expect(
+        AstrologyMath.nakshatraIndex(AstrologyMath.degreesPerNakshatra),
+        1,
+      );
       expect(AstrologyMath.padaNumber(0), 1);
-      expect(AstrologyMath.padaNumber(3.3333333334), 2);
+      expect(AstrologyMath.padaNumber(AstrologyMath.degreesPerPada), 2);
     });
 
     test('maps all 30 tithis and 27 yogas within valid ranges', () {
