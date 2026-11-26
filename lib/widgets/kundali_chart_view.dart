@@ -138,15 +138,29 @@ class KundaliChartView extends StatelessWidget {
   }
 
   Widget _eastChart(BuildContext context) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: 12,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3, crossAxisSpacing: 3, mainAxisSpacing: 3,
-        childAspectRatio: 1.18,
+    // East Indian square layout: houses remain fixed while the Rashi labels
+    // are derived from the actual Ascendant sign.
+    const slots = <int>[0,1,2,3,7,11,15,14,13,12,8,4];
+    final cells = List<Widget>.filled(16, const SizedBox.shrink());
+    for (var house = 1; house <= 12; house++) {
+      cells[slots[house - 1]] = _houseCell(context, house, compact: true);
+    }
+    cells[5] = _centerLabel(context, 'EAST INDIAN', 'House-based layout');
+    cells[6] = _centerLabel(context, 'JANMA KUNDALI', 'D1 · Rashi chart');
+    cells[9] = _centerLabel(context, 'LAGNA', _rashi(chart.ascendantSignIndex));
+    cells[10] = _centerLabel(context, 'ASC', _degree(chart.ascendantLongitude));
+    return AspectRatio(
+      aspectRatio: 1,
+      child: GridView.count(
+        physics: const NeverScrollableScrollPhysics(),
+        crossAxisCount: 4,
+        mainAxisSpacing: 2,
+        crossAxisSpacing: 2,
+        children: cells.map((cell) => Container(
+          decoration: BoxDecoration(border: Border.all(color: const Color(0xFFD9C5A6), width: .8)),
+          child: cell,
+        )).toList(),
       ),
-      itemBuilder: (context, index) => _houseCell(context, index + 1),
     );
   }
 
