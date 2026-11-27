@@ -13,6 +13,7 @@ void main() {
         birthDate: DateTime(2000, 1, 1),
         hour: 2,
         minute: 30,
+        second: 45,
         timeZoneId: 'Asia/Kolkata',
         placeName: 'Test location',
         latitude: 23.0225,
@@ -21,7 +22,7 @@ void main() {
       );
 
       expect(result.birthLocal, isA<tz.TZDateTime>());
-      expect(result.birthUtc, DateTime.utc(1999, 12, 31, 21));
+      expect(result.birthUtc, DateTime.utc(1999, 12, 31, 21, 0, 45));
       expect(result.timeZoneId, 'Asia/Kolkata');
     });
 
