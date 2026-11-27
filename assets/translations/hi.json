@@ -1181,5 +1181,15 @@
   "dashboard_sade_sati_active": "साढ़ेसाती चल रही है",
   "dashboard_sade_sati_inactive": "साढ़ेसाती सक्रिय नहीं है",
   "dashboard_dhaiya_active": "शनि ढैय्या का संकेत है",
-  "gochar_shani": "शनि गोचर"
+  "gochar_shani": "शनि गोचर",
+  "advanced_graha_profile": "उन्नत ग्रह प्रोफ़ाइल",
+  "graha_profile_method_note": "पारंपरिक D1 भाव-स्वामी परीक्षण और D1/D9 तुलना। कार्यात्मक स्वभाव लग्न पर निर्भर करता है; इसे स्थिति, दृष्टि, बल और पूरी कुंडली के साथ देखें। यह पूर्ण षड्बल या भविष्यवाणी रिपोर्ट नहीं है।",
+  "natural_nature": "नैसर्गिक स्वभाव",
+  "functional_nature": "कार्यात्मक स्वभाव",
+  "owned_houses": "स्वामित्व वाले भाव",
+  "d1_d9_sign": "D1 / D9 राशि",
+  "placement_house_theme": "स्थिति का भाव-विषय",
+  "vargottama": "वर्गोत्तम",
+  "yogakaraka": "योगकारक",
+  "navamsa": "नवांश"
 }
