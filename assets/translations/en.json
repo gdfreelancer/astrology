@@ -1176,5 +1176,6 @@
   "current_antardasha": "Antardasha",
   "no_active_dasha": "No current period in the calculated timeline",
   "selected_profile_details": "Birth details used for your astrology calculations",
-  "loading": "Loading…"
+  "loading": "Loading…",
+  "recent_kundali_reports": "Recent Kundali reports"
 }
