@@ -1219,5 +1219,11 @@
   "varga_own_sign": "Own sign",
   "varga_friendly_sign": "Friendly sign",
   "varga_enemy_sign": "Enemy sign",
-  "varga_neutral_sign": "Neutral sign"
+  "varga_neutral_sign": "Neutral sign",
+  "varga_relation_own": "Own",
+  "varga_relation_great_friend": "Great friend",
+  "varga_relation_friend": "Friend",
+  "varga_relation_neutral": "Neutral",
+  "varga_relation_enemy": "Enemy",
+  "varga_relation_great_enemy": "Great enemy"
 }
