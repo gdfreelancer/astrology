@@ -351,6 +351,7 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
         hour: _birthTime!.hour,
         minute: _birthTime!.minute,
         second: _birthSecond,
+        timeAccuracy: _timeAccuracy,
         timeZoneId: _timeZoneId!,
         placeName: _placeController.text.trim(),
         latitude: _location!.latitude,
