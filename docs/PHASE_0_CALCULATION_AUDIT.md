@@ -97,7 +97,7 @@ Phase 0 does not remove or redesign any existing feature. It preserves:
 
 ## Next validation milestone
 
-Before Phase 1 introduces more strength, Yoga or Dosha calculations, add independently sourced reference fixtures for:
+Before a future advanced strength, Yoga or Dosha expansion, add independently sourced reference fixtures for:
 
 1. Planetary longitudes at representative dates.
 2. Moon longitude and Nakshatra/Pada boundary cases.
