@@ -80,6 +80,7 @@ void main() {
           graha('Venus', 1),
           graha('Mars', 3),
           graha('Jupiter', 0),
+          graha('Rahu', 0),
           graha('Moon', 2),
         ]),
         groom: null,
@@ -90,7 +91,8 @@ void main() {
       expect(profile.seventhLord, 'Venus');
       expect(profile.seventhLordDignity, 'own');
       expect(profile.seventhLordHouse, 2);
-      expect(profile.seventhHouseAspectedBy, containsAll(['Mars', 'Jupiter']));\n      expect(profile.seventhHouseAspectedBy, isNot(contains('Rahu')));
+      expect(profile.seventhHouseAspectedBy, containsAll(['Mars', 'Jupiter']));
+      expect(profile.seventhHouseAspectedBy, isNot(contains('Rahu')));
     });
 
     test('creates a descriptive Navamsa seventh-house profile', () {
