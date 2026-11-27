@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_locale.dart';
 import '../../models/kundali/kundali_graha.dart';
 import '../../services/varga_chart_service.dart';
+import 'varga_strength_panel.dart';
 import '../../theme/app_theme.dart';
 
 class DivisionalChartsScreen extends StatefulWidget {
@@ -132,7 +133,9 @@ class _DivisionalChartsScreenState extends State<DivisionalChartsScreen> {
               rashiKeys: _rashiKeys,
               planetKeys: _planetKeys,
             ),
-          const SizedBox(height: 9),
+          const SizedBox(height: 18),
+          VargaStrengthPanel(chart: widget.chart),
+          const SizedBox(height: 12),
           Container(
             padding: const EdgeInsets.all(13),
             decoration: BoxDecoration(
