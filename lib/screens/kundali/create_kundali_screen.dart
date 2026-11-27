@@ -140,6 +140,7 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
         await Navigator.of(context).push(MaterialPageRoute<void>(
           builder: (_) => const BirthProfilesScreen(),
         ));
+        await _loadSelectedBirthProfile();
       }
       return;
     }
@@ -191,6 +192,7 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
       await Navigator.of(context).push(MaterialPageRoute<void>(
         builder: (_) => const BirthProfilesScreen(),
       ));
+      await _loadSelectedBirthProfile();
       return;
     }
     if (selectedId == null || !mounted) return;
@@ -237,8 +239,9 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
     nameController.dispose();
     if (name == null || !mounted) return;
     final now = DateTime.now();
+    final profileId = now.microsecondsSinceEpoch.toString();
     await BirthProfileService.save(BirthProfile(
-      id: now.microsecondsSinceEpoch.toString(),
+      id: profileId,
       name: name,
       gender: _gender,
       birthDate: _birthDate!,
@@ -251,6 +254,7 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
       longitude: _location!.longitude,
       timeZoneId: _timeZoneId!,
     ));
+    await BirthProfileService.select(profileId);
     if (mounted) _showMessage(context.tr('profile_saved'));
   }
 
