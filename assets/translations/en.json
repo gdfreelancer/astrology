@@ -1202,5 +1202,22 @@
   "mahadasha_start": "Mahadasha start",
   "mahadasha_end": "Mahadasha end",
   "antardasha_start": "Antardasha start",
-  "antardasha_end": "Antardasha end"
+  "antardasha_end": "Antardasha end",
+  "varga_strength_analysis": "Varga strength & dignity",
+  "vimsopaka_method_note": "Vimsopaka Bala is a separate 20-point measure based on sign-lord relationships across the selected divisional charts. It is not Shadbala and should be read alongside D1 and the relevant Varga.",
+  "vimsopaka_shadvarga": "Shadvarga · 6 divisions",
+  "vimsopaka_saptavarga": "Saptavarga · 7 divisions",
+  "vimsopaka_dashavarga": "Dashavarga · 10 divisions",
+  "vimsopaka_shodashavarga": "Shodashavarga · 16 divisions",
+  "vimsopaka_weights_note": "The displayed scheme uses BPHS chapter 7 weights (total 20). Varga dignity grades use the natal natural + temporary friendship relationship to each divisional sign lord. Other textual lineages may differ.",
+  "pushkara_navamsa": "Pushkara Navamsa",
+  "pushkara_bhaga": "Pushkara Bhaga",
+  "varga_flags_note": "Vargottama means the D1 and D9 signs match. Pushkara Navamsa follows a later commonly used degree table. Pushkara Bhaga uses the Jataka Parijata degree-band convention; applying it to all grahas is a common extension, not an uncontested rule.",
+  "varga_exalted": "Exalted",
+  "varga_debilitated": "Debilitated",
+  "varga_moolatrikona": "Moolatrikona",
+  "varga_own_sign": "Own sign",
+  "varga_friendly_sign": "Friendly sign",
+  "varga_enemy_sign": "Enemy sign",
+  "varga_neutral_sign": "Neutral sign"
 }
