@@ -86,7 +86,7 @@ class JyotishReferenceService {
       return bv.compareTo(av);
     });
     const roles7 = ['Atmakaraka','Amatyakaraka','Bhratrikaraka','Matrikaraka','Putrakaraka','Gnatikaraka','Darakaraka'];
-    const roles8 = ['Atmakaraka','Amatyakaraka','Bhratrikaraka','Matrikaraka','Putrakaraka','Gnatikaraka','Darakaraka','Pitṛkaraka'];
+    const roles8 = ['Atmakaraka','Amatyakaraka','Bhratrikaraka','Matrikaraka','Pitṛkaraka','Putrakaraka','Gnatikaraka','Darakaraka'];
     final roles = planets.length == 8 ? roles8 : roles7;
     return [for(var i=0;i<math.min(planets.length,roles.length);i++) CharaKaraka(roles[i],planets[i],planets[i].signDegree)];
   }
