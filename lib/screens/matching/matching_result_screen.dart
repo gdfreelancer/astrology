@@ -413,12 +413,12 @@ class _AdvancedCompatibilitySection extends StatelessWidget {
       _AdvancedPersonCard(name:report.groom.name,assessment:a.groomManglik,profile:a.groomSeventhHouse),
       if(brideD9!=null&&groomD9!=null)...[
         const SizedBox(height:14),
-        const Text('Navamsa (D9) comparison',style:TextStyle(fontSize:12,fontWeight:FontWeight.w800,color:AppTheme.plum)),
+        Text(context.tr('navamsa_comparison_title'),style:const TextStyle(fontSize:12,fontWeight:FontWeight.w800,color:AppTheme.plum)),
         const SizedBox(height:7),
         Row(crossAxisAlignment:CrossAxisAlignment.start,children:[
-          Expanded(child:_NavamsaCard(name:report.bride.name,chart:brideD9)),
+          Expanded(child:_NavamsaCard(name:report.bride.name,chart:brideD9,profile:a.brideNavamsa!)),
           const SizedBox(width:8),
-          Expanded(child:_NavamsaCard(name:report.groom.name,chart:groomD9)),
+          Expanded(child:_NavamsaCard(name:report.groom.name,chart:groomD9,profile:a.groomNavamsa!)),
         ]),
       ],
       const SizedBox(height:9),
@@ -427,20 +427,21 @@ class _AdvancedCompatibilitySection extends StatelessWidget {
   }
 }
 class _NavamsaCard extends StatelessWidget {
-  const _NavamsaCard({required this.name, required this.chart});
+  const _NavamsaCard({required this.name, required this.chart, required this.profile});
   final String name;
   final VargaChart chart;
+  final NavamsaCompatibilityProfile profile;
 
   @override
   Widget build(BuildContext context) {
     String sign(int value) => _matchingRashi(value);
     final venus = chart.planets.where((p) => p.name == 'Venus').firstOrNull;
     final jupiter = chart.planets.where((p) => p.name == 'Jupiter').firstOrNull;
-    final seventhSign = (chart.ascendantSignIndex + 6) % 12;
-    const lords = ['Mars','Venus','Mercury','Moon','Sun','Mercury','Venus','Mars','Jupiter','Saturn','Saturn','Jupiter'];
-    final seventhLord = lords[seventhSign];
-    final lord = chart.planets.where((p) => p.name == seventhLord).firstOrNull;
-    final occupants = chart.inHouse(7).map((p) => _matchingGraha(p.name)).join(', ');
+    final occupants = profile.seventhHouseOccupants.map(_matchingGraha).join(', ');
+    String dignity(String? value) => value == null ? '—' : context.tr('matching_dignity_$value');
+    final aspects = profile.seventhHouseAspectedBy.isEmpty
+        ? context.tr('none_listed')
+        : profile.seventhHouseAspectedBy.map(_matchingGraha).join(', ');
     return Container(
       padding: const EdgeInsets.all(11),
       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(13),
@@ -448,13 +449,15 @@ class _NavamsaCard extends StatelessWidget {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(name, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: AppTheme.ink)),
         const SizedBox(height: 7),
-        _AnalysisLine(label: context.tr('navamsa_lagna'), value: sign(chart.ascendantSignIndex)),
+        _AnalysisLine(label: context.tr('navamsa_lagna'), value: sign(profile.ascendantSign)),
         _AnalysisLine(label: context.tr('navamsa_venus'), value: venus == null ? '—' : sign(venus.signIndex)),
         _AnalysisLine(label: context.tr('navamsa_jupiter'), value: jupiter == null ? '—' : sign(jupiter.signIndex)),
-        _AnalysisLine(label: context.tr('navamsa_seventh_sign'), value: sign(seventhSign)),
+        _AnalysisLine(label: context.tr('navamsa_seventh_sign'), value: sign(profile.seventhHouseSign)),
         _AnalysisLine(label: context.tr('navamsa_seventh_occupants'), value: occupants.isEmpty ? context.tr('none_listed') : occupants),
         _AnalysisLine(label: context.tr('navamsa_seventh_lord'),
-          value: '${_matchingGraha(seventhLord)} · ${context.tr('house')} ${lord?.houseNumber ?? '—'}'),
+          value: '${_matchingGraha(profile.seventhLord)} · ${context.tr('house')} ${profile.seventhLordHouse ?? '—'}'),
+        _AnalysisLine(label: context.tr('seventh_lord_dignity'), value: dignity(profile.seventhLordDignity)),
+        _AnalysisLine(label: context.tr('seventh_house_aspected_by'), value: aspects),
       ]),
     );
   }
