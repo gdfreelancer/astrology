@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 /// Input guards shared by astrology calculations.
 ///
 /// These checks reject malformed inputs without changing valid historical
@@ -48,18 +46,5 @@ class AstrologyInputValidator {
       throw ArgumentError.value(value, 'value', 'Angle must be finite.');
     }
     return (value % 360 + 360) % 360;
-  }
-
-  static bool isValidCoordinates({
-    required double latitude,
-    required double longitude,
-  }) {
-    return latitude.isFinite &&
-        longitude.isFinite &&
-        latitude >= -90 &&
-        latitude <= 90 &&
-        longitude >= -180 &&
-        longitude <= 180 &&
-        !math.isNaN(latitude + longitude);
   }
 }
