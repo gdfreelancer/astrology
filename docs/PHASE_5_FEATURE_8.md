@@ -29,4 +29,4 @@ Moon illumination is estimated geometrically from the Sun–Moon angular separat
 
 ## Tests and verification
 
-Added `test/advanced_lunar_events_test.dart` for illumination bounds, phase labels, chronological event ordering, event categories and Sankranti sign indexes. Tests and Android build have not been executed in this environment. Run the manual GitHub Actions Android APK workflow on `dev` before release.
+Added `test/services/panchang_lunar_events_test.dart` covering illumination bounds, all supported phase labels, 90-day chronological UTC event ordering, phase-boundary coverage, Ekadashi metadata, Sankranti sign indexes and invalid-coordinate rejection. Tests and Android build have not been executed in this environment. Run the manual GitHub Actions Android APK workflow on `dev` before release.
