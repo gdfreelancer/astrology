@@ -1284,5 +1284,22 @@
   "yoga_name_neecha_bhanga_mercury": "નીચભંગ તપાસ · બુધ",
   "yoga_name_neecha_bhanga_jupiter": "નીચભંગ તપાસ · ગુરુ",
   "yoga_name_neecha_bhanga_venus": "નીચભંગ તપાસ · શુક્ર",
-  "yoga_name_neecha_bhanga_saturn": "નીચભંગ તપાસ · શનિ"
+  "yoga_name_neecha_bhanga_saturn": "નીચભંગ તપાસ · શનિ",
+  "manglik_mitigation_candidates": "તપાસવા જેવા પરંપરાગત શમન સંકેતો (આપમેળે દોષભંગ નહીં)",
+  "matching_mars_own_sign": "મંગળ પોતાની રાશિમાં છે",
+  "matching_mars_exalted_sign": "મંગળ ઉચ્ચ રાશિમાં છે",
+  "matching_jupiter_influence": "ગુરુની મંગળ પર દૃષ્ટિ છે",
+  "seventh_lord_dignity": "સપ્તમેશની રાશિ સ્થિતિ",
+  "seventh_house_aspected_by": "સપ્તમ ભાવ પર દૃષ્ટિ કરતા ગ્રહો",
+  "seventh_lord_aspected_by": "સપ્તમેશ પર દૃષ્ટિ કરતા ગ્રહો",
+  "matching_dignity_exalted": "ઉચ્ચ",
+  "matching_dignity_own": "સ્વરાશિ",
+  "matching_dignity_debilitated": "નીચ",
+  "matching_dignity_other": "અન્ય રાશિ",
+  "navamsa_lagna": "નવાંશ લગ્ન",
+  "navamsa_venus": "નવાંશમાં શુક્ર",
+  "navamsa_jupiter": "નવાંશમાં ગુરુ",
+  "navamsa_seventh_sign": "નવાંશ સાતમા ભાવની રાશિ",
+  "navamsa_seventh_occupants": "નવાંશ સાતમા ભાવના ગ્રહો",
+  "navamsa_seventh_lord": "નવાંશ સપ્તમેશ અને ભાવ"
 }
