@@ -9,6 +9,7 @@ import '../../services/birth_profile_service.dart';
 import '../../services/birth_chart_service.dart';
 import '../../services/vimshottari_dasha_service.dart';
 import '../../services/gochar_service.dart';
+import '../../services/kundali_history_service.dart';
 import '../../services/panchang_service.dart';
 import '../../services/settings/app_preferences_service.dart';
 import '../../theme/app_theme.dart';
@@ -43,6 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String? _dashaSummary;
   String? _gocharSummary;
   bool _loadingProfile = true;
+  List<RecentKundaliReport> _recentReports = [];
 
   @override
   void initState() {
@@ -50,6 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
     timezone_data.initializeTimeZones();
     _loadToday();
     _loadActiveProfile();
+    _loadRecentReports();
   }
 
   Future<void> _loadToday() async {
@@ -147,6 +150,69 @@ class _HomeScreenState extends State<HomeScreen> {
         _gocharSummary = null;
       });
     }
+  }
+
+  Future<void> _loadRecentReports() async {
+    final reports = await KundaliHistoryService.getRecent();
+    if (!mounted) return;
+    setState(() => _recentReports = reports);
+  }
+
+  void _openRecentReport(RecentKundaliReport report) {
+    _open(CreateKundaliScreen(initialProfile: report.profile));
+  }
+
+  Widget _buildRecentReports(BuildContext context) {
+    if (_recentReports.isEmpty) return const SizedBox.shrink();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _SectionHeading(title: context.tr('recent_kundali_reports')),
+        const SizedBox(height: 10),
+        for (final report in _recentReports.take(3))
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Material(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(14),
+              child: InkWell(
+                onTap: () => _openRecentReport(report),
+                borderRadius: BorderRadius.circular(14),
+                child: Container(
+                  padding: const EdgeInsets.all(13),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: const Color(0xFFEAE5EF)),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.history_rounded, color: AppTheme.plum),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(report.profile.name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+                            const SizedBox(height: 3),
+                            Text('${report.rashi} · ${report.nakshatra} · ${report.profile.placeName}',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(fontSize: 9, color: AppTheme.muted)),
+                          ],
+                        ),
+                      ),
+                      const Icon(Icons.chevron_right_rounded, color: AppTheme.plum),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
   }
 
   Future<void> _openBirthProfiles() async {
@@ -338,6 +404,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   _buildBirthProfileCard(context),
                   const SizedBox(height: 10),
                   _buildAstrologySummary(context),
+                  const SizedBox(height: 18),
+                  _buildRecentReports(context),
                   const SizedBox(height: 22),
                   _SectionHeading(
                     title: context.tr('today_panchang'),
