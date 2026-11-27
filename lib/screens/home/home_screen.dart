@@ -113,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
         longitude: profile.longitude,
         gender: profile.gender,
       );
-      final now = DateTime.now();
+      final now = tz.TZDateTime.now(tz.getLocation(profile.timeZoneId));
       final timeline = VimshottariDashaService.calculate(
         siderealMoonLongitude: chart.siderealMoonLongitude,
         birthDate: chart.birthLocal,
@@ -145,6 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
     } catch (_) {
       if (!mounted) return;
       setState(() {
+        _activeProfile = null;
         _loadingProfile = false;
         _dashaSummary = null;
         _gocharSummary = null;
