@@ -1181,5 +1181,15 @@
   "dashboard_sade_sati_active": "Sade Sati is active",
   "dashboard_sade_sati_inactive": "Sade Sati is not active",
   "dashboard_dhaiya_active": "Shani Dhaiya is indicated",
-  "gochar_shani": "Saturn Gochar"
+  "gochar_shani": "Saturn Gochar",
+  "advanced_graha_profile": "Advanced Graha profile",
+  "graha_profile_method_note": "Traditional D1 house-lord screening and D1/D9 comparison. Functional nature depends on the ascendant and should be read with dignity, aspects, strength and the full chart. This is not a complete Shadbala or prediction report.",
+  "natural_nature": "Natural nature",
+  "functional_nature": "Functional nature",
+  "owned_houses": "Owned houses",
+  "d1_d9_sign": "D1 / D9 sign",
+  "placement_house_theme": "Placement theme",
+  "vargottama": "Vargottama",
+  "yogakaraka": "Yogakaraka",
+  "navamsa": "Navamsa"
 }
