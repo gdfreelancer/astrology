@@ -2,59 +2,67 @@
 
 ## Implemented
 
-Added a divisional-chart calculation service and a dedicated screen reachable from Kundali results. The selector provides all fifteen Varga charts listed in the roadmap:
+The existing divisional chart selector continues to provide all fifteen divisional charts (D2, D3, D4, D7, D9, D10, D12, D16, D20, D24, D27, D30, D40, D45 and D60). It maps the natal sidereal Ascendant and all nine grahas into divisional signs, recalculates houses from the divisional Ascendant, and displays all twelve houses. D1 and its saved North/South/East display preference are unchanged.
 
-- D2 Hora
-- D3 Drekkana
-- D4 Chaturthamsa
-- D7 Saptamsa
-- D9 Navamsa
-- D10 Dasamsa
-- D12 Dwadashamsa
-- D16 Shodashamsa
-- D20 Vimshamsa
-- D24 Chaturvimshamsa
-- D27 Saptavimshamsa
-- D30 Trimshamsa
-- D40 Khavedamsa
-- D45 Akshavedamsa
-- D60 Shashtiamsa
+Phase 4 strength work is now integrated into the Divisional Charts screen:
 
-For each chart, the app maps the natal sidereal Ascendant and all nine grahas into divisional signs, recalculates houses from the divisional Ascendant, and shows the sign and planet occupants for all twelve houses. The D1 chart and its saved North/South/East display preference are unchanged.
+- Vimsopaka Bala for the seven classical planets, with selectable Shadvarga, Saptavarga, Dashavarga and Shodashavarga schemes.
+- The selected scheme's per-varga weights and component scores are displayed. Each scheme is checked to total exactly 20.
+- Each component displays its divisional sign, sign lord, dignity relationship and Vimsopaka points.
+- The Vimsopaka relationship ladder is Own 20, Great Friend 18, Friend 15, Neutral 10, Enemy 7 and Great Enemy 5. Natural friendship and temporary friendship are combined using the natal D1 sign relationship to the divisional sign lord.
+- Per-varga dignity labels include exalted, debilitated, Moolatrikona, own, friendly, neutral and enemy sign. Moolatrikona uses the mapped degree within each division.
+- Cross-varga indicators compare D1 with D9 (Vargottama) and D1 with D10. Each planet's complete selected-scheme breakdown is expandable.
+- Pushkara Navamsa and Pushkara Bhaga flags are shown separately from Vimsopaka points and Shadbala.
 
-## Required Phase 4 continuation — not optional
+## Selected calculation conventions
 
-Phase 4 is not complete until the following Varga-strength work is implemented:
-- Vimsopaka Bala using the selected Shadvarga/Saptavarga/Dashavarga/Shodashavarga scheme, with the scheme and weights shown to the user.
-- Per-graha Varga dignity/strength breakdown across the applicable divisional charts.
-- Cross-varga comparison for D1, D9, D10 and other relevant charts, without treating one Varga as a replacement for D1.
-- Vargottama, Pushkara Navamsa and Pushkara Bhaga flags with documented tradition-specific rules and exact boundary handling.
-- Tests against independently checked examples for each supported Varga and the Vimsopaka weighting schemes.
-- Integration with Phase 2 Shadbala while keeping Shadbala and Vimsopaka Bala as separate measures.
+### Vimsopaka Bala weights
 
-Do not create an arbitrary normalized percentage and label it Vimsopaka Bala. If a scheme's source convention is not selected or validated, expose the convention choice or mark that result as unavailable.
+The implemented BPHS chapter 7 weight tables are:
 
-## Calculation conventions
+| Varga | Shadvarga | Saptavarga | Dashavarga | Shodashavarga |
+|---|---:|---:|---:|---:|
+| D1 | 6 | 5 | 3 | 3.5 |
+| D2 | 2 | 2 | 1.5 | 1 |
+| D3 | 4 | 3 | 1.5 | 1 |
+| D4 | — | — | — | 0.5 |
+| D7 | — | 1 | 1.5 | 0.5 |
+| D9 | 5 | 2.5 | 1.5 | 3 |
+| D10 | — | — | 1.5 | 0.5 |
+| D12 | 2 | 4.5 | 1.5 | 0.5 |
+| D16 | — | — | 1.5 | 2 |
+| D20 | — | — | — | 0.5 |
+| D24 | — | — | — | 0.5 |
+| D27 | — | — | — | 0.5 |
+| D30 | 1 | 2 | 1.5 | 1 |
+| D40 | — | — | — | 0.5 |
+| D45 | — | — | — | 0.5 |
+| D60 | — | — | 5 | 4 |
+| **Total** | **20** | **20** | **20** | **20** |
 
-The service implements common Parashari sign-division conventions:
-- D2: Hora split with Leo/Cancer assignment reversed for even signs.
-- D3, D4, D12: sequential sign divisions with the traditional sign offsets.
-- D7: odd signs counted from themselves; even signs from the seventh.
-- D9: movable from itself, fixed from the ninth, dual from the fifth.
-- D10: odd signs from themselves; even signs from the ninth.
-- D16, D20, D45: modality-based starting signs.
-- D24: odd signs from Leo and even signs from Cancer.
-- D27: element-based starts (Aries, Cancer, Libra, Capricorn).
-- D30: unequal planetary segments with traditional planetary own-sign assignments, separately for odd and even signs.
-- D40: odd signs from Aries; even signs from Libra.
-- D60: odd signs from Aries; even signs from Libra, proceeding sequentially.
+The Saptavarga D9/D12 weights follow the verse order in the selected BPHS translation (D9 = 2.5, D12 = 4.5). Other published tables swap those weights; results from those tables are not numerically interchangeable. The selected convention is exposed in the scheme description rather than silently mixing tables.
 
-Regional lineages and Jyotish schools can use variant rules, particularly for some higher Vargas. The implemented convention should be explicitly compared with the intended source/tradition before treating charts as authoritative.
+The seven classical planets are scored. Rahu and Ketu are not assigned a classical Vimsopaka score in this implementation.
+
+### Dignity and friendship
+
+Vimsopaka grades are based on the relationship of each graha to the lord of its sign in the relevant Varga. Natural and temporary relationships are combined using the D1 natal sign placements. This is a selected Parashari-style convention; some software and Jyotish lineages use different relationship tables or dignity ladders.
+
+### Vargottama and Pushkara
+
+- Vargottama is flagged when a planet occupies the same sign in D1 and D9.
+- Pushkara Navamsa uses the commonly used later degree table: fire signs 7th/9th, earth 3rd/5th, air 6th/8th and water 1st/3rd Navamsas. This list is tradition-specific and not universally standardized.
+- Pushkara Bhaga uses the Jataka Parijata degree list, interpreted as the one-degree interval immediately below the named integer degree. The source verse directly discusses the Moon; applying the table to all grahas is a common modern extension. A point-orb interpretation is a different convention.
+- D1/D10 sign repetition is shown as a comparison flag only; it is not called Vargottama.
+
+## Relationship to Shadbala
+
+Vimsopaka Bala is kept separate from Shadbala. Phase 2's full Shadbala engine has not yet been completed, so this feature does not fabricate or combine a Shadbala value. The Vimsopaka calculation can be used independently and later displayed alongside validated Shadbala results.
 
 ## Accuracy limitations
 
-All divisional positions inherit the app's existing GeoEngine planetary positions and approximate Lahiri ayanamsha. The current birth time is minute precision; higher divisions are especially sensitive to small birth-time and ephemeris differences. The screen displays placements only and does not add varga-specific interpretations, dignity, aspects, strength calculations or predictions.
+All divisional positions inherit the app's existing GeoEngine planetary positions and approximate Lahiri ayanamsha. Higher divisions, especially D60, are highly sensitive to birth-time and ephemeris errors. The birth time and ephemeris limitations remain visible in the UI. Varga strength is a traditional calculation, not a deterministic prediction.
 
 ## Verification
 
-Added unit tests for the requested divisions, key sign rules, Trimshamsa unequal segments, boundary values, and divisional-house recalculation. Tests and Android build have not been executed in this environment. Run the GitHub Actions Android APK workflow on dev before release.
+Added regression coverage for all four scheme totals, component counts, score bounds, Pushkara flags and D1/D9 repetition. The GitHub Actions Android workflow and Flutter test suite have not been executed from this environment. Run the manual Android APK workflow on `dev` before release.
