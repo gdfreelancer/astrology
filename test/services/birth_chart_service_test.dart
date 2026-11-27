@@ -14,6 +14,7 @@ void main() {
         hour: 2,
         minute: 30,
         second: 45,
+        timeAccuracy: 'exact',
         timeZoneId: 'Asia/Kolkata',
         placeName: 'Test location',
         latitude: 23.0225,
@@ -24,6 +25,7 @@ void main() {
       expect(result.birthLocal, isA<tz.TZDateTime>());
       expect(result.birthUtc, DateTime.utc(1999, 12, 31, 21, 0, 45));
       expect(result.timeZoneId, 'Asia/Kolkata');
+      expect(result.timeAccuracy, 'exact');
     });
 
     test('resolves historical daylight-saving offsets from the IANA zone', () {
