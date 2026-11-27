@@ -308,9 +308,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _open(Widget screen) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => screen),
-    );
+    Navigator.of(context)
+        .push(MaterialPageRoute<void>(builder: (_) => screen))
+        .then((_) {
+      if (!mounted) return;
+      _loadActiveProfile();
+      _loadRecentReports();
+    });
   }
 
   String _time(DateTime value) {
