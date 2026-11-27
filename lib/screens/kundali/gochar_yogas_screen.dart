@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_locale.dart';
 import '../../models/kundali/kundali_graha.dart';
 import '../../services/gochar_service.dart';
+import '../../services/yoga_dosha_analysis_service.dart';
 import '../../services/ashtakavarga_service.dart';
 import '../../services/vimshottari_dasha_service.dart';
 import '../../theme/app_theme.dart';
@@ -24,6 +25,7 @@ class _GocharYogasScreenState extends State<GocharYogasScreen> {
   }
   @override Widget build(BuildContext context) {
     final report=_report;
+    final yogaAssessments = YogaDoshaAnalysisService.analyse(widget.chart);
     final saturn=report.transits.firstWhere((p)=>p.name=='Saturn');
     final ashtakavarga=AshtakavargaService.calculate(widget.chart);
     final dasha=VimshottariDashaService.calculate(siderealMoonLongitude:widget.siderealMoonLongitude,birthDate:widget.birthDate);
@@ -114,6 +116,26 @@ class _GocharYogasScreenState extends State<GocharYogasScreen> {
           const SizedBox(height:4),Text(context.tr(yoga.descriptionKey),style:const TextStyle(fontSize:10,height:1.45,color:AppTheme.muted)),
           const SizedBox(height:5),Text(yoga.planetNames.map((p)=>context.tr('planet_${p.toLowerCase()}')).join(' · '),style:const TextStyle(fontSize:10,fontWeight:FontWeight.w700,color:AppTheme.plum))
         ])),
+        const SizedBox(height:18),
+        Text(context.tr('yoga_assessment'),style:const TextStyle(fontSize:15,fontWeight:FontWeight.w800,color:AppTheme.ink)),
+        const SizedBox(height:8),
+        if(yogaAssessments.isEmpty)
+          Container(padding:const EdgeInsets.all(14),decoration:BoxDecoration(color:Colors.white,borderRadius:BorderRadius.circular(14),border:Border.all(color:const Color(0xFFEAE5EF))),child:Text(context.tr('no_yoga_assessments'),style:const TextStyle(fontSize:10,color:AppTheme.muted)))
+        else
+          for(final assessment in yogaAssessments)
+            Container(margin:const EdgeInsets.only(bottom:8),padding:const EdgeInsets.all(13),decoration:BoxDecoration(color:Colors.white,borderRadius:BorderRadius.circular(14),border:Border.all(color:const Color(0xFFEAE5EF))),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+              Row(children:[Expanded(child:Text(assessment.key.replaceAll('_',' ').toUpperCase(),style:const TextStyle(fontSize:11,fontWeight:FontWeight.w900,color:AppTheme.ink))),Text(context.tr(assessment.status==YogaStatus.formed?'yoga_status_formed':assessment.status==YogaStatus.modified?'yoga_status_modified':'yoga_status_weakened'),style:const TextStyle(fontSize:9,fontWeight:FontWeight.w800,color:AppTheme.plum))]),
+              const SizedBox(height:5),
+              Text(assessment.formation,style:const TextStyle(fontSize:10,height:1.4,color:AppTheme.muted)),
+              if(assessment.modifiers.isNotEmpty) ...[
+                const SizedBox(height:5),
+                Text(assessment.modifiers.join(' · '),style:const TextStyle(fontSize:9,height:1.4,color:Color(0xFF9A6836))),
+              ],
+              const SizedBox(height:5),
+              Text(assessment.planetNames.map((p)=>context.tr('planet_${p.toLowerCase()}')).join(' · '),style:const TextStyle(fontSize:9,fontWeight:FontWeight.w700,color:AppTheme.plum)),
+            ])),
+        const SizedBox(height:10),
+        Container(padding:const EdgeInsets.all(13),decoration:BoxDecoration(color:const Color(0xFFF3EEF8),borderRadius:BorderRadius.circular(14)),child:Text(context.tr('yoga_assessment_disclaimer'),style:const TextStyle(fontSize:9.5,height:1.5,color:AppTheme.muted))),
         const SizedBox(height:10),
         Container(padding:const EdgeInsets.all(13),decoration:BoxDecoration(color:const Color(0xFFFFF6E8),borderRadius:BorderRadius.circular(14)),child:Text(context.tr('gochar_accuracy_note'),style:const TextStyle(fontSize:10,height:1.5,color:Color(0xFF795D36))))
       ]))
