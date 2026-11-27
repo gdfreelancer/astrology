@@ -25,6 +25,32 @@ void main() {
       expect(result.timeZoneId, 'Asia/Kolkata');
     });
 
+    test('resolves historical daylight-saving offsets from the IANA zone', () {
+      final winter = BirthChartService.calculate(
+        birthDate: DateTime(2000, 1, 1),
+        hour: 12,
+        minute: 0,
+        timeZoneId: 'America/New_York',
+        placeName: 'Test location',
+        latitude: 40.7128,
+        longitude: -74.0060,
+        gender: 'Not specified',
+      );
+      final summer = BirthChartService.calculate(
+        birthDate: DateTime(2000, 7, 1),
+        hour: 12,
+        minute: 0,
+        timeZoneId: 'America/New_York',
+        placeName: 'Test location',
+        latitude: 40.7128,
+        longitude: -74.0060,
+        gender: 'Not specified',
+      );
+
+      expect(winter.birthUtc, DateTime.utc(2000, 1, 1, 17));
+      expect(summer.birthUtc, DateTime.utc(2000, 7, 1, 16));
+    });
+
     test('returns complete normalized chart structures', () {
       final result = BirthChartService.calculate(
         birthDate: DateTime(2000, 1, 1),
@@ -43,6 +69,19 @@ void main() {
       expect(chart.ascendantLongitude, inInclusiveRange(0, 360));
       expect(chart.midheavenLongitude, inInclusiveRange(0, 360));
       expect(chart.ascendantSignIndex, inInclusiveRange(0, 11));
+
+      for (var index = 0; index < chart.bhavas.length; index++) {
+        final house = chart.bhavas[index];
+        expect(house.number, index + 1);
+        expect(house.width, greaterThan(0));
+        expect(
+          BirthChartService.houseForLongitude(
+            house.middleLongitude,
+            chart.bhavas,
+          ),
+          house.number,
+        );
+      }
 
       for (final graha in chart.grahas) {
         expect(graha.longitude, inInclusiveRange(0, 360));
