@@ -1101,7 +1101,7 @@
   "graha_mantra_when": "When to use this mantra",
   "graha_mantra_when_subtitle": "Traditional devotional context; not a guaranteed remedy",
   "dhaiya_title": "Saturn Dhaiya",
-  "dhaiya_active": "Shani Dhaiya is indicated",
+  "dhaiya_active": "Dhaiya indicator present",
   "dhaiya_inactive": "No Dhaiya indicator on selected date",
   "muhurat_dates_for": "Suitable dates for your activity",
   "muhurat_years_description": "Browse preliminary date options and daytime windows for the current and following year.",
@@ -1177,5 +1177,8 @@
   "no_active_dasha": "No current period in the calculated timeline",
   "selected_profile_details": "Birth details used for your astrology calculations",
   "loading": "Loading…",
-  "recent_kundali_reports": "Recent Kundali reports"
+  "recent_kundali_reports": "Recent Kundali reports",
+  "dashboard_sade_sati_active": "Sade Sati is active",
+  "dashboard_sade_sati_inactive": "Sade Sati is not active",
+  "dashboard_dhaiya_active": "Shani Dhaiya is indicated"
 }
