@@ -300,7 +300,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Expanded(child: _DashboardSummaryTile(
           icon: Icons.public_rounded,
           title: context.tr('gochar_shani'),
-          value: _gocharSummary ?? context.tr('sade_sati_inactive'),
+          value: _gocharSummary ?? context.tr('dashboard_sade_sati_inactive'),
         )),
       ],
     );
