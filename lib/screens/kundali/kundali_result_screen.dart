@@ -17,6 +17,7 @@ import 'vimshottari_dasha_screen.dart';
 import 'divisional_charts_screen.dart';
 import 'gochar_yogas_screen.dart';
 import 'advanced_chart_analysis_screen.dart';
+import 'strength_analysis_screen.dart';
 import 'jyotish_reference_screen.dart';
 import 'ashtakavarga_screen.dart';
 import '../remedies/personalized_remedies_screen.dart';
@@ -152,6 +153,15 @@ class KundaliResultScreen extends StatelessWidget {
               subtitle: 'Graha Drishti, Avastha and supported Yoga checks',
               onTap: () => Navigator.of(context).push(MaterialPageRoute(
                 builder: (_) => AdvancedChartAnalysisScreen(chart: birthResult.kundaliChart),
+              )),
+            ),
+            const SizedBox(height: 8),
+            _AnalysisShortcut(
+              icon: Icons.stacked_bar_chart_rounded,
+              title: context.tr('strength_analysis_title'),
+              subtitle: context.tr('partial_shadbala_notice'),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => StrengthAnalysisScreen(chart: birthResult.kundaliChart),
               )),
             ),
             const SizedBox(height: 8),
