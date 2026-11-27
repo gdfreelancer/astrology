@@ -128,7 +128,7 @@ class VargaChartService {
     if (division != 30) {
       final part = (within / segmentWidth).floor();
       return ((within - part * segmentWidth) / segmentWidth * 30)
-          .clamp(0.0, 29.999999999);
+          .clamp(0.0, 29.999999999).toDouble();
     }
     final sign = (normalized / 30).floor();
     final segments = sign.isEven
