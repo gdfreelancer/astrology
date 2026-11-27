@@ -44,16 +44,16 @@ class KundaliHistoryService {
   static Future<List<RecentKundaliReport>> getRecent() async {
     final preferences = await SharedPreferences.getInstance();
     final raw = preferences.getString(_storageKey);
-    if (raw == null || raw.isEmpty) return const [];
+    if (raw == null || raw.isEmpty) return <RecentKundaliReport>[];
     try {
       final decoded = jsonDecode(raw) as List<dynamic>;
       return decoded
           .map((item) => RecentKundaliReport.fromJson(
                 item as Map<String, dynamic>,
               ))
-          .toList(growable: false);
+          .toList();
     } catch (_) {
-      return const [];
+      return <RecentKundaliReport>[];
     }
   }
 
