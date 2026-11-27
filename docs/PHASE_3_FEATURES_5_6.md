@@ -12,7 +12,15 @@ Added a dedicated analysis screen reachable from the Kundali result.
 - Includes concise traditional house-topic associations for all twelve houses.
 - For Bhava Chalit, displays the sign at the Bhava Madhya and its degree.
 
-Interpretation is intentionally descriptive, not deterministic. This screen does not yet calculate house-lord strength, aspects, dignity, Shadbala, yogas or divisional-chart confirmation. These are separate advanced analysis items.
+### Required Phase 3 continuation — not optional
+Phase 3 is not complete until these additions are implemented:
+- Bhava Bala for all twelve houses, with a transparent breakdown of the accepted components and units.
+- Bhavesha (house-lord) strength and placement interpretation, using validated Phase 2 Graha Bala rather than a placeholder score.
+- House aspects and occupancy analysis that clearly distinguishes Rashi/D1 and Bhava Chalit.
+- House-wise interpretation combining house sign, lord, occupants, aspects and strength, with source/method notes.
+- Tests using reference charts and boundary cases; missing or unreliable inputs must be reported as unavailable, not estimated silently.
+
+Interpretation is descriptive and conditional, not deterministic. Existing screen content remains intact.
 
 ## Feature 6: Vimshottari Dasha
 
@@ -36,4 +44,4 @@ Added a calculation service, timeline model, UI and tests.
 
 ## Verification
 
-Added unit tests for Nakshatra lord selection, birth balance, Mahadasha order, Antardasha sequence and current-period lookup. Tests and Android build have not been executed in this environment. Run GitHub Actions Android APK workflow on `dev` before release.
+Added unit tests for Nakshatra lord selection, birth balance, Mahadasha order, Antardasha sequence and current-period lookup. Tests and Android build have not been executed in this environment. Run GitHub Actions Android APK workflow on dev before release.
