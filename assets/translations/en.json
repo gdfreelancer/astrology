@@ -1175,5 +1175,6 @@
   "current_mahadasha": "Mahadasha",
   "current_antardasha": "Antardasha",
   "no_active_dasha": "No current period in the calculated timeline",
-  "selected_profile_details": "Birth details used for your astrology calculations"
+  "selected_profile_details": "Birth details used for your astrology calculations",
+  "loading": "Loading…"
 }
