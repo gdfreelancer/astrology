@@ -4,7 +4,7 @@ import 'package:astrology/models/birth_profile.dart';
 void main() {
   group('BirthProfile', () {
     test('round-trips second-level time and accuracy metadata', () {
-      const profile = BirthProfile(
+      final profile = BirthProfile(
         id: 'profile-1',
         name: 'Test',
         gender: 'Not specified',
