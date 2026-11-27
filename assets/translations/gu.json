@@ -1175,5 +1175,6 @@
   "current_mahadasha": "મહાદશા",
   "current_antardasha": "અંતર્દશા",
   "no_active_dasha": "ગણતરી કરેલી સમયરેખામાં વર્તમાન અવધિ ઉપલબ્ધ નથી",
-  "selected_profile_details": "તમારી જ્યોતિષ ગણતરીમાં ઉપયોગ થતી જન્મ વિગતો"
+  "selected_profile_details": "તમારી જ્યોતિષ ગણતરીમાં ઉપયોગ થતી જન્મ વિગતો",
+  "loading": "લોડ થઈ રહ્યું છે…"
 }
