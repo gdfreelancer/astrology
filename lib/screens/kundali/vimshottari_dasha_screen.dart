@@ -75,8 +75,10 @@ class VimshottariDashaScreen extends StatelessWidget {
                 Text(context.tr('mahadasha_antardasha'),
                   style: const TextStyle(color: AppTheme.muted, fontSize: 10)),
                 const SizedBox(height: 10),
-                _DateLine(label: context.tr('period_start'), date: currentAntar.start),
-                _DateLine(label: context.tr('period_end'), date: currentAntar.end),
+                _DateLine(label: context.tr('mahadasha_start'), date: currentMaha.start),
+                _DateLine(label: context.tr('mahadasha_end'), date: currentMaha.end),
+                _DateLine(label: context.tr('antardasha_start'), date: currentAntar.start),
+                _DateLine(label: context.tr('antardasha_end'), date: currentAntar.end),
               ]),
             )
           else
@@ -100,7 +102,7 @@ class VimshottariDashaScreen extends StatelessWidget {
               title: _planet(context, period.planet)),
           if (currentAntar != null) ...[
             const SizedBox(height: 18),
-            Text('Pratyantardasha', style: const TextStyle(color: AppTheme.ink, fontSize: 15, fontWeight: FontWeight.w800)),
+            Text(context.tr('pratyantardasha'), style: const TextStyle(color: AppTheme.ink, fontSize: 15, fontWeight: FontWeight.w800)),
             const SizedBox(height: 8),
             for (final period in VimshottariSubperiodService.children(currentAntar))
               _PeriodTile(period: period, isCurrent: period.contains(now), title: _planet(context, period.planet)),
@@ -111,13 +113,13 @@ class VimshottariDashaScreen extends StatelessWidget {
               final currentSookshma = sookshma.where((p) => p.contains(now)).firstOrNull;
               return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 const SizedBox(height: 14),
-                Text('Sookshma Dasha', style: const TextStyle(color: AppTheme.ink, fontSize: 15, fontWeight: FontWeight.w800)),
+                Text(context.tr('sookshma_dasha'), style: const TextStyle(color: AppTheme.ink, fontSize: 15, fontWeight: FontWeight.w800)),
                 const SizedBox(height: 8),
                 for (final period in sookshma)
                   _PeriodTile(period: period, isCurrent: period.contains(now), title: _planet(context, period.planet)),
                 if (currentSookshma != null) ...[
                   const SizedBox(height: 14),
-                  Text('Prana Dasha', style: const TextStyle(color: AppTheme.ink, fontSize: 15, fontWeight: FontWeight.w800)),
+                  Text(context.tr('prana_dasha'), style: const TextStyle(color: AppTheme.ink, fontSize: 15, fontWeight: FontWeight.w800)),
                   const SizedBox(height: 8),
                   for (final period in VimshottariSubperiodService.children(currentSookshma))
                     _PeriodTile(period: period, isCurrent: period.contains(now), title: _planet(context, period.planet)),
