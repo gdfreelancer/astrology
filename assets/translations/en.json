@@ -1225,5 +1225,11 @@
   "varga_relation_friend": "Friend",
   "varga_relation_neutral": "Neutral",
   "varga_relation_enemy": "Enemy",
-  "varga_relation_great_enemy": "Great enemy"
+  "varga_relation_great_enemy": "Great enemy",
+  "yoga_assessment": "Detailed Yoga assessment",
+  "no_yoga_assessments": "No supported Yoga combinations detected by these rules.",
+  "yoga_status_formed": "Formed",
+  "yoga_status_modified": "Modified",
+  "yoga_status_weakened": "Weakened",
+  "yoga_assessment_disclaimer": "These are educational placement-level checks, not predictions. Some classical cancellation rules and strength calculations remain unavailable; traditions may differ."
 }
