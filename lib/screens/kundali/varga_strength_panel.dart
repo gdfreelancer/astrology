@@ -106,7 +106,16 @@ class _VargaStrengthPanelState extends State<VargaStrengthPanel> {
     );
   }
 
-  String _relationKey(String value) => switch (value) {\n    'Own' => 'varga_relation_own',\n    'Great friend' => 'varga_relation_great_friend',\n    'Friend' => 'varga_relation_friend',\n    'Enemy' => 'varga_relation_enemy',\n    'Great enemy' => 'varga_relation_great_enemy',\n    _ => 'varga_relation_neutral',\n  };\n\n  String _dignityKey(String value) => switch (value) {
+  String _relationKey(String value) => switch (value) {
+    'Own' => 'varga_relation_own',
+    'Great friend' => 'varga_relation_great_friend',
+    'Friend' => 'varga_relation_friend',
+    'Enemy' => 'varga_relation_enemy',
+    'Great enemy' => 'varga_relation_great_enemy',
+    _ => 'varga_relation_neutral',
+  };
+
+  String _dignityKey(String value) => switch (value) {
     'Exalted' => 'varga_exalted',
     'Debilitated' => 'varga_debilitated',
     'Moolatrikona' => 'varga_moolatrikona',
