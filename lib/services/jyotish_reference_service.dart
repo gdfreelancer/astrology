@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 import '../models/kundali/kundali_graha.dart';
 import '../models/panchang_data.dart';
-import 'panchang_service.dart';
 
 class CharaKaraka {
   const CharaKaraka(this.role, this.planet, this.degree);
