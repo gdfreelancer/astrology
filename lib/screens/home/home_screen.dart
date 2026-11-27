@@ -200,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     if (profile != null) ...[
                       const SizedBox(height: 3),
                       Text(
-                        '${profile.placeName} · ${profile.formattedTime}',
+                        '${profile.placeName} · ${profile.formattedTime} · ${context.tr('time_accuracy_${profile.timeAccuracy}')}',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(fontSize: 10, color: AppTheme.muted),
