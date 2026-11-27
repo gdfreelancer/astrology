@@ -141,7 +141,7 @@ class _BirthProfilesScreenState extends State<BirthProfilesScreen> {
                                         color: AppTheme.ink)),
                                 const SizedBox(height: 4),
                                 Text(
-                                  '${profile.birthDate.day.toString().padLeft(2, '0')}/${profile.birthDate.month.toString().padLeft(2, '0')}/${profile.birthDate.year} · ${profile.formattedTime}',
+                                  '${profile.birthDate.day.toString().padLeft(2, '0')}/${profile.birthDate.month.toString().padLeft(2, '0')}/${profile.birthDate.year} · ${profile.formattedTime} · ${context.tr('time_accuracy_${profile.timeAccuracy}')}',
                                   style: const TextStyle(
                                       fontSize: 10, color: AppTheme.muted),
                                 ),
