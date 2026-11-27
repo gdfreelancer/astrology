@@ -22,6 +22,18 @@ Added a divisional-chart calculation service and a dedicated screen reachable fr
 
 For each chart, the app maps the natal sidereal Ascendant and all nine grahas into divisional signs, recalculates houses from the divisional Ascendant, and shows the sign and planet occupants for all twelve houses. The D1 chart and its saved North/South/East display preference are unchanged.
 
+## Required Phase 4 continuation — not optional
+
+Phase 4 is not complete until the following Varga-strength work is implemented:
+- Vimsopaka Bala using the selected Shadvarga/Saptavarga/Dashavarga/Shodashavarga scheme, with the scheme and weights shown to the user.
+- Per-graha Varga dignity/strength breakdown across the applicable divisional charts.
+- Cross-varga comparison for D1, D9, D10 and other relevant charts, without treating one Varga as a replacement for D1.
+- Vargottama, Pushkara Navamsa and Pushkara Bhaga flags with documented tradition-specific rules and exact boundary handling.
+- Tests against independently checked examples for each supported Varga and the Vimsopaka weighting schemes.
+- Integration with Phase 2 Shadbala while keeping Shadbala and Vimsopaka Bala as separate measures.
+
+Do not create an arbitrary normalized percentage and label it Vimsopaka Bala. If a scheme's source convention is not selected or validated, expose the convention choice or mark that result as unavailable.
+
 ## Calculation conventions
 
 The service implements common Parashari sign-division conventions:
@@ -45,4 +57,4 @@ All divisional positions inherit the app's existing GeoEngine planetary position
 
 ## Verification
 
-Added unit tests for the requested divisions, key sign rules, Trimshamsa unequal segments, boundary values, and divisional-house recalculation. Tests and Android build have not been executed in this environment. Run the GitHub Actions Android APK workflow on `dev` before release.
+Added unit tests for the requested divisions, key sign rules, Trimshamsa unequal segments, boundary values, and divisional-house recalculation. Tests and Android build have not been executed in this environment. Run the GitHub Actions Android APK workflow on dev before release.
