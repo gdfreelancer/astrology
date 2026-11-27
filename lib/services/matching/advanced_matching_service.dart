@@ -196,6 +196,7 @@ class AdvancedMatchingService {
   /// Whole-sign Parashari drishti: all grahas 7th; Mars 4th/8th,
   /// Jupiter 5th/9th and Saturn 3rd/10th. Nodes are excluded.
   static bool _aspectsSign(String planet, int fromSign, int targetSign) {
+    if (planet == 'Rahu' || planet == 'Ketu') return false;
     final house = ((targetSign - fromSign + 12) % 12) + 1;
     if (house == 7) return true;
     return switch (planet) {
