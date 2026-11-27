@@ -4,6 +4,11 @@ import 'package:timezone/timezone.dart' as tz;
 
 import '../../l10n/app_locale.dart';
 import '../../models/panchang_data.dart';
+import '../../models/birth_profile.dart';
+import '../../services/birth_profile_service.dart';
+import '../../services/birth_chart_service.dart';
+import '../../services/vimshottari_dasha_service.dart';
+import '../../services/gochar_service.dart';
 import '../../services/panchang_service.dart';
 import '../../services/settings/app_preferences_service.dart';
 import '../../theme/app_theme.dart';
@@ -19,6 +24,7 @@ import '../graha/graha_list_screen.dart';
 import '../settings/settings_screen.dart';
 import '../library/offline_learning_screen.dart';
 import '../birth_profiles/profile_comparison_screen.dart';
+import '../birth_profiles/birth_profiles_screen.dart';
 import '../kundali/transit_calendar_screen.dart';
 import '../remedies/remedies_home_screen.dart';
 
@@ -33,12 +39,17 @@ class _HomeScreenState extends State<HomeScreen> {
   PanchangData? _today;
   bool _loadingPanchang = true;
   String _locationName = 'Ahmedabad, Gujarat, India';
+  BirthProfile? _activeProfile;
+  String? _dashaSummary;
+  String? _gocharSummary;
+  bool _loadingProfile = true;
 
   @override
   void initState() {
     super.initState();
     timezone_data.initializeTimeZones();
     _loadToday();
+    _loadActiveProfile();
   }
 
   Future<void> _loadToday() async {
@@ -73,6 +84,159 @@ class _HomeScreenState extends State<HomeScreen> {
         _loadingPanchang = false;
       });
     }
+  }
+
+  Future<void> _loadActiveProfile() async {
+    try {
+      final profile = await BirthProfileService.getSelected();
+      if (profile == null) {
+        if (!mounted) return;
+        setState(() {
+          _activeProfile = null;
+          _dashaSummary = null;
+          _gocharSummary = null;
+          _loadingProfile = false;
+        });
+        return;
+      }
+      final chart = BirthChartService.calculate(
+        birthDate: profile.birthDate,
+        hour: profile.hour,
+        minute: profile.minute,
+        second: profile.second,
+        timeZoneId: profile.timeZoneId,
+        placeName: profile.placeName,
+        latitude: profile.latitude,
+        longitude: profile.longitude,
+        gender: profile.gender,
+      );
+      final now = DateTime.now();
+      final timeline = VimshottariDashaService.calculate(
+        siderealMoonLongitude: chart.siderealMoonLongitude,
+        birthDate: chart.birthLocal,
+      );
+      final maha = timeline.mahadashaAt(now);
+      final antar = timeline.antardashaAt(now);
+      final dasha = maha == null
+          ? context.tr('no_active_dasha')
+          : '${maha.planet} ${context.tr('current_mahadasha')}${antar == null ? '' : ' · ${antar.planet} ${context.tr('current_antardasha')}'}';
+      final transits = GocharService.positionsAt(now.toUtc());
+      final saturn = transits.firstWhere((p) => p.name == 'Saturn');
+      final moon = chart.kundaliChart.grahas.firstWhere((p) => p.name == 'Moon');
+      final sadeSati = GocharService.sadeSati(
+        natalMoonSignIndex: moon.signIndex,
+        transitSaturnSignIndex: saturn.signIndex,
+      );
+      final gochar = sadeSati.isActive
+          ? context.tr('sade_sati_active')
+          : sadeSati.isDhaiya
+              ? context.tr('dhaiya_active')
+              : context.tr('sade_sati_inactive');
+      if (!mounted) return;
+      setState(() {
+        _activeProfile = profile;
+        _dashaSummary = dasha;
+        _gocharSummary = gochar;
+        _loadingProfile = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _loadingProfile = false;
+        _dashaSummary = null;
+        _gocharSummary = null;
+      });
+    }
+  }
+
+  Future<void> _openBirthProfiles() async {
+    await Navigator.of(context).push(MaterialPageRoute<void>(
+      builder: (_) => const BirthProfilesScreen(),
+    ));
+    if (mounted) await _loadActiveProfile();
+  }
+
+  Widget _buildBirthProfileCard(BuildContext context) {
+    final profile = _activeProfile;
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(17),
+      child: InkWell(
+        onTap: _openBirthProfiles,
+        borderRadius: BorderRadius.circular(17),
+        child: Container(
+          padding: const EdgeInsets.all(15),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(17),
+            border: Border.all(color: const Color(0xFFEAE5EF)),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 42,
+                height: 42,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF1EAF9),
+                  borderRadius: BorderRadius.circular(13),
+                ),
+                child: const Icon(Icons.person_rounded, color: AppTheme.plum),
+              ),
+              const SizedBox(width: 11),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(context.tr('active_birth_profile'),
+                        style: const TextStyle(fontSize: 9, color: AppTheme.muted, fontWeight: FontWeight.w700)),
+                    const SizedBox(height: 4),
+                    Text(
+                      _loadingProfile
+                          ? context.tr('loading')
+                          : profile?.name ?? context.tr('no_active_birth_profile'),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 13, color: AppTheme.ink, fontWeight: FontWeight.w800),
+                    ),
+                    if (profile != null) ...[
+                      const SizedBox(height: 3),
+                      Text(
+                        '${profile.placeName} · ${profile.formattedTime}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontSize: 10, color: AppTheme.muted),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              Text(context.tr('manage_birth_profiles'),
+                  style: const TextStyle(fontSize: 9, color: AppTheme.plum, fontWeight: FontWeight.w800)),
+              const SizedBox(width: 4),
+              const Icon(Icons.chevron_right_rounded, color: AppTheme.plum, size: 18),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAstrologySummary(BuildContext context) {
+    if (_activeProfile == null || _loadingProfile) return const SizedBox.shrink();
+    return Row(
+      children: [
+        Expanded(child: _DashboardSummaryTile(
+          icon: Icons.auto_awesome_rounded,
+          title: context.tr('current_dasha_summary'),
+          value: _dashaSummary ?? context.tr('no_active_dasha'),
+        )),
+        const SizedBox(width: 10),
+        Expanded(child: _DashboardSummaryTile(
+          icon: Icons.saturn_rounded,
+          title: 'Gochar · Shani',
+          value: _gocharSummary ?? context.tr('sade_sati_inactive'),
+        )),
+      ],
+    );
   }
 
   void _open(Widget screen) {
@@ -170,6 +334,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   _KundaliBanner(
                     onTap: () => _open(const CreateKundaliScreen()),
                   ),
+                  const SizedBox(height: 13),
+                  _buildBirthProfileCard(context),
+                  const SizedBox(height: 10),
+                  _buildAstrologySummary(context),
                   const SizedBox(height: 22),
                   _SectionHeading(
                     title: context.tr('today_panchang'),
@@ -764,4 +932,38 @@ class _KundaliBanner extends StatelessWidget {
       ),
     );
   }
+}
+
+class _DashboardSummaryTile extends StatelessWidget {
+  const _DashboardSummaryTile({
+    required this.icon,
+    required this.title,
+    required this.value,
+  });
+
+  final IconData icon;
+  final String title;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        constraints: const BoxConstraints(minHeight: 112),
+        padding: const EdgeInsets.all(13),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF6F2FA),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: const Color(0xFFEAE1F1)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, color: AppTheme.plum, size: 18),
+            const SizedBox(height: 8),
+            Text(title, style: const TextStyle(fontSize: 9, color: AppTheme.muted, fontWeight: FontWeight.w700)),
+            const SizedBox(height: 5),
+            Text(value, maxLines: 3, overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 11, color: AppTheme.ink, fontWeight: FontWeight.w800, height: 1.25)),
+          ],
+        ),
+      );
 }
