@@ -1225,5 +1225,11 @@
   "varga_relation_friend": "મિત્ર",
   "varga_relation_neutral": "સમ",
   "varga_relation_enemy": "શત્રુ",
-  "varga_relation_great_enemy": "અતિશત્રુ"
+  "varga_relation_great_enemy": "અતિશત્રુ",
+  "yoga_assessment": "યોગનું વિગતવાર વિશ્લેષણ",
+  "no_yoga_assessments": "આ નિયમો મુજબ કોઈ સમર્થિત યોગ સંયોજન મળ્યું નથી.",
+  "yoga_status_formed": "રચાયેલ",
+  "yoga_status_modified": "ફેરફાર થયેલ",
+  "yoga_status_weakened": "નબળું",
+  "yoga_assessment_disclaimer": "આ શૈક્ષણિક ગ્રહસ્થિતિ આધારિત તપાસ છે, ભવિષ્યવાણી નથી. કેટલાક શાસ્ત્રીય ભંગ નિયમો અને બળની ગણતરી હજી ઉપલબ્ધ નથી; પરંપરાઓમાં તફાવત હોઈ શકે છે."
 }
