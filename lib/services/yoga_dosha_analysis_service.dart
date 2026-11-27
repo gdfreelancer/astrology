@@ -160,12 +160,34 @@ class YogaDoshaAnalysisService {
       if(a.name==b.name||a.signIndex==b.signIndex)return true;
       return AdvancedChartAnalysisService.aspects(chart).any((x)=>(x.planet.name==a.name&&x.occupants.any((g)=>g.name==b.name))||(x.planet.name==b.name&&x.occupants.any((g)=>g.name==a.name)));
     }
-    final raja=<String>[];
-    for(final k in [1,4,7,10])for(final t in [5,9])if(linked(lord(k),lord(t)))raja.add(lord(k)!.name+' with '+lord(t)!.name);
-    if(raja.isNotEmpty)add('raja_yoga',YogaCategory.raja,raja,'yoga_raja_formation');
-    final dhana=<String>[];
-    for(final w in [2,11])for(final t in [5,9])if(linked(lord(w),lord(t)))dhana.add(lord(w)!.name+' with '+lord(t)!.name);
-    if(dhana.isNotEmpty)add('dhana_yoga',YogaCategory.dhana,dhana,'yoga_dhana_formation');
+    final rajaPlanets = <String>{};
+    for (final k in [1, 4, 7, 10]) {
+      for (final t in [5, 9]) {
+        final kendraLord = lord(k);
+        final trikonaLord = lord(t);
+        if (linked(kendraLord, trikonaLord)) {
+          if (kendraLord != null) rajaPlanets.add(kendraLord.name);
+          if (trikonaLord != null) rajaPlanets.add(trikonaLord.name);
+        }
+      }
+    }
+    if (rajaPlanets.isNotEmpty) {
+      add('raja_yoga', YogaCategory.raja, rajaPlanets.toList(), 'yoga_raja_formation');
+    }
+    final dhanaPlanets = <String>{};
+    for (final w in [2, 11]) {
+      for (final t in [5, 9]) {
+        final wealthLord = lord(w);
+        final trikonaLord = lord(t);
+        if (linked(wealthLord, trikonaLord)) {
+          if (wealthLord != null) dhanaPlanets.add(wealthLord.name);
+          if (trikonaLord != null) dhanaPlanets.add(trikonaLord.name);
+        }
+      }
+    }
+    if (dhanaPlanets.isNotEmpty) {
+      add('dhana_yoga', YogaCategory.dhana, dhanaPlanets.toList(), 'yoga_dhana_formation');
+    }
 
     for(final h in [6,8,12]){
       final l=lord(h);
