@@ -118,7 +118,7 @@ class _GrahaStrengthList extends StatelessWidget {
             ),
           const SizedBox(height: 4),
           Text(
-            'Uchcha, Dig and Paksha values are component estimates in virupas. They must not be added together and presented as full Shadbala.',
+            '${context.tr('strength_component_caveat')}',
             style: const TextStyle(
               fontSize: 10,
               height: 1.5,
