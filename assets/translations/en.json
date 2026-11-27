@@ -1276,5 +1276,13 @@
   "yoga_modifier_exalted_placement": "Exalted placement",
   "yoga_modifier_own_sign_placement": "Own-sign placement",
   "yoga_modifier_combustion_screening_flag": "Combustion screening flag",
-  "yoga_modifier_retrograde_motion_not_automatically_weak": "Retrograde motion; not automatically weak"
+  "yoga_modifier_retrograde_motion_not_automatically_weak": "Retrograde motion; not automatically weak",
+  "yoga_modifier_retrograde_motion": "Retrograde motion; not automatically weak",
+  "yoga_name_neecha_bhanga_sun": "Neecha Bhanga screening · Sun",
+  "yoga_name_neecha_bhanga_moon": "Neecha Bhanga screening · Moon",
+  "yoga_name_neecha_bhanga_mars": "Neecha Bhanga screening · Mars",
+  "yoga_name_neecha_bhanga_mercury": "Neecha Bhanga screening · Mercury",
+  "yoga_name_neecha_bhanga_jupiter": "Neecha Bhanga screening · Jupiter",
+  "yoga_name_neecha_bhanga_venus": "Neecha Bhanga screening · Venus",
+  "yoga_name_neecha_bhanga_saturn": "Neecha Bhanga screening · Saturn"
 }
