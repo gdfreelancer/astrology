@@ -27,8 +27,11 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _placeController = TextEditingController();
+  final _secondController = TextEditingController(text: '0');
   DateTime? _birthDate;
   TimeOfDay? _birthTime;
+  int _birthSecond = 0;
+  String _timeAccuracy = 'unknown';
   String? _timeZoneId;
   String _gender = 'Not specified';
   Location? _location;
@@ -43,12 +46,14 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
     super.initState();
     timezone_data.initializeTimeZones();
     _loadChartPreference();
+    _loadSelectedBirthProfile();
   }
 
   @override
   void dispose() {
     _nameController.dispose();
     _placeController.dispose();
+    _secondController.dispose();
     super.dispose();
   }
 
@@ -74,6 +79,32 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
       setState(() => _loadingPreference = false);
       _showMessage(context.tr('chart_style_tip'));
     }
+  }
+
+  Future<void> _loadSelectedBirthProfile() async {
+    final selected = await BirthProfileService.getSelected();
+    if (!mounted || selected == null) return;
+    _applyBirthProfile(selected);
+  }
+
+  void _applyBirthProfile(BirthProfile selected) {
+    setState(() {
+      _nameController.text = selected.name;
+      _placeController.text = selected.placeName;
+      _birthDate = selected.birthDate;
+      _birthTime = TimeOfDay(hour: selected.hour, minute: selected.minute);
+      _birthSecond = selected.second;
+      _secondController.text = selected.second.toString();
+      _timeAccuracy = selected.timeAccuracy;
+      _timeZoneId = selected.timeZoneId;
+      _gender = selected.gender;
+      _location = Location(
+        latitude: selected.latitude,
+        longitude: selected.longitude,
+        timestamp: DateTime.now(),
+      );
+      _placeError = null;
+    });
   }
 
   Future<void> _chooseSavedProfile() async {
@@ -157,20 +188,8 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
     }
     if (selectedId == null || !mounted) return;
     final selected = profiles.firstWhere((profile) => profile.id == selectedId);
-    setState(() {
-      _nameController.text = selected.name;
-      _placeController.text = selected.placeName;
-      _birthDate = selected.birthDate;
-      _birthTime = TimeOfDay(hour: selected.hour, minute: selected.minute);
-      _timeZoneId = selected.timeZoneId;
-      _gender = selected.gender;
-      _location = Location(
-        latitude: selected.latitude,
-        longitude: selected.longitude,
-        timestamp: DateTime.now(),
-      );
-      _placeError = null;
-    });
+    await BirthProfileService.select(selected.id);
+    _applyBirthProfile(selected);
   }
 
   Future<void> _saveCurrentProfile() async {
@@ -218,6 +237,8 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
       birthDate: _birthDate!,
       hour: _birthTime!.hour,
       minute: _birthTime!.minute,
+      second: _birthSecond,
+      timeAccuracy: _timeAccuracy,
       placeName: _placeController.text.trim(),
       latitude: _location!.latitude,
       longitude: _location!.longitude,
@@ -318,6 +339,7 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
         birthDate: _birthDate!,
         hour: _birthTime!.hour,
         minute: _birthTime!.minute,
+        second: _birthSecond,
         timeZoneId: _timeZoneId!,
         placeName: _placeController.text.trim(),
         latitude: _location!.latitude,
@@ -433,10 +455,41 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
               const SizedBox(height: 13),
               _Label(context.tr('exact_time_of_birth')),
               _TapField(
-                value: _birthTime == null ? context.tr('select_local_birth_time') : AppPreferencesService.cachedUse24HourTime ? '${_birthTime!.hour.toString().padLeft(2, '0')}:${_birthTime!.minute.toString().padLeft(2, '0')}' : _birthTime!.format(context),
+                value: _birthTime == null ? context.tr('select_local_birth_time') : AppPreferencesService.cachedUse24HourTime ? '${_birthTime!.hour.toString().padLeft(2, '0')}:${_birthTime!.minute.toString().padLeft(2, '0')}:${_birthSecond.toString().padLeft(2, '0')}' : '${_birthTime!.format(context)}:${_birthSecond.toString().padLeft(2, '0')}',
                 placeholder: _birthTime == null,
                 icon: Icons.schedule_rounded,
                 onTap: _pickTime,
+              ),
+              const SizedBox(height: 8),
+              TextFormField(
+                controller: _secondController,
+                keyboardType: TextInputType.number,
+                decoration: _decoration(context.tr('seconds_00_59'), Icons.timer_outlined),
+                validator: (value) {
+                  final second = int.tryParse(value ?? '');
+                  return second == null || second < 0 || second > 59
+                      ? context.tr('invalid_seconds')
+                      : null;
+                },
+                onChanged: (value) {
+                  final parsed = int.tryParse(value);
+                  if (parsed != null && parsed >= 0 && parsed <= 59) {
+                    _birthSecond = parsed;
+                  }
+                },
+              ),
+              const SizedBox(height: 8),
+              DropdownButtonFormField<String>(
+                value: _timeAccuracy,
+                decoration: InputDecoration(labelText: context.tr('time_accuracy')),
+                items: [
+                  DropdownMenuItem(value: 'exact', child: Text(context.tr('time_accuracy_exact'))),
+                  DropdownMenuItem(value: 'approximate', child: Text(context.tr('time_accuracy_approximate'))),
+                  DropdownMenuItem(value: 'unknown', child: Text(context.tr('time_accuracy_unknown'))),
+                ],
+                onChanged: (value) {
+                  if (value != null) setState(() => _timeAccuracy = value);
+                },
               ),
               const SizedBox(height: 7),
               Text(context.tr('use_local_birth_time'), style: TextStyle(color: AppTheme.muted, fontSize: 10)),
