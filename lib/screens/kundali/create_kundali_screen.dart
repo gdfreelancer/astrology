@@ -8,6 +8,7 @@ import 'package:timezone/timezone.dart' as tz;
 import '../../models/kundali/kundali_chart_style.dart';
 import '../../models/birth_profile.dart';
 import '../../services/birth_profile_service.dart';
+import '../../services/kundali_history_service.dart';
 import '../../services/birth_chart_service.dart';
 import '../../services/settings/app_preferences_service.dart';
 import '../../services/kundali/kundali_preferences_service.dart';
@@ -17,7 +18,9 @@ import 'kundali_chart_style_screen.dart';
 import 'kundali_result_screen.dart';
 
 class CreateKundaliScreen extends StatefulWidget {
-  const CreateKundaliScreen({super.key});
+  const CreateKundaliScreen({super.key, this.initialProfile});
+
+  final BirthProfile? initialProfile;
 
   @override
   State<CreateKundaliScreen> createState() => _CreateKundaliScreenState();
@@ -82,6 +85,10 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
   }
 
   Future<void> _loadSelectedBirthProfile() async {
+    if (widget.initialProfile != null) {
+      _applyBirthProfile(widget.initialProfile!);
+      return;
+    }
     final selected = await BirthProfileService.getSelected();
     if (!mounted || selected == null) return;
     _applyBirthProfile(selected);
@@ -346,6 +353,29 @@ class _CreateKundaliScreenState extends State<CreateKundaliScreen> {
         longitude: _location!.longitude,
         gender: _gender,
       );
+      final createdAt = DateTime.now();
+      final reportProfile = BirthProfile(
+        id: 'report-${createdAt.microsecondsSinceEpoch}',
+        name: _nameController.text.trim().isEmpty
+            ? _placeController.text.trim()
+            : _nameController.text.trim(),
+        gender: _gender,
+        birthDate: _birthDate!,
+        hour: _birthTime!.hour,
+        minute: _birthTime!.minute,
+        second: _birthSecond,
+        timeAccuracy: _timeAccuracy,
+        placeName: _placeController.text.trim(),
+        latitude: _location!.latitude,
+        longitude: _location!.longitude,
+        timeZoneId: _timeZoneId!,
+      );
+      await KundaliHistoryService.record(RecentKundaliReport(
+        profile: reportProfile,
+        rashi: result.rashi,
+        nakshatra: result.nakshatra,
+        createdAt: createdAt,
+      ));
       if (!mounted) return;
       await Navigator.of(context).push(MaterialPageRoute<void>(
         builder: (_) => KundaliResultScreen(
