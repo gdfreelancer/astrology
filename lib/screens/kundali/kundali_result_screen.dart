@@ -236,6 +236,7 @@ class KundaliResultScreen extends StatelessWidget {
                 Text(context.tr('calculation_details'), style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: AppTheme.ink)),
                 const SizedBox(height: 12),
                 _DetailLine(label: context.tr('birth_time_zone'), value: birthResult.timeZoneId),
+                _DetailLine(label: context.tr('time_accuracy'), value: context.tr('time_accuracy_${birthResult.timeAccuracy}')),
                 _DetailLine(label: context.tr('coordinates'), value: '${birthResult.latitude.toStringAsFixed(4)}, ${birthResult.longitude.toStringAsFixed(4)}'),
                 _DetailLine(label: context.tr('ayanamsha'), value: '${birthResult.ayanamsa.toStringAsFixed(4)}°'),
                 _DetailLine(label: context.tr('sidereal_moon_longitude'), value: '${birthResult.siderealMoonLongitude.toStringAsFixed(4)}°'),
