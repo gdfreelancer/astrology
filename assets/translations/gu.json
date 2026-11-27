@@ -974,7 +974,7 @@
   "change_date": "બદલો",
   "transit_positions": "નિરયણ ગ્રહ સ્થિતિ",
   "sade_sati": "સાડાસાતી",
-  "sade_sati_active": "સાડેસાતી ચાલી રહી છે",
+  "sade_sati_active": "સાડાસાતી સક્રિય છે",
   "sade_sati_inactive": "સાડેસાતી સક્રિય નથી",
   "sade_sati_inactive_desc": "આ તારીખે શનિ તમારી જન્મ ચંદ્ર રાશિથી 12મી, પહેલી કે બીજી રાશિમાં ગોચર કરતો નથી.",
   "sade_sati_phase_0": "પ્રથમ ચરણ: શનિ જન્મ ચંદ્ર રાશિથી 12મી રાશિમાં ગોચર કરે છે.",
@@ -1101,7 +1101,7 @@
   "graha_mantra_when": "આ મંત્રનો જપ ક્યારે કરવો",
   "graha_mantra_when_subtitle": "પરંપરાગત ભક્તિ પ્રથા; ખાતરીપૂર્વકનો ઉપાય નથી",
   "dhaiya_title": "શનિ ઢૈયા",
-  "dhaiya_active": "શનિ ઢૈયાનો સંકેત છે",
+  "dhaiya_active": "ઢૈયાનો સંકેત હાજર છે",
   "dhaiya_inactive": "પસંદ કરેલી તારીખે ઢૈયાનો સંકેત નથી",
   "muhurat_dates_for": "તમારા કાર્ય માટે યોગ્ય તારીખો",
   "muhurat_years_description": "વર્તમાન અને આવતા વર્ષ માટે સંભવિત તારીખો અને દિવસના સમય જુઓ.",
@@ -1177,5 +1177,8 @@
   "no_active_dasha": "ગણતરી કરેલી સમયરેખામાં વર્તમાન અવધિ ઉપલબ્ધ નથી",
   "selected_profile_details": "તમારી જ્યોતિષ ગણતરીમાં ઉપયોગ થતી જન્મ વિગતો",
   "loading": "લોડ થઈ રહ્યું છે…",
-  "recent_kundali_reports": "તાજેતરના કુંડળી રિપોર્ટ"
+  "recent_kundali_reports": "તાજેતરના કુંડળી રિપોર્ટ",
+  "dashboard_sade_sati_active": "સાડેસાતી ચાલી રહી છે",
+  "dashboard_sade_sati_inactive": "સાડેસાતી સક્રિય નથી",
+  "dashboard_dhaiya_active": "શનિ ઢૈયાનો સંકેત છે"
 }
