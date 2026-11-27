@@ -73,6 +73,14 @@ void main() {
         ),
         throwsRangeError,
       );
+      expect(
+        () => AstrologyInputValidator.validateLocalBirthTime(
+          hour: 12,
+          minute: 30,
+          second: 60,
+        ),
+        throwsRangeError,
+      );
     });
 
     test('requires a non-empty time-zone ID', () {
