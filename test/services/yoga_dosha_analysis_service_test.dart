@@ -26,7 +26,33 @@ void main(){
   });
   test('reports Raja and Dhana lord connections separately',(){
     final result=YogaDoshaAnalysisService.analyse(makeChart(asc:0,signs:{'Mars':0,'Jupiter':0,'Venus':1,'Saturn':9}));
-    expect(result.any((x)=>x.category==YogaCategory.raja),isA<bool>());
+    expect(result.any((x)=>x.key=='raja_yoga'),isTrue);
+  });
+  test('detects Manglik reference points separately and reports mitigations without cancelling',(){
+    final chart=makeChart(asc:0,signs:{'Mars':6,'Moon':0,'Venus':1,'Jupiter':6});
+    final doshas=YogaDoshaAnalysisService.analyseDoshas(chart);
+    final manglik=doshas.firstWhere((x)=>x.key=='manglik');
+    expect(manglik.bases,contains('Lagna'));
+    expect(manglik.bases,contains('Moon'));
+    expect(manglik.mitigationIndicators,contains('dosha_jupiter_influence'));
+    expect(manglik.caveat,isNotEmpty);
+  });
+  test('detects strict Kala Sarpa only when all seven classical planets are within one node half',(){
+    final chart=makeChart(signs:{
+      'Rahu':0,'Ketu':6,'Sun':0,'Moon':1,'Mars':2,'Mercury':3,
+      'Jupiter':4,'Venus':4,'Saturn':5,
+    });
+    expect(YogaDoshaAnalysisService.analyseDoshas(chart).any((x)=>x.key=='kala_sarpa'),isTrue);
+    final broken=makeChart(signs:{
+      'Rahu':0,'Ketu':6,'Sun':0,'Moon':1,'Mars':2,'Mercury':3,
+      'Jupiter':4,'Venus':4,'Saturn':8,
+    });
+    expect(YogaDoshaAnalysisService.analyseDoshas(broken).any((x)=>x.key=='kala_sarpa'),isFalse);
+  });
+  test('detects close luminary-node conjunction as a Grahan screening only',(){
+    final chart=makeChart(signs:{'Sun':0,'Rahu':0,'Moon':3,'Ketu':6});
+    expect(YogaDoshaAnalysisService.analyseDoshas(chart).any((x)=>x.key=='surya_grahan'),isTrue);
+    expect(YogaDoshaAnalysisService.analyseDoshas(chart).any((x)=>x.key=='chandra_grahan'),isFalse);
   });
   test('does not assign a universal good or bad score',(){
     final result=YogaDoshaAnalysisService.analyse(makeChart());
