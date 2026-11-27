@@ -1181,5 +1181,15 @@
   "dashboard_sade_sati_active": "સાડેસાતી ચાલી રહી છે",
   "dashboard_sade_sati_inactive": "સાડેસાતી સક્રિય નથી",
   "dashboard_dhaiya_active": "શનિ ઢૈયાનો સંકેત છે",
-  "gochar_shani": "શનિ ગોચર"
+  "gochar_shani": "શનિ ગોચર",
+  "advanced_graha_profile": "ઉન્નત ગ્રહ પ્રોફાઇલ",
+  "graha_profile_method_note": "પરંપરાગત D1 ભાવ-સ્વામી તપાસ અને D1/D9 તુલના. કાર્યાત્મક સ્વભાવ લગ્ન પર આધારિત છે; તેને સ્થિતિ, દૃષ્ટિ, બળ અને સંપૂર્ણ કુંડળી સાથે જોવો. આ સંપૂર્ણ ષડ્બળ અથવા ભવિષ્યવાણી રિપોર્ટ નથી.",
+  "natural_nature": "નૈસર્ગિક સ્વભાવ",
+  "functional_nature": "કાર્યાત્મક સ્વભાવ",
+  "owned_houses": "માલિકી ધરાવતા ભાવ",
+  "d1_d9_sign": "D1 / D9 રાશિ",
+  "placement_house_theme": "સ્થિતિનો ભાવ-વિષય",
+  "vargottama": "વર્ગોત્તમ",
+  "yogakaraka": "યોગકારક",
+  "navamsa": "નવાંશ"
 }
