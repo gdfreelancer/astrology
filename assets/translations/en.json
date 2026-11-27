@@ -1284,5 +1284,22 @@
   "yoga_name_neecha_bhanga_mercury": "Neecha Bhanga screening · Mercury",
   "yoga_name_neecha_bhanga_jupiter": "Neecha Bhanga screening · Jupiter",
   "yoga_name_neecha_bhanga_venus": "Neecha Bhanga screening · Venus",
-  "yoga_name_neecha_bhanga_saturn": "Neecha Bhanga screening · Saturn"
+  "yoga_name_neecha_bhanga_saturn": "Neecha Bhanga screening · Saturn",
+  "manglik_mitigation_candidates": "Traditional mitigation indicators to review (not automatic cancellation)",
+  "matching_mars_own_sign": "Mars is in its own sign",
+  "matching_mars_exalted_sign": "Mars is in its exaltation sign",
+  "matching_jupiter_influence": "Jupiter aspects Mars",
+  "seventh_lord_dignity": "Seventh-lord sign dignity",
+  "seventh_house_aspected_by": "Planets aspecting the 7th house",
+  "seventh_lord_aspected_by": "Planets aspecting the 7th lord",
+  "matching_dignity_exalted": "Exalted",
+  "matching_dignity_own": "Own sign",
+  "matching_dignity_debilitated": "Debilitated",
+  "matching_dignity_other": "Other sign",
+  "navamsa_lagna": "D9 ascendant",
+  "navamsa_venus": "Venus in D9",
+  "navamsa_jupiter": "Jupiter in D9",
+  "navamsa_seventh_sign": "D9 7th-house sign",
+  "navamsa_seventh_occupants": "D9 7th-house occupants",
+  "navamsa_seventh_lord": "D9 7th lord and house"
 }
