@@ -12,7 +12,7 @@ class MatchingPdfService {
       value == null ? 'Not available' : value ? 'Indicator present' : 'Not present';
 
   static String _sign(int? value) =>
-      value == null ? '—' : kundaliRashiNames[value.clamp(0, 11)];
+      value == null ? '—' : kundaliRashiNames[value.clamp(0, 11).toInt()];
 
   static String _planets(List<String> values) =>
       values.isEmpty ? 'None listed' : values.join(', ');
