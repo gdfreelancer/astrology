@@ -114,6 +114,22 @@ class _RashiBhavaAnalysisScreenState extends State<RashiBhavaAnalysisScreen> {
               rashiKey: _rashiKeys,
               planetKeys: _planetKeys,
             ),
+          const SizedBox(height: 10),
+          Container(
+            padding: const EdgeInsets.all(13),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF4EFF9),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: const Color(0xFFE2D8ED)),
+            ),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(context.tr('bhava_bala_pending'),
+                style: const TextStyle(color: AppTheme.plum, fontSize: 11, fontWeight: FontWeight.w800)),
+              const SizedBox(height: 5),
+              Text(context.tr('bhava_bala_dependency_note'),
+                style: const TextStyle(color: AppTheme.muted, fontSize: 10, height: 1.5)),
+            ]),
+          ),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.all(13),
