@@ -46,13 +46,11 @@ void main() {
       siderealMoonLongitude: 8,
       birthDate: birth,
     );
-    final currentMaha = timeline.mahadashaAt(birth);
-    final currentAntar = timeline.antardashaAt(birth);
-    expect(currentMaha, isNotNull);
-    expect(currentAntar, isNotNull);
-    expect(currentAntar!.start.isBefore(birth), isTrue);
+    final currentMaha = timeline.mahadashaAt(birth)!;
+    final currentAntar = timeline.antardashaAt(birth)!;
+    expect(currentAntar.start.isBefore(birth), isTrue);
     expect(currentAntar.end.isAfter(birth), isTrue);
-    expect(currentMaha!.contains(birth), isTrue);
+    expect(currentMaha.contains(birth), isTrue);
   });
 
   test('returns null outside the calculated nine-Mahadasha horizon', () {
