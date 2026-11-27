@@ -58,6 +58,22 @@ void main() {
       expect(result.brideManglik.hasAnyIndicator, isFalse);
     });
 
+    test('reports exaltation and Jupiter influence as review indicators only', () {
+      final result = AdvancedMatchingService.calculate(
+        bride: chart([
+          graha('Mars', 9),
+          graha('Moon', 2),
+          graha('Venus', 2),
+          graha('Jupiter', 5),
+        ], ascendant: 2),
+        groom: null,
+      );
+
+      expect(result.brideManglik.mitigationIndicators,
+          containsAll(['mars_exalted_sign', 'jupiter_influence']));
+      expect(result.brideManglik.hasAnyIndicator, isTrue);
+    });
+
     test('analyses seventh-house lord dignity and graha drishti', () {
       final result = AdvancedMatchingService.calculate(
         bride: chart([
@@ -74,7 +90,7 @@ void main() {
       expect(profile.seventhLord, 'Venus');
       expect(profile.seventhLordDignity, 'own');
       expect(profile.seventhLordHouse, 2);
-      expect(profile.seventhHouseAspectedBy, containsAll(['Mars', 'Jupiter']));
+      expect(profile.seventhHouseAspectedBy, containsAll(['Mars', 'Jupiter']));\n      expect(profile.seventhHouseAspectedBy, isNot(contains('Rahu')));
     });
 
     test('creates a descriptive Navamsa seventh-house profile', () {
