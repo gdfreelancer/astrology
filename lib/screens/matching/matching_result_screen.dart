@@ -427,43 +427,90 @@ class _AdvancedCompatibilitySection extends StatelessWidget {
   }
 }
 class _NavamsaCard extends StatelessWidget {
-  const _NavamsaCard({required this.name,required this.chart});
-  final String name;final VargaChart chart;
-  @override Widget build(BuildContext context){
-    String sign(int i)=>_matchingRashi(i);
-    final venus=chart.planets.where((p)=>p.name=='Venus').firstOrNull;
-    final jupiter=chart.planets.where((p)=>p.name=='Jupiter').firstOrNull;
-    final seventh=chart.inHouse(7).map((p)=>p.name).join(', ');
-    return Container(padding:const EdgeInsets.all(11),decoration:BoxDecoration(color:Colors.white,borderRadius:BorderRadius.circular(13),border:Border.all(color:const Color(0xFFEAE5EF))),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-      Text(name,style:const TextStyle(fontSize:10,fontWeight:FontWeight.w800,color:AppTheme.ink)),
-      const SizedBox(height:7),
-      _AnalysisLine(label:'D9 Lagna',value:sign(chart.ascendantSignIndex)),
-      _AnalysisLine(label:'Venus',value:venus==null?'—':sign(venus.signIndex)),
-      _AnalysisLine(label:'Jupiter',value:jupiter==null?'—':sign(jupiter.signIndex)),
-      _AnalysisLine(label:'7th house',value:seventh.isEmpty?'—':seventh),
-    ]));
+  const _NavamsaCard({required this.name, required this.chart});
+  final String name;
+  final VargaChart chart;
+
+  @override
+  Widget build(BuildContext context) {
+    String sign(int value) => _matchingRashi(value);
+    final venus = chart.planets.where((p) => p.name == 'Venus').firstOrNull;
+    final jupiter = chart.planets.where((p) => p.name == 'Jupiter').firstOrNull;
+    final seventhSign = (chart.ascendantSignIndex + 6) % 12;
+    const lords = ['Mars','Venus','Mercury','Moon','Sun','Mercury','Venus','Mars','Jupiter','Saturn','Saturn','Jupiter'];
+    final seventhLord = lords[seventhSign];
+    final lord = chart.planets.where((p) => p.name == seventhLord).firstOrNull;
+    final occupants = chart.inHouse(7).map((p) => _matchingGraha(p.name)).join(', ');
+    return Container(
+      padding: const EdgeInsets.all(11),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(13),
+        border: Border.all(color: const Color(0xFFEAE5EF))),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(name, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+        const SizedBox(height: 7),
+        _AnalysisLine(label: context.tr('navamsa_lagna'), value: sign(chart.ascendantSignIndex)),
+        _AnalysisLine(label: context.tr('navamsa_venus'), value: venus == null ? '—' : sign(venus.signIndex)),
+        _AnalysisLine(label: context.tr('navamsa_jupiter'), value: jupiter == null ? '—' : sign(jupiter.signIndex)),
+        _AnalysisLine(label: context.tr('navamsa_seventh_sign'), value: sign(seventhSign)),
+        _AnalysisLine(label: context.tr('navamsa_seventh_occupants'), value: occupants.isEmpty ? context.tr('none_listed') : occupants),
+        _AnalysisLine(label: context.tr('navamsa_seventh_lord'),
+          value: '${_matchingGraha(seventhLord)} · ${context.tr('house')} ${lord?.houseNumber ?? '—'}'),
+      ]),
+    );
   }
 }
-
 class _AdvancedPersonCard extends StatelessWidget {
-  const _AdvancedPersonCard({required this.name,required this.assessment,required this.profile});
-  final String name; final ManglikAssessment assessment; final HouseCompatibilityProfile profile;
-  @override Widget build(BuildContext context){
-    String status(bool? v)=>v==null?context.tr('not_available'):v?context.tr('indicator_present'):context.tr('indicator_not_present');
-    String sign(int? v)=>v==null?'—':_matchingRashi(v);
-    return Container(padding:const EdgeInsets.all(13),decoration:BoxDecoration(color:Colors.white,borderRadius:BorderRadius.circular(15),border:Border.all(color:const Color(0xFFEAE5EF))),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-      Text(name,style:const TextStyle(fontSize:12,fontWeight:FontWeight.w800,color:AppTheme.ink)),
-      const SizedBox(height:9),Text(context.tr('manglik_dosha'),style:const TextStyle(fontSize:11,fontWeight:FontWeight.w800,color:AppTheme.plum)),
-      _AnalysisLine(label:context.tr('from_lagna'),value:status(assessment.fromLagna)),
-      _AnalysisLine(label:context.tr('from_moon'),value:status(assessment.fromMoon)),
-      _AnalysisLine(label:context.tr('from_venus'),value:status(assessment.fromVenus)),
-      if(assessment.marsHouseFromLagna!=null)_AnalysisLine(label:context.tr('mars_position'),value:'${context.tr('house')} ${assessment.marsHouseFromLagna} · ${sign(assessment.marsSignIndex)}'),
-      const Divider(height:17,color:Color(0xFFF0ECF3)),
-      Text(context.tr('seventh_house_profile'),style:const TextStyle(fontSize:11,fontWeight:FontWeight.w800,color:AppTheme.plum)),
-      _AnalysisLine(label:context.tr('seventh_house_sign'),value:sign(profile.seventhHouseSign)),
-      _AnalysisLine(label:context.tr('seventh_house_occupants'),value:profile.seventhHouseOccupants.isEmpty?context.tr('none_listed'):profile.seventhHouseOccupants.map(_matchingGraha).join(', ')),
-      _AnalysisLine(label:context.tr('seventh_lord'),value:profile.seventhLord==null?'—':'${_matchingGraha(profile.seventhLord!)} · ${context.tr('house')} ${profile.seventhLordHouse??'—'}')
-    ]));
+  const _AdvancedPersonCard({required this.name, required this.assessment, required this.profile});
+  final String name;
+  final ManglikAssessment assessment;
+  final HouseCompatibilityProfile profile;
+
+  @override
+  Widget build(BuildContext context) {
+    String status(bool? value) => value == null
+        ? context.tr('not_available')
+        : value ? context.tr('indicator_present') : context.tr('indicator_not_present');
+    String sign(int? value) => value == null ? '—' : _matchingRashi(value);
+    String planets(List<String> values) => values.isEmpty
+        ? context.tr('none_listed') : values.map(_matchingGraha).join(', ');
+    String dignity(String? value) => value == null ? '—' : context.tr('matching_dignity_$value');
+
+    return Container(
+      padding: const EdgeInsets.all(13),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: const Color(0xFFEAE5EF))),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(name, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+        const SizedBox(height: 9),
+        Text(context.tr('manglik_dosha'), style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppTheme.plum)),
+        _AnalysisLine(label: context.tr('from_lagna'), value: status(assessment.fromLagna)),
+        _AnalysisLine(label: context.tr('from_moon'), value: status(assessment.fromMoon)),
+        _AnalysisLine(label: context.tr('from_venus'), value: status(assessment.fromVenus)),
+        if (assessment.marsHouseFromLagna != null)
+          _AnalysisLine(label: context.tr('mars_position'),
+            value: '${context.tr('house')} ${assessment.marsHouseFromLagna} · ${sign(assessment.marsSignIndex)}'),
+        if (assessment.mitigationIndicators.isNotEmpty) ...[
+          const SizedBox(height: 7),
+          Text(context.tr('manglik_mitigation_candidates'),
+            style: const TextStyle(fontSize: 9.5, fontWeight: FontWeight.w800, color: AppTheme.plum)),
+          for (final item in assessment.mitigationIndicators)
+            Padding(padding: const EdgeInsets.only(top: 4),
+              child: Text('• ${context.tr('matching_$item')}',
+                style: const TextStyle(fontSize: 9, color: AppTheme.muted, height: 1.4))),
+        ],
+        const Divider(height: 17, color: Color(0xFFF0ECF3)),
+        Text(context.tr('seventh_house_profile'),
+          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppTheme.plum)),
+        _AnalysisLine(label: context.tr('seventh_house_sign'), value: sign(profile.seventhHouseSign)),
+        _AnalysisLine(label: context.tr('seventh_house_occupants'), value: planets(profile.seventhHouseOccupants)),
+        _AnalysisLine(label: context.tr('seventh_lord'),
+          value: profile.seventhLord == null ? '—' :
+            '${_matchingGraha(profile.seventhLord!)} · ${context.tr('house')} ${profile.seventhLordHouse ?? '—'}'),
+        _AnalysisLine(label: context.tr('seventh_lord_dignity'), value: dignity(profile.seventhLordDignity)),
+        _AnalysisLine(label: context.tr('seventh_house_aspected_by'), value: planets(profile.seventhHouseAspectedBy)),
+        _AnalysisLine(label: context.tr('seventh_lord_aspected_by'), value: planets(profile.seventhLordAspectedBy)),
+      ]),
+    );
   }
 }
 class _AnalysisLine extends StatelessWidget{
