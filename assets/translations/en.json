@@ -1178,5 +1178,10 @@
   "virupa": "virupa",
   "not_calculated": "Not calculated",
   "bhava_strength_notice": "Descriptive Bhava assessment: lord placement and dignity, occupants and supported whole-sign aspects. This is not a numerical classical Bhava Bala total.",
-  "strength_component_caveat": "Component values are partial and must not be interpreted as a complete Shadbala score."
+  "strength_component_caveat": "Component values are partial and must not be interpreted as a complete Shadbala score.",
+  "exact_exaltation_degree": "Exact exaltation degree",
+  "exaltation_sign": "Exaltation sign",
+  "debilitation_sign": "Debilitation sign",
+  "own_sign": "Own sign",
+  "other_dignity_unassessed": "Other / friendship not assessed"
 }
