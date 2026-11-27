@@ -1219,5 +1219,11 @@
   "varga_own_sign": "સ્વરાશિ",
   "varga_friendly_sign": "મિત્ર રાશિ",
   "varga_enemy_sign": "શત્રુ રાશિ",
-  "varga_neutral_sign": "સમ રાશિ"
+  "varga_neutral_sign": "સમ રાશિ",
+  "varga_relation_own": "સ્વ",
+  "varga_relation_great_friend": "અતિમિત્ર",
+  "varga_relation_friend": "મિત્ર",
+  "varga_relation_neutral": "સમ",
+  "varga_relation_enemy": "શત્રુ",
+  "varga_relation_great_enemy": "અતિશત્રુ"
 }
