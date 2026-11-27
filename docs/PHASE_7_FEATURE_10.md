@@ -9,7 +9,7 @@
 - Expands each D1 seventh-house profile with seventh-house occupants, seventh lord and its house, a basic sign dignity classification, planets aspecting the seventh house, and planets aspecting the seventh lord.
 - Expands Navamsa (D9) comparison with D9 ascendant, Venus and Jupiter positions, seventh-house sign and occupants, seventh lord and its house, seventh-lord sign dignity, and planets aspecting the D9 seventh house.
 - Uses whole-sign Parashari graha drishti for this descriptive comparison: all planets cast the seventh aspect; Mars additionally casts fourth/eighth, Jupiter fifth/ninth, and Saturn third/tenth. Nodes are excluded from this aspect list.
-- Does not add unsupported compatibility points for Manglik, seventh-house, D9 or mitigation indicators. These remain separate descriptive analyses.
+- Includes the expanded D1 and D9 profiles in the shareable matching PDF as descriptive rows, without adding unsupported compatibility points. These remain separate analyses.
 - Adds regression tests for independent Manglik reference points, mitigation indicator handling, seventh-lord dignity, D1 aspects, D9 profile generation and missing legacy chart data.
 - Adds English, Hindi and Gujarati labels for the new analysis.
 
