@@ -137,10 +137,12 @@ class VargaStrengthService {
     for (final item in selectedWeights.entries) {
       final division = item.key;
       final weight = item.value;
-      final sign = division == 1
-          ? natal.signIndex
+      final position = division == 1
+          ? null
           : VargaChartService.calculate(chart, division).planets
-              .firstWhere((p) => p.name == natal.name).signIndex;
+              .firstWhere((p) => p.name == natal.name);
+      final sign = position?.signIndex ?? natal.signIndex;
+      final degree = position?.degreeInSign ?? natal.signDegree;
       final lord = _lords[sign];
       final relation = _compoundRelation(natal.name, lord, byName);
       final points = relation == 'Own'
@@ -153,7 +155,7 @@ class VargaStrengthService {
               'Great enemy' => 5.0,
               _ => 10.0,
             };
-      final dignity = _dignity(natal.name, sign, division == 1 ? natal.signDegree : null);
+      final dignity = _dignity(natal.name, sign, degree);
       score += weight * points / 20;
       entries.add(VargaStrengthEntry(
         division: division,
