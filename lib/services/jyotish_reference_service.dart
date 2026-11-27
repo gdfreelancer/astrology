@@ -49,7 +49,7 @@ class JyotishReferenceService {
   static const _elements = ['Fire','Earth','Air','Water','Fire','Earth','Air','Water','Fire','Earth','Air','Water'];
   static const _modes = ['Movable','Fixed','Dual','Movable','Fixed','Dual','Movable','Fixed','Dual','Movable','Fixed','Dual'];
   static const _genders = ['Masculine','Feminine','Masculine','Feminine','Masculine','Feminine','Masculine','Feminine','Masculine','Feminine','Masculine','Feminine'];
-  static const _dayStrength = [false,false,true,true,true,true,true,true,true,false,true,true];
+  static const _dayStrength = [false,false,false,false,true,true,true,true,false,false,true,true];
   static const _directions = {'Sun':'East','Moon':'North-West','Mars':'South','Mercury':'North','Jupiter':'North-East','Venus':'South-East','Saturn':'West','Rahu':'South-West','Ketu':'North-West'};
   static const _colours = {'Sun':'Deep red / copper','Moon':'White','Mars':'Red','Mercury':'Green','Jupiter':'Yellow','Venus':'White / pastel','Saturn':'Dark blue / black','Rahu':'Smoky / dark blue','Ketu':'Grey / earthy'};
   static const _karakatva = {
