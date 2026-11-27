@@ -1276,5 +1276,13 @@
   "yoga_modifier_exalted_placement": "ઉચ્ચ સ્થિતિ",
   "yoga_modifier_own_sign_placement": "સ્વરાશિ સ્થિતિ",
   "yoga_modifier_combustion_screening_flag": "અસ્ત સ્થિતિનો પ્રારંભિક સંકેત",
-  "yoga_modifier_retrograde_motion_not_automatically_weak": "વક્રી ગતિ; આપમેળે નબળી નથી"
+  "yoga_modifier_retrograde_motion_not_automatically_weak": "વક્રી ગતિ; આપમેળે નબળી નથી",
+  "yoga_modifier_retrograde_motion": "વક્રી ગતિ; આપમેળે નબળી નથી",
+  "yoga_name_neecha_bhanga_sun": "નીચભંગ તપાસ · સૂર્ય",
+  "yoga_name_neecha_bhanga_moon": "નીચભંગ તપાસ · ચંદ્ર",
+  "yoga_name_neecha_bhanga_mars": "નીચભંગ તપાસ · મંગળ",
+  "yoga_name_neecha_bhanga_mercury": "નીચભંગ તપાસ · બુધ",
+  "yoga_name_neecha_bhanga_jupiter": "નીચભંગ તપાસ · ગુરુ",
+  "yoga_name_neecha_bhanga_venus": "નીચભંગ તપાસ · શુક્ર",
+  "yoga_name_neecha_bhanga_saturn": "નીચભંગ તપાસ · શનિ"
 }
