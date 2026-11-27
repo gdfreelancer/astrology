@@ -18,7 +18,7 @@ class MatchingPdfService {
       values.isEmpty ? 'None listed' : values.join(', ');
 
   static String _profileSummary(HouseCompatibilityProfile profile) =>
-      'Sign ${_sign(profile.seventhHouseSign)}; occupants: ${_planets(profile.seventhHouseOccupants)}; lord: ${profile.seventhLord ?? '—'} in house ${profile.seventhLordHouse ?? '—'} (${profile.seventhLordDignity ?? '—'}); aspects: ${_planets(profile.seventhHouseAspectedBy)}';
+      'Sign ${_sign(profile.seventhHouseSign)}; occupants: ${_planets(profile.seventhHouseOccupants)}; lord: ${profile.seventhLord ?? '—'} in house ${profile.seventhLordHouse ?? '—'} (${profile.seventhLordDignity ?? '—'}); house aspects: ${_planets(profile.seventhHouseAspectedBy)}; lord aspects: ${_planets(profile.seventhLordAspectedBy)}';
 
   static String _navamsaSummary(NavamsaCompatibilityProfile? profile) {
     if (profile == null) return 'Not available in saved chart';
