@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../l10n/app_locale.dart';
 import '../../models/kundali/kundali_graha.dart';
+import '../../services/bhava_analysis_service.dart';
 import '../../theme/app_theme.dart';
 
 class RashiBhavaAnalysisScreen extends StatefulWidget {
@@ -40,6 +41,7 @@ class _RashiBhavaAnalysisScreenState extends State<RashiBhavaAnalysisScreen> {
   @override
   Widget build(BuildContext context) {
     final chart = widget.chart;
+    final houseAspects = BhavaAnalysisService.analyse(chart, useChalit: _useChalit);
     return Scaffold(
       appBar: AppBar(
         title: Text(context.tr('rashi_bhava_analysis'),
@@ -105,6 +107,7 @@ class _RashiBhavaAnalysisScreenState extends State<RashiBhavaAnalysisScreen> {
                 ? chart.grahas.firstWhere((g) => g.name == _lords[chart.bhava(index + 1).signIndex]).bhavaNumber
                 : chart.grahas.firstWhere((g) => g.name == _lords[(chart.ascendantSignIndex + index) % 12]).houseNumber),
               topic: context.tr(_topics[index]),
+              aspectingGrahas: houseAspects[index].aspectingGrahas,
               degree: _useChalit
                   ? _degree(chart.bhava(index + 1).middleLongitude)
                   : null,
@@ -156,6 +159,7 @@ class _HouseCard extends StatelessWidget {
     required this.lord,
     required this.planets,
     required this.topic,
+    required this.aspectingGrahas,
     required this.lordPlacement,
     required this.rashiKey,
     required this.planetKeys,
@@ -166,6 +170,7 @@ class _HouseCard extends StatelessWidget {
   final String lord;
   final List<KundaliGraha> planets;
   final String topic;
+  final List<KundaliGraha> aspectingGrahas;
   final int? lordPlacement;
   final String? degree;
   final List<String> rashiKey;
@@ -219,6 +224,17 @@ class _HouseCard extends StatelessWidget {
             planets.isEmpty
                 ? context.tr('no_planets_placed')
                 : planets.map((p) => context.tr(planetKeys[p.name] ?? p.name)).join(' · '),
+            style: const TextStyle(color: AppTheme.ink, fontSize: 9, fontWeight: FontWeight.w700),
+          )),
+        ]),
+        const SizedBox(height: 6),
+        Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('${context.tr('aspected_by')}: ',
+            style: const TextStyle(color: AppTheme.muted, fontSize: 9)),
+          Expanded(child: Text(
+            aspectingGrahas.isEmpty
+                ? context.tr('no_classical_aspects_listed')
+                : aspectingGrahas.map((p) => context.tr(planetKeys[p.name] ?? p.name)).join(' · '),
             style: const TextStyle(color: AppTheme.ink, fontSize: 9, fontWeight: FontWeight.w700),
           )),
         ]),
