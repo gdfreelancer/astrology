@@ -20,12 +20,16 @@ class AstrologyInputValidator {
   static void validateLocalBirthTime({
     required int hour,
     required int minute,
+    int second = 0,
   }) {
     if (hour < 0 || hour > 23) {
       throw RangeError.range(hour, 0, 23, 'hour');
     }
     if (minute < 0 || minute > 59) {
       throw RangeError.range(minute, 0, 59, 'minute');
+    }
+    if (second < 0 || second > 59) {
+      throw RangeError.range(second, 0, 59, 'second');
     }
   }
 
