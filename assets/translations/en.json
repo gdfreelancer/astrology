@@ -1191,5 +1191,9 @@
   "placement_house_theme": "Placement theme",
   "vargottama": "Vargottama",
   "yogakaraka": "Yogakaraka",
-  "navamsa": "Navamsa"
+  "navamsa": "Navamsa",
+  "aspected_by": "Aspected by",
+  "no_classical_aspects_listed": "No supported Graha Drishti listed",
+  "bhava_bala_pending": "Bhava Bala",
+  "bhava_bala_dependency_note": "Full Bhava Bala is not displayed yet. It requires validated Shadbala for each house lord and a documented Bhava Bala method. This app will not substitute an estimated score."
 }
