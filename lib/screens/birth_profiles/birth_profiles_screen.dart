@@ -19,6 +19,7 @@ class BirthProfilesScreen extends StatefulWidget {
 class _BirthProfilesScreenState extends State<BirthProfilesScreen> {
   List<BirthProfile> _profiles = [];
   bool _loading = true;
+  String? _selectedProfileId;
 
   @override
   void initState() {
@@ -29,9 +30,11 @@ class _BirthProfilesScreenState extends State<BirthProfilesScreen> {
 
   Future<void> _load() async {
     final values = await BirthProfileService.getAll();
+    final selectedId = await BirthProfileService.getSelectedId();
     if (!mounted) return;
     setState(() {
       _profiles = values;
+      _selectedProfileId = selectedId;
       _loading = false;
     });
   }
@@ -45,6 +48,15 @@ class _BirthProfilesScreenState extends State<BirthProfilesScreen> {
     if (saved == null) return;
     await BirthProfileService.save(saved);
     await _load();
+  }
+
+  Future<void> _select(BirthProfile profile) async {
+    await BirthProfileService.select(profile.id);
+    if (!mounted) return;
+    setState(() => _selectedProfileId = profile.id);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(context.tr('active_birth_profile_updated'))),
+    );
   }
 
   Future<void> _delete(BirthProfile profile) async {
@@ -145,6 +157,18 @@ class _BirthProfilesScreenState extends State<BirthProfilesScreen> {
                               ],
                             ),
                           ),
+                          IconButton(
+                            tooltip: context.tr('select_birth_profile'),
+                            onPressed: () => _select(profile),
+                            icon: Icon(
+                              _selectedProfileId == profile.id
+                                  ? Icons.check_circle_rounded
+                                  : Icons.radio_button_unchecked_rounded,
+                              color: _selectedProfileId == profile.id
+                                  ? AppTheme.plum
+                                  : AppTheme.muted,
+                            ),
+                          ),
                           PopupMenuButton<String>(
                             onSelected: (value) {
                               if (value == 'edit') _edit(profile);
@@ -223,9 +247,11 @@ class _BirthProfileEditorState extends State<_BirthProfileEditor> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _name;
   late final TextEditingController _place;
+  late final TextEditingController _second;
   DateTime? _date;
   TimeOfDay? _time;
   String? _zone;
+  String _timeAccuracy = 'unknown';
   String _gender = 'Not specified';
   Location? _location;
   bool _resolving = false;
@@ -237,10 +263,12 @@ class _BirthProfileEditorState extends State<_BirthProfileEditor> {
     final p = widget.profile;
     _name = TextEditingController(text: p?.name ?? '');
     _place = TextEditingController(text: p?.placeName ?? '');
+    _second = TextEditingController(text: (p?.second ?? 0).toString());
     _date = p?.birthDate;
     _time = p == null ? null : TimeOfDay(hour: p.hour, minute: p.minute);
     _zone = p?.timeZoneId;
     _gender = p?.gender ?? 'Not specified';
+    _timeAccuracy = p?.timeAccuracy ?? 'unknown';
     if (p != null) {
       _location = Location(
         latitude: p.latitude,
@@ -254,6 +282,7 @@ class _BirthProfileEditorState extends State<_BirthProfileEditor> {
   void dispose() {
     _name.dispose();
     _place.dispose();
+    _second.dispose();
     super.dispose();
   }
 
@@ -325,6 +354,8 @@ class _BirthProfileEditorState extends State<_BirthProfileEditor> {
       birthDate: _date!,
       hour: _time!.hour,
       minute: _time!.minute,
+      second: int.tryParse(_second.text) ?? 0,
+      timeAccuracy: _timeAccuracy,
       placeName: _place.text.trim(),
       latitude: _location!.latitude,
       longitude: _location!.longitude,
@@ -390,8 +421,39 @@ class _BirthProfileEditorState extends State<_BirthProfileEditor> {
             _picker(_time == null
                 ? context.tr('select_local_birth_time')
                 : AppPreferencesService.cachedUse24HourTime
-                    ? '${_time!.hour.toString().padLeft(2, '0')}:${_time!.minute.toString().padLeft(2, '0')}'
-                    : _time!.format(context), Icons.schedule_rounded, _pickTime),
+                    ? '${_time!.hour.toString().padLeft(2, '0')}:${_time!.minute.toString().padLeft(2, '0')}:${(int.tryParse(_second.text) ?? 0).toString().padLeft(2, '0')}'
+                    : '${_time!.format(context)}:${(int.tryParse(_second.text) ?? 0).toString().padLeft(2, '0')}', Icons.schedule_rounded, _pickTime),
+            const SizedBox(height: 8),
+            _fieldLabel(context.tr('birth_time_seconds')),
+            TextFormField(
+              controller: _second,
+              keyboardType: TextInputType.number,
+              decoration: _decoration(context.tr('seconds_00_59'), Icons.timer_outlined),
+              validator: (value) {
+                final second = int.tryParse(value ?? '');
+                return second == null || second < 0 || second > 59
+                    ? context.tr('invalid_seconds')
+                    : null;
+              },
+            ),
+            const SizedBox(height: 14),
+            _fieldLabel(context.tr('time_accuracy')),
+            DropdownButtonFormField<String>(
+              value: _timeAccuracy,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+              ),
+              items: [
+                DropdownMenuItem(value: 'exact', child: Text(context.tr('time_accuracy_exact'))),
+                DropdownMenuItem(value: 'approximate', child: Text(context.tr('time_accuracy_approximate'))),
+                DropdownMenuItem(value: 'unknown', child: Text(context.tr('time_accuracy_unknown'))),
+              ],
+              onChanged: (value) {
+                if (value != null) setState(() => _timeAccuracy = value);
+              },
+            ),
             const SizedBox(height: 14),
             _fieldLabel(context.tr('place_of_birth')),
             TextFormField(
