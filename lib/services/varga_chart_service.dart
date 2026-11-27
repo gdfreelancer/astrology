@@ -18,12 +18,14 @@ class VargaPlanetPosition {
     required this.name,
     required this.symbol,
     required this.signIndex,
+    required this.degreeInSign,
     required this.houseNumber,
     required this.isRetrograde,
   });
   final String name;
   final String symbol;
   final int signIndex;
+  final double degreeInSign;
   final int houseNumber;
   final bool isRetrograde;
 }
@@ -72,6 +74,7 @@ class VargaChartService {
         name: graha.name,
         symbol: graha.symbol,
         signIndex: sign,
+        degreeInSign: _degreeInVarga(graha.longitude, division),
         houseNumber: ((sign - asc + 12) % 12) + 1,
         isRetrograde: graha.isRetrograde,
       );
@@ -110,6 +113,35 @@ class VargaChartService {
       _ => throw ArgumentError.value(division, 'division', 'Unsupported Varga division'),
     };
     return part.clamp(0, 11).toInt();
+  }
+
+  static double _degreeInVarga(double longitude, int division) {
+    final normalized = (longitude % 360 + 360) % 360;
+    final within = normalized % 30;
+    final segmentWidth = switch (division) {
+      2 => 15.0, 3 => 10.0, 4 => 7.5, 7 => 30 / 7,
+      9 => 30 / 9, 10 => 3.0, 12 => 2.5, 16 => 30 / 16,
+      20 => 1.5, 24 => 1.25, 27 => 30 / 27,
+      40 => .75, 45 => 30 / 45, 60 => .5,
+      _ => 30.0,
+    };
+    if (division != 30) {
+      final part = (within / segmentWidth).floor();
+      return ((within - part * segmentWidth) / segmentWidth * 30)
+          .clamp(0.0, 29.999999999);
+    }
+    final sign = (normalized / 30).floor();
+    final segments = sign.isEven
+        ? const [5.0, 5.0, 8.0, 7.0, 5.0]
+        : const [5.0, 7.0, 8.0, 5.0, 5.0];
+    var start = 0.0;
+    for (final width in segments) {
+      if (within - start < width) {
+        return ((within - start) / width * 30).clamp(0.0, 29.999999999);
+      }
+      start += width;
+    }
+    return 0;
   }
 
   static int _sequential(int natalSign, int part, int start) =>
