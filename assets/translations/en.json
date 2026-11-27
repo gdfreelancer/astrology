@@ -1194,7 +1194,7 @@
   "navamsa": "Navamsa",
   "aspected_by": "Aspected by",
   "no_classical_aspects_listed": "No supported Graha Drishti listed",
-  "bhava_bala_pending": "Bhava Bala",
+  "bhava_bala_pending": "Not included in this release",
   "bhava_bala_dependency_note": "Full Bhava Bala is not included in this release. House-strength scores and Bhavesha strength are intentionally omitted because the required validated Shadbala inputs and a fully documented method are not available. No estimated score is shown.",
   "pratyantardasha": "Pratyantardasha",
   "sookshma_dasha": "Sookshma Dasha",
