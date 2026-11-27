@@ -31,12 +31,13 @@ void main() {
 
   test('computes house lord ownership relative to the ascendant', () {
     expect(GrahaProfileAnalysisService.ownedHouses(chart(0), 'Mars'), [1, 8]);
-    expect(GrahaProfileAnalysisService.ownedHouses(chart(3), 'Mars'), [5, 12]);
+    expect(GrahaProfileAnalysisService.ownedHouses(chart(3), 'Mars'), [5, 10]);
   });
 
   test('marks a planet owning a trikona and kendra as yogakaraka', () {
     final profiles = GrahaProfileAnalysisService.analyse(chart(6));
-    final venus = profiles.firstWhere((p) => p.planet.name == 'Venus');
-    expect(venus.isYogakaraka, isTrue);
+    final saturn = profiles.firstWhere((p) => p.planet.name == 'Saturn');
+    expect(saturn.ownedHouses, [4, 5]);
+    expect(saturn.isYogakaraka, isTrue);
   });
 }
