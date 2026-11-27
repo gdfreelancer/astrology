@@ -48,9 +48,9 @@ void main() {
         bride: chart([
           graha('Mars', 0),
           graha('Moon', 2),
-          graha('Venus', 1),
+          graha('Venus', 2),
           graha('Jupiter', 6),
-        ]),
+        ], ascendant: 2),
         groom: null,
       );
 
