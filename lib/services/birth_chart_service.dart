@@ -14,6 +14,7 @@ class BirthChartService {
     required DateTime birthDate,
     required int hour,
     required int minute,
+    int second = 0,
     required String timeZoneId,
     required String placeName,
     required double latitude,
@@ -21,12 +22,12 @@ class BirthChartService {
     required String gender,
   }) {
     AstrologyInputValidator.validateDate(birthDate);
-    AstrologyInputValidator.validateLocalBirthTime(hour: hour, minute: minute);
+    AstrologyInputValidator.validateLocalBirthTime(hour: hour, minute: minute, second: second);
     AstrologyInputValidator.validateCoordinates(latitude: latitude, longitude: longitude);
     AstrologyInputValidator.validateTimeZoneId(timeZoneId);
     final location = tz.getLocation(timeZoneId);
     final localBirth = tz.TZDateTime(
-      location, birthDate.year, birthDate.month, birthDate.day, hour, minute,
+      location, birthDate.year, birthDate.month, birthDate.day, hour, minute, second,
     );
     final utcBirth = localBirth.toUtc();
 
