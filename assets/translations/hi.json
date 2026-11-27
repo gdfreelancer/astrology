@@ -974,7 +974,7 @@
   "change_date": "बदलें",
   "transit_positions": "निरयन ग्रह स्थिति",
   "sade_sati": "साढ़ेसाती",
-  "sade_sati_active": "साढ़ेसाती चल रही है",
+  "sade_sati_active": "साढ़ेसाती सक्रिय है",
   "sade_sati_inactive": "साढ़ेसाती सक्रिय नहीं है",
   "sade_sati_inactive_desc": "इस तारीख को शनि आपकी जन्म चंद्र राशि से 12वीं, पहली या दूसरी राशि में गोचर नहीं कर रहा है।",
   "sade_sati_phase_0": "प्रथम चरण: शनि जन्म चंद्र राशि से 12वीं राशि में गोचर कर रहा है।",
@@ -1101,7 +1101,7 @@
   "graha_mantra_when": "इस मंत्र का जाप कब करें",
   "graha_mantra_when_subtitle": "पारंपरिक भक्ति-विधि; निश्चित उपाय नहीं",
   "dhaiya_title": "शनि ढैय्या",
-  "dhaiya_active": "शनि ढैय्या का संकेत है",
+  "dhaiya_active": "ढैय्या का संकेत मौजूद है",
   "dhaiya_inactive": "चुनी गई तारीख पर ढैय्या का संकेत नहीं है",
   "muhurat_dates_for": "आपके कार्य के लिए उपयुक्त तिथियाँ",
   "muhurat_years_description": "वर्तमान और अगले वर्ष के लिए संभावित तिथियाँ और दिन के समय देखें।",
@@ -1177,5 +1177,8 @@
   "no_active_dasha": "गणना की गई समयरेखा में वर्तमान अवधि उपलब्ध नहीं है",
   "selected_profile_details": "आपकी ज्योतिष गणनाओं में उपयोग होने वाला जन्म विवरण",
   "loading": "लोड हो रहा है…",
-  "recent_kundali_reports": "हाल की कुंडली रिपोर्ट"
+  "recent_kundali_reports": "हाल की कुंडली रिपोर्ट",
+  "dashboard_sade_sati_active": "साढ़ेसाती चल रही है",
+  "dashboard_sade_sati_inactive": "साढ़ेसाती सक्रिय नहीं है",
+  "dashboard_dhaiya_active": "शनि ढैय्या का संकेत है"
 }
