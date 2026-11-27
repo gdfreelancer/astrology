@@ -26,6 +26,7 @@ class _GocharYogasScreenState extends State<GocharYogasScreen> {
   @override Widget build(BuildContext context) {
     final report=_report;
     final yogaAssessments = YogaDoshaAnalysisService.analyse(widget.chart);
+    final doshaAssessments = YogaDoshaAnalysisService.analyseDoshas(widget.chart);
     final saturn=report.transits.firstWhere((p)=>p.name=='Saturn');
     final ashtakavarga=AshtakavargaService.calculate(widget.chart);
     final dasha=VimshottariDashaService.calculate(siderealMoonLongitude:widget.siderealMoonLongitude,birthDate:widget.birthDate);
@@ -124,15 +125,31 @@ class _GocharYogasScreenState extends State<GocharYogasScreen> {
         else
           for(final assessment in yogaAssessments)
             Container(margin:const EdgeInsets.only(bottom:8),padding:const EdgeInsets.all(13),decoration:BoxDecoration(color:Colors.white,borderRadius:BorderRadius.circular(14),border:Border.all(color:const Color(0xFFEAE5EF))),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-              Row(children:[Expanded(child:Text(assessment.key.replaceAll('_',' ').toUpperCase(),style:const TextStyle(fontSize:11,fontWeight:FontWeight.w900,color:AppTheme.ink))),Text(context.tr(assessment.status==YogaStatus.formed?'yoga_status_formed':assessment.status==YogaStatus.modified?'yoga_status_modified':'yoga_status_weakened'),style:const TextStyle(fontSize:9,fontWeight:FontWeight.w800,color:AppTheme.plum))]),
+              Row(children:[Expanded(child:Text(context.tr('yoga_name_${assessment.key}'),style:const TextStyle(fontSize:11,fontWeight:FontWeight.w900,color:AppTheme.ink))),Text(context.tr(assessment.status==YogaStatus.formed?'yoga_status_formed':assessment.status==YogaStatus.modified?'yoga_status_modified':'yoga_status_weakened'),style:const TextStyle(fontSize:9,fontWeight:FontWeight.w800,color:AppTheme.plum))]),
               const SizedBox(height:5),
-              Text(assessment.formation,style:const TextStyle(fontSize:10,height:1.4,color:AppTheme.muted)),
+              Text(context.tr(assessment.formation),style:const TextStyle(fontSize:10,height:1.4,color:AppTheme.muted)),
               if(assessment.modifiers.isNotEmpty) ...[
                 const SizedBox(height:5),
-                Text(assessment.modifiers.join(' · '),style:const TextStyle(fontSize:9,height:1.4,color:Color(0xFF9A6836))),
+                Text(assessment.modifiers.map((m) => context.tr('yoga_modifier_${m.toLowerCase().replaceAll(' ', '_').replaceAll('-', '_')}')).join(' · '),style:const TextStyle(fontSize:9,height:1.4,color:Color(0xFF9A6836))),
               ],
               const SizedBox(height:5),
               Text(assessment.planetNames.map((p)=>context.tr('planet_${p.toLowerCase()}')).join(' · '),style:const TextStyle(fontSize:9,fontWeight:FontWeight.w700,color:AppTheme.plum)),
+            ])),
+        const SizedBox(height:18),
+        Text(context.tr('dosha_screening_title'),style:const TextStyle(fontSize:15,fontWeight:FontWeight.w800,color:AppTheme.ink)),
+        const SizedBox(height:8),
+        if(doshaAssessments.isEmpty)
+          Container(padding:const EdgeInsets.all(14),decoration:BoxDecoration(color:Colors.white,borderRadius:BorderRadius.circular(14),border:Border.all(color:const Color(0xFFEAE5EF))),child:Text(context.tr('dosha_none_detected'),style:const TextStyle(fontSize:10,color:AppTheme.muted)))
+        else
+          for(final dosha in doshaAssessments)
+            Container(margin:const EdgeInsets.only(bottom:8),padding:const EdgeInsets.all(13),decoration:BoxDecoration(color:Colors.white,borderRadius:BorderRadius.circular(14),border:Border.all(color:const Color(0xFFEAE5EF))),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+              Text(context.tr('dosha_name_${dosha.key}'),style:const TextStyle(fontSize:11,fontWeight:FontWeight.w900,color:AppTheme.ink)),
+              const SizedBox(height:5),
+              Text(context.tr(dosha.formation),style:const TextStyle(fontSize:10,height:1.4,color:AppTheme.muted)),
+              if(dosha.bases.isNotEmpty) Text('${context.tr('dosha_reference_from')}: ${dosha.bases.map((b)=>context.tr('dosha_basis_${b.toLowerCase()}')).join(' · ')}',style:const TextStyle(fontSize:9,color:AppTheme.plum)),
+              if(dosha.mitigationIndicators.isNotEmpty) Text('${context.tr('dosha_mitigation_review')}: ${dosha.mitigationIndicators.map((m)=>context.tr(m)).join(' · ')}',style:const TextStyle(fontSize:9,color:Color(0xFF9A6836))),
+              Text(dosha.planetNames.map((p)=>context.tr('planet_${p.toLowerCase()}')).join(' · '),style:const TextStyle(fontSize:9,fontWeight:FontWeight.w700,color:AppTheme.plum)),
+              const SizedBox(height:4),Text(context.tr(dosha.caveat),style:const TextStyle(fontSize:9,height:1.4,color:AppTheme.muted)),
             ])),
         const SizedBox(height:10),
         Container(padding:const EdgeInsets.all(13),decoration:BoxDecoration(color:const Color(0xFFF3EEF8),borderRadius:BorderRadius.circular(14)),child:Text(context.tr('yoga_assessment_disclaimer'),style:const TextStyle(fontSize:9.5,height:1.5,color:AppTheme.muted))),
