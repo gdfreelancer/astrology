@@ -5,7 +5,7 @@
 - Retains the existing North Indian 36-point Ashtakoota report and the separate directional South Indian 10-Porutham report. Their totals are never combined or treated as interchangeable.
 - Retains locally saved matching reports and backward-compatible report payloads. Advanced D1/D9 profiles are derived from stored placements when available; older reports without a stored chart show unavailable values rather than fabricated data.
 - Shows Manglik/Kuja screening independently from Lagna, Moon and Venus for both charts, using the configured 1, 2, 4, 7, 8 and 12 house convention.
-- Adds conservative Manglik mitigation indicators for Mars in own sign, Mars exaltation sign and Jupiter's aspect to Mars. They are displayed as factors to review, never as automatic cancellation or a final dosha verdict.
+- Adds conservative Manglik mitigation indicators for Mars in own sign, Mars exaltation sign and Jupiter's conjunction with or aspect to Mars. They are displayed as factors to review, never as automatic cancellation or a final dosha verdict.
 - Expands each D1 seventh-house profile with seventh-house occupants, seventh lord and its house, a basic sign dignity classification, planets aspecting the seventh house, and planets aspecting the seventh lord.
 - Expands Navamsa (D9) comparison with D9 ascendant, Venus and Jupiter positions, seventh-house sign and occupants, seventh lord and its house, seventh-lord sign dignity, and planets aspecting the D9 seventh house.
 - Uses whole-sign Parashari graha drishti for this descriptive comparison: all planets cast the seventh aspect; Mars additionally casts fourth/eighth, Jupiter fifth/ninth, and Saturn third/tenth. Nodes are excluded from this aspect list.
