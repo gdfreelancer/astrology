@@ -131,10 +131,10 @@ class _HomeScreenState extends State<HomeScreen> {
         transitSaturnSignIndex: saturn.signIndex,
       );
       final gochar = sadeSati.isActive
-          ? context.tr('sade_sati_active')
+          ? context.tr('dashboard_sade_sati_active')
           : sadeSati.isDhaiya
-              ? context.tr('dhaiya_active')
-              : context.tr('sade_sati_inactive');
+              ? context.tr('dashboard_dhaiya_active')
+              : context.tr('dashboard_sade_sati_inactive');
       if (!mounted) return;
       setState(() {
         _activeProfile = profile;
