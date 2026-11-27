@@ -1,26 +1,30 @@
 # Phase 6 — Gochar, Yogas & Sade Sati
 
-## Delivered
-- Date-selectable sidereal geocentric transit positions for Sun, Moon, Mars, Mercury, Jupiter, Venus, Saturn, Rahu and Ketu.
-- Retrograde marker based on a ±12-hour longitude difference.
-- Sade Sati phase classification relative to natal Moon sign: Saturn in 12th (rising), 1st (peak), or 2nd (setting).
-- Conservative natal yoga detection: Gajakesari, Budhaditya, Chandra-Mangal and supported Pancha Mahapurusha combinations (Ruchaka, Bhadra, Hamsa, Malavya, Shasha).
-- English, Hindi and Gujarati screen strings.
+## Implemented on dev
+- Existing date-selectable sidereal geocentric transit positions, retrograde screening, Sade Sati phase and Dhaiya sign indicators are retained.
+- Existing placement-level Gajakesari, Budhaditya, Chandra-Mangala, Raja/Dhana, Vipareeta, Neecha Bhanga and supported Pancha Mahapurusha checks are retained.
+- Added `YogaDoshaAnalysisService` with structured, separate Yoga categories (Raja, Dhana, Vipareeta, Mahapurusha, lunar and other), explicit formation conditions, planet references, dignity/combustion/retrograde modifiers and formed/modified/weakened status.
+- Added structured assessments to the Gochar & Yogas screen; the result does not collapse all combinations into a single auspicious/inauspicious score.
+- Added English, Hindi and Gujarati labels and an educational limitations notice.
+- Added regression tests for Gajakesari formation/non-formation, Budhaditya and Chandra-Mangala formation, and structured result/caveat behavior.
 
-## Required Phase 6 continuation — not optional
-Phase 6 is not complete until comprehensive Yoga/Dosha judgement is implemented:
-- Expand the supported Yoga catalogue with clearly defined formation rules and source references.
-- Evaluate strength and actual applicability, not just the presence of a sign/house combination.
-- Apply documented cancellation, weakening, exception and modification rules (including combustion, debilitation cancellation where applicable, affliction, dignity, aspects, house ownership and relevant divisional confirmation).
-- Distinguish Raja Yoga, Dhana Yoga, Arishta/Dosha and other categories; do not combine them into one generic positive/negative score.
-- Explain which exact chart conditions formed, weakened, cancelled or modified each result.
-- Integrate validated Phase 2 Shadbala/Graha condition and Phase 4 Varga/Vimsopaka results only where the selected traditional rule requires them.
-- Add regression/reference fixtures for positive, negative, cancelled and borderline examples, including alternative tradition settings where rules differ.
-- Avoid deterministic predictions; show rule-based educational interpretations and uncertainty clearly.
+## Important remaining Phase 6 work
+Phase 6 is **partially implemented, not complete**. The following planned work remains:
+- Full classical Yoga catalogue with source-by-source citations and lineage/tradition selection.
+- Full Arishta/Dosha catalogue and cancellation/mitigation rules.
+- Comprehensive Neecha Bhanga Raja Yoga exceptions, planetary war, combustion thresholds by tradition, aspects and affliction judgement.
+- Validated Shadbala and Bhava Bala integration (blocked on the outstanding Phase 2 and Phase 3 work).
+- Rule-specific Vimsopaka/divisional confirmation and validated strength integration where required.
+- Historical/future Sade Sati ingress and retrograde crossing windows.
+- Positive, negative, cancelled and borderline reference-chart fixtures across alternative traditions.
 
-## Important calculation boundaries
-- Transit positions use GeoEngine and the app's mean Lahiri ayanamsha approximation.
-- Sade Sati shows the phase on the selected date only. It does not invent start/end dates or retrograde crossing windows.
-- Current Yoga detection is intentionally limited to sign/house placement rules. It does not assess combustion, planetary strength, aspects, cancellation, dignity beyond the listed own/exaltation signs, divisional confirmation or regional/classical rule variants. A detected combination is not a prediction.
-- Mean Rahu/Ketu are used.
-- This feature is not Swiss Ephemeris validated. Verify important chart work with a trusted ephemeris and astrologer.
+## Calculation boundaries
+- Current Yoga screening uses the existing whole-sign placements/aspects and combustion screening. It is not a complete classical judgement engine; combustion and dignity indicators are simplified and do not prove a Yoga is cancelled.
+- Retrograde status is displayed as a modifier, not automatically considered weakness or strength.
+- Vimsopaka and Shadbala are not combined. No unvalidated numeric strength score is inferred.
+- Transit positions use GeoEngine and the app's mean Lahiri ayanamsha approximation; mean Rahu/Ketu are used.
+- Sade Sati and Dhaiya remain selected-date sign classifications, not a complete historical/future transit timeline.
+- These are educational rule-based indicators, not deterministic predictions. Important chart work should be verified against a trusted ephemeris and a qualified practitioner.
+
+## Verification
+Regression tests have been authored but not run in this environment. Run the manual GitHub Actions Android APK workflow on `dev` before release.
