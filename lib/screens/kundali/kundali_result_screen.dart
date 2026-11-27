@@ -12,6 +12,7 @@ import '../../theme/app_theme.dart';
 import '../../widgets/bhava_chalit_card.dart';
 import '../../widgets/kundali_chart_view.dart';
 import 'graha_analysis_screen.dart';
+import 'advanced_graha_profile_screen.dart';
 import 'rashi_bhava_analysis_screen.dart';
 import 'vimshottari_dasha_screen.dart';
 import 'divisional_charts_screen.dart';
@@ -227,6 +228,14 @@ class KundaliResultScreen extends StatelessWidget {
                 icon: const Icon(Icons.analytics_outlined, size: 16),
                 label: Text(context.tr('view_graha_analysis')),
               ),
+            ),
+            const SizedBox(height: 5),
+            OutlinedButton.icon(
+              onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => AdvancedGrahaProfileScreen(chart: birthResult.kundaliChart),
+              )),
+              icon: const Icon(Icons.auto_awesome_outlined, size: 16),
+              label: Text(context.tr('advanced_graha_profile')),
             ),
             const SizedBox(height: 19),
             Container(
