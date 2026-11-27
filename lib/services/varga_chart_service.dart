@@ -137,7 +137,7 @@ class VargaChartService {
     var start = 0.0;
     for (final width in segments) {
       if (within - start < width) {
-        return ((within - start) / width * 30).clamp(0.0, 29.999999999);
+        return ((within - start) / width * 30).clamp(0.0, 29.999999999).toDouble();
       }
       start += width;
     }
