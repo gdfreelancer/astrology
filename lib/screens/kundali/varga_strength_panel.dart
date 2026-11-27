@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_locale.dart';
 import '../../models/kundali/kundali_graha.dart';
 import '../../services/varga_strength_service.dart';
-import '../../services/varga_chart_service.dart';
 import '../../theme/app_theme.dart';
 
 class VargaStrengthPanel extends StatefulWidget {
