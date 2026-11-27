@@ -210,7 +210,7 @@ class _BhavaStrengthList extends StatelessWidget {
                   const SizedBox(height: 9),
                   _DetailLine(
                     label: context.tr('bhava_lord'),
-                    value: item.houseLord,
+                    value: _planetName(context, item.houseLord),
                   ),
                   _DetailLine(
                     label: context.tr('lord_placed_house'),
@@ -222,7 +222,7 @@ class _BhavaStrengthList extends StatelessWidget {
                     label: context.tr('bhava_occupants'),
                     value: item.occupants.isEmpty
                         ? context.tr('no_planets')
-                        : item.occupants.map((p) => p.name).join(', '),
+                        : item.occupants.map((p) => _planetName(context, p.name)).join(', '),
                   ),
                   _DetailLine(
                     label: context.tr('graha_aspects_on_bhava'),
