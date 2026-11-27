@@ -122,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final antar = timeline.antardashaAt(now);
       final dasha = maha == null
           ? context.tr('no_active_dasha')
-          : '${maha.planet} ${context.tr('current_mahadasha')}${antar == null ? '' : ' · ${antar.planet} ${context.tr('current_antardasha')}'}';
+          : '${_localizedPlanetName(context, maha.planet)} ${context.tr('current_mahadasha')}${antar == null ? '' : ' · ${_localizedPlanetName(context, antar.planet)} ${context.tr('current_antardasha')}'}';
       final transits = GocharService.positionsAt(now.toUtc());
       final saturn = transits.firstWhere((p) => p.name == 'Saturn');
       final moon = chart.kundaliChart.grahas.firstWhere((p) => p.name == 'Moon');
@@ -198,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppTheme.ink)),
                             const SizedBox(height: 3),
-                            Text('${report.rashi} · ${report.nakshatra} · ${report.profile.placeName}',
+                            Text('${_localizedRashiName(context, report.rashi)} · ${_localizedNakshatraName(context, report.nakshatra)} · ${report.profile.placeName}',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(fontSize: 9, color: AppTheme.muted)),
@@ -1035,4 +1035,46 @@ class _DashboardSummaryTile extends StatelessWidget {
           ],
         ),
       );
+}
+
+String _localizedPlanetName(BuildContext context, String name) {
+  final key = switch (name) {
+    'Sun' => 'planet_sun',
+    'Moon' => 'planet_moon',
+    'Mars' => 'planet_mars',
+    'Mercury' => 'planet_mercury',
+    'Jupiter' => 'planet_jupiter',
+    'Venus' => 'planet_venus',
+    'Saturn' => 'planet_saturn',
+    'Rahu' => 'planet_rahu',
+    'Ketu' => 'planet_ketu',
+    _ => '',
+  };
+  return key.isEmpty ? name : context.tr(key);
+}
+
+String _localizedRashiName(BuildContext context, String name) {
+  const keys = {
+    'Aries': 'p_mesha',
+    'Taurus': 'p_vrishabha',
+    'Gemini': 'p_mithuna',
+    'Cancer': 'p_karka',
+    'Leo': 'p_simha',
+    'Virgo': 'p_kanya',
+    'Libra': 'p_tula',
+    'Scorpio': 'p_vrishchika',
+    'Sagittarius': 'p_dhanu',
+    'Capricorn': 'p_makara',
+    'Aquarius': 'p_kumbha',
+    'Pisces': 'p_meena',
+  };
+  final key = keys[name];
+  return key == null ? name : context.tr(key);
+}
+
+String _localizedNakshatraName(BuildContext context, String name) {
+  final slug = name.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]+'), '_');
+  final key = 'p_$slug';
+  final value = context.tr(key);
+  return value == key ? name : value;
 }
