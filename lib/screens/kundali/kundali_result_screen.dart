@@ -267,9 +267,10 @@ class KundaliResultScreen extends StatelessWidget {
   static String _month(int month) => AppLocale.text('month_short_$month');
   static String _time(DateTime value) {
     final minute = value.minute.toString().padLeft(2, '0');
-    if (AppPreferencesService.cachedUse24HourTime) return '${value.hour.toString().padLeft(2, '0')}:$minute';
+    final seconds = value.second == 0 ? '' : ':${value.second.toString().padLeft(2, '0')}';
+    if (AppPreferencesService.cachedUse24HourTime) return '${value.hour.toString().padLeft(2, '0')}:$minute$seconds';
     final h = value.hour % 12 == 0 ? 12 : value.hour % 12;
-    return '$h:$minute ${value.hour >= 12 ? 'PM' : 'AM'}';
+    return '$h:$minute$seconds ${value.hour >= 12 ? 'PM' : 'AM'}';
   }
 }
 
