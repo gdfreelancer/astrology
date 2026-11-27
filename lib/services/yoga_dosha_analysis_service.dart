@@ -144,7 +144,7 @@ class YogaDoshaAnalysisService {
         else if(_exalt[n]==g.signIndex)modifiers.add('Exalted placement');
         else if((_own[n]??const <int>[]).contains(g.signIndex))modifiers.add('Own-sign placement');
         if(conditions.where((c)=>c.planet.name==n).firstOrNull?.combust==true){modifiers.add('Combustion screening flag');severe++;}
-        if(g.isRetrograde)modifiers.add('Retrograde motion; not automatically weak');
+        if(g.isRetrograde)modifiers.add('retrograde_motion');
       }
       out.add(YogaAssessment(key:key,category:category,status:severe>=2?YogaStatus.weakened:modifiers.isEmpty?YogaStatus.formed:YogaStatus.modified,planetNames:List.unmodifiable(names.toSet()),formation:formation,modifiers:List.unmodifiable(modifiers),caveat:'yoga_assessment_disclaimer'));
     }
