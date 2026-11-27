@@ -5,6 +5,7 @@ import '../../services/gochar_service.dart';
 import '../../services/ashtakavarga_service.dart';
 import '../../services/vimshottari_dasha_service.dart';
 import '../../theme/app_theme.dart';
+import '../remedies/remedy_library_screen.dart';
 
 class GocharYogasScreen extends StatefulWidget {
   const GocharYogasScreen({super.key,required this.chart,required this.siderealMoonLongitude,required this.birthDate});
@@ -67,6 +68,24 @@ class _GocharYogasScreenState extends State<GocharYogasScreen> {
           ]
         ])),
         const SizedBox(height:18),
+        if(report.sadeSati.isDhaiya) ...[
+          Container(
+            margin: const EdgeInsets.only(bottom: 14),
+            padding: const EdgeInsets.all(13),
+            decoration: BoxDecoration(color: const Color(0xFFF3EEF8), borderRadius: BorderRadius.circular(14), border: Border.all(color: const Color(0xFFEAE5EF))),
+            child: Row(children: [
+              const Icon(Icons.spa_outlined, color: AppTheme.plum),
+              const SizedBox(width: 10),
+              const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text('Shani Dhaiya reference', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+                Text('Traditional three-phase table and remedies', style: TextStyle(fontSize: 10, color: AppTheme.muted)),
+              ])),
+              TextButton(onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                builder: (_) => const RemedyLibraryScreen(section: RemedyLibrarySection.shani),
+              )), child: const Text('View')),
+            ]),
+          ),
+        ],
         Text(context.tr('sade_sati'),style:const TextStyle(fontSize:15,fontWeight:FontWeight.w800,color:AppTheme.ink)),
         const SizedBox(height:8),
         Container(padding:const EdgeInsets.all(15),decoration:BoxDecoration(color:phase==null?const Color(0xFFF5F2F8):const Color(0xFFFFF6E8),borderRadius:BorderRadius.circular(16),border:Border.all(color:phase==null?const Color(0xFFEAE5EF):const Color(0xFFF1E2C9))),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[

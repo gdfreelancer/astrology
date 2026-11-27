@@ -5,10 +5,12 @@ import '../../services/kundali_pdf_service.dart';
 import '../../l10n/app_locale.dart';
 import '../../models/birth_chart_result.dart';
 import '../../services/settings/app_preferences_service.dart';
-import '../../models/kundali/kundali_chart_style.dart';
+import '../../services/vimshottari_dasha_service.dart';
 import '../../models/kundali/kundali_graha.dart';
+import '../../models/kundali/kundali_chart_style.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/bhava_chalit_card.dart';
+import '../../widgets/kundali_chart_view.dart';
 import 'graha_analysis_screen.dart';
 import 'rashi_bhava_analysis_screen.dart';
 import 'vimshottari_dasha_screen.dart';
@@ -16,12 +18,10 @@ import 'divisional_charts_screen.dart';
 import 'gochar_yogas_screen.dart';
 import 'advanced_chart_analysis_screen.dart';
 import 'ashtakavarga_screen.dart';
+import '../remedies/personalized_remedies_screen.dart';
+import '../remedies/remedies_home_screen.dart';
 
 
-String _localizedRashi(int index) {
-  const keys = ['p_mesha','p_vrishabha','p_mithuna','p_karka','p_simha','p_kanya','p_tula','p_vrishchika','p_dhanu','p_makara','p_kumbha','p_meena'];
-  return AppLocale.text(keys[index]);
-}
 String _localizedGraha(String name) {
   const keys = {'Sun':'planet_sun','Moon':'planet_moon','Mars':'planet_mars','Mercury':'planet_mercury','Jupiter':'planet_jupiter','Venus':'planet_venus','Saturn':'planet_saturn','Rahu':'planet_rahu','Ketu':'planet_ketu'};
   final key = keys[name];
@@ -110,6 +110,11 @@ class KundaliResultScreen extends StatelessWidget {
               Expanded(child: _InfoCard(label: context.tr('naming_syllable'), value: birthResult.namingSyllable, symbol: 'ॐ')),
             ]),
 
+            const SizedBox(height: 12),
+            _CurrentDashaSummary(
+              siderealMoonLongitude: birthResult.siderealMoonLongitude,
+              birthDate: birthResult.birthLocal,
+            ),
             const SizedBox(height: 20),
             Text(context.tr('janma_kundali_d1'), style: TextStyle(fontSize: 15, color: AppTheme.ink, fontWeight: FontWeight.w800)),
             const SizedBox(height: 5),
@@ -118,7 +123,7 @@ class KundaliResultScreen extends StatelessWidget {
               style: const TextStyle(fontSize: 10, color: AppTheme.muted),
             ),
             const SizedBox(height: 11),
-            _KundaliHouseGrid(chart: birthResult.kundaliChart),
+            KundaliChartView(chart: birthResult.kundaliChart, style: chartStyle),
             const SizedBox(height: 16),
             BhavaChalitCard(chart: birthResult.kundaliChart),
             const SizedBox(height: 12),
@@ -169,6 +174,25 @@ class KundaliResultScreen extends StatelessWidget {
                 builder: (_) => GocharYogasScreen(chart: birthResult.kundaliChart, siderealMoonLongitude: birthResult.siderealMoonLongitude, birthDate: birthResult.birthLocal),
               )),
             ),
+            const SizedBox(height: 8),
+            _AnalysisShortcut(
+              icon: Icons.auto_awesome,
+              title: 'Personalized remedy assessment',
+              subtitle: 'Review the 12 remedy-selection factors for a saved Kundali',
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => const PersonalizedRemediesScreen(),
+              )),
+            ),
+            const SizedBox(height: 8),
+            _AnalysisShortcut(
+              icon: Icons.spa_outlined,
+              title: 'Traditional remedies library',
+              subtitle: 'Gemstones, mantras, yantras and Dosha references',
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => const RemediesHomeScreen(),
+              )),
+            ),
+            const SizedBox(height: 8),
             const SizedBox(height: 8),
             _AnalysisShortcut(
               icon: Icons.grid_view_rounded,
@@ -276,87 +300,124 @@ class _DetailLine extends StatelessWidget {
 }
 
 
-class _KundaliHouseGrid extends StatelessWidget {
-  const _KundaliHouseGrid({required this.chart});
-  final KundaliChart chart;
+class _CurrentDashaSummary extends StatelessWidget {
+  const _CurrentDashaSummary({
+    required this.siderealMoonLongitude,
+    required this.birthDate,
+  });
+
+  final double siderealMoonLongitude;
+  final DateTime birthDate;
 
   @override
   Widget build(BuildContext context) {
+    final timeline = VimshottariDashaService.calculate(
+      siderealMoonLongitude: siderealMoonLongitude,
+      birthDate: birthDate,
+    );
+    final now = DateTime.now();
+    final maha = timeline.mahadashaAt(now);
+    final antar = timeline.antardashaAt(now);
+
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFF8EC),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFE8D5B5)),
+        color: const Color(0xFFF4EFF9),
+        borderRadius: BorderRadius.circular(17),
+        border: Border.all(color: const Color(0xFFE5D9F0)),
       ),
-      child: Column(
+      child: Row(
         children: [
-          Row(
-            children: [
-              const Icon(Icons.star_rounded, color: AppTheme.plum, size: 16),
-              const SizedBox(width: 6),
-              Expanded(
-                child: Text(
-                  'Lagna: ${_localizedRashi(chart.ascendantSignIndex)} · ${_degree(chart.ascendantLongitude)}',
-                  style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppTheme.ink),
+          const Icon(Icons.auto_awesome, color: AppTheme.plum, size: 22),
+          const SizedBox(width: 11),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Current Vimshottari Dasha',
+                    style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppTheme.ink)),
+                const SizedBox(height: 5),
+                Text(
+                  maha == null
+                      ? 'Current period is outside the calculated 120-year timeline'
+                      : '${maha.planet} Mahadasha'
+                          '${antar == null ? '' : ' · ${antar.planet} Antardasha'}',
+                  style: const TextStyle(fontSize: 12, color: AppTheme.plum, fontWeight: FontWeight.w800),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: 12,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 6,
-              mainAxisSpacing: 6,
-              childAspectRatio: 1.12,
-            ),
-            itemBuilder: (context, index) {
-              final house = index + 1;
-              final sign = (chart.ascendantSignIndex + index) % 12;
-              final occupants = chart.inHouse(house);
-              return Container(
-                padding: const EdgeInsets.all(7),
-                decoration: BoxDecoration(
-                  color: house == 1 ? const Color(0xFFEDE5F8) : Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: house == 1 ? AppTheme.plum : const Color(0xFFE8D5B5),
-                    width: house == 1 ? 1.3 : .8,
+                if (maha != null) ...[
+                  const SizedBox(height: 3),
+                  Text(
+                    '${_shortDate(maha.start)} – ${_shortDate(maha.end)}',
+                    style: const TextStyle(fontSize: 9, color: AppTheme.muted),
                   ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(context.tr('house_number').replaceAll('{n}', '$house'), style: const TextStyle(fontSize: 8, color: AppTheme.muted, fontWeight: FontWeight.w700)),
-                    const SizedBox(height: 2),
-                    Text(
-                      '${kundaliRashiSymbols[sign]} ${_localizedRashi(sign)}',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 9, color: AppTheme.ink, fontWeight: FontWeight.w800),
-                    ),
-                    const Spacer(),
-                    Text(
-                      occupants.isEmpty ? '—' : occupants.map((g) => g.symbol).join(' · '),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 10, color: AppTheme.plum, fontWeight: FontWeight.w900),
-                    ),
-                  ],
-                ),
-              );
-            },
+                ],
+              ],
+            ),
           ),
-          const SizedBox(height: 8),
-          Text(context.tr('house_one_note'), style: TextStyle(fontSize: 9, color: AppTheme.muted)),
         ],
       ),
     );
   }
+
+  static String _shortDate(DateTime date) =>
+      '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+}
+
+class _AnalysisShortcut extends StatelessWidget {
+  const _AnalysisShortcut({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => Material(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(15),
+          child: Container(
+            padding: const EdgeInsets.all(13),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(color: const Color(0xFFEAE5EF)),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 36,
+                  height: 36,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF4EFF9),
+                    borderRadius: BorderRadius.circular(11),
+                  ),
+                  child: Icon(icon, color: AppTheme.plum, size: 18),
+                ),
+                const SizedBox(width: 11),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(title, style: const TextStyle(color: AppTheme.ink, fontSize: 11, fontWeight: FontWeight.w800)),
+                      const SizedBox(height: 3),
+                      Text(subtitle, style: const TextStyle(color: AppTheme.muted, fontSize: 9)),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.chevron_right_rounded, color: AppTheme.plum, size: 20),
+              ],
+            ),
+          ),
+        ),
+      );
 }
 
 class _GrahaPlacementList extends StatelessWidget {
@@ -364,47 +425,45 @@ class _GrahaPlacementList extends StatelessWidget {
   final KundaliChart chart;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(17),
-        border: Border.all(color: const Color(0xFFEAE5EF)),
-      ),
-      child: Column(
-        children: [
-          for (var i = 0; i < chart.grahas.length; i++) ...[
-            if (i > 0) const Divider(height: 1, indent: 14, endIndent: 14, color: Color(0xFFF0ECF3)),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 10),
-              child: Row(
-                children: [
-                  Container(
-                    width: 32,
-                    height: 32,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(color: const Color(0xFFF4EFF9), borderRadius: BorderRadius.circular(10)),
-                    child: Text(chart.grahas[i].symbol, style: const TextStyle(color: AppTheme.plum, fontSize: 11, fontWeight: FontWeight.w900)),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(_localizedGraha(chart.grahas[i].name), style: const TextStyle(fontSize: 11, color: AppTheme.ink, fontWeight: FontWeight.w800)),
-                        Text('${_localizedRashi(chart.grahas[i].signIndex)} · ${_degree(chart.grahas[i].longitude)}', style: const TextStyle(fontSize: 9, color: AppTheme.muted)),
-                      ],
+  Widget build(BuildContext context) => Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(17),
+          border: Border.all(color: const Color(0xFFEAE5EF)),
+        ),
+        child: Column(
+          children: [
+            for (var i = 0; i < chart.grahas.length; i++) ...[
+              if (i > 0) const Divider(height: 1, indent: 14, endIndent: 14, color: Color(0xFFF0ECF3)),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 10),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 32,
+                      height: 32,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(color: const Color(0xFFF4EFF9), borderRadius: BorderRadius.circular(10)),
+                      child: Text(chart.grahas[i].symbol, style: const TextStyle(color: AppTheme.plum, fontSize: 11, fontWeight: FontWeight.w900)),
                     ),
-                  ),
-                  Text(context.tr('house_number').replaceAll('{n}', '${chart.grahas[i].houseNumber}'), style: const TextStyle(fontSize: 10, color: AppTheme.plum, fontWeight: FontWeight.w800)),
-                ],
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(_localizedGraha(chart.grahas[i].name), style: const TextStyle(fontSize: 11, color: AppTheme.ink, fontWeight: FontWeight.w800)),
+                          Text('${_localizedAstroName(kundaliRashiNames[chart.grahas[i].signIndex])} · ${_degree(chart.grahas[i].longitude)}', style: const TextStyle(fontSize: 9, color: AppTheme.muted)),
+                        ],
+                      ),
+                    ),
+                    Text(context.tr('house_number').replaceAll('{n}', '${chart.grahas[i].houseNumber}'), style: const TextStyle(fontSize: 10, color: AppTheme.plum, fontWeight: FontWeight.w800)),
+                  ],
+                ),
               ),
-            ),
+            ],
           ],
-        ],
-      ),
-    );
-  }
+        ),
+      );
 }
 
 String _degree(double longitude) {
@@ -412,43 +471,4 @@ String _degree(double longitude) {
   final degrees = withinSign.floor();
   final minutes = ((withinSign - degrees) * 60).round();
   return '${degrees}° ${minutes.toString().padLeft(2, '0')}′';
-}
-
-class _AnalysisShortcut extends StatelessWidget {
-  const _AnalysisShortcut({
-    required this.icon, required this.title, required this.subtitle,
-    required this.onTap,
-  });
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final VoidCallback onTap;
-  @override
-  Widget build(BuildContext context) => Material(
-    color: Colors.white,
-    borderRadius: BorderRadius.circular(15),
-    child: InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(15),
-      child: Container(
-        padding: const EdgeInsets.all(13),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          border: Border.all(color: const Color(0xFFEAE5EF)),
-        ),
-        child: Row(children: [
-          Container(width: 36, height: 36, alignment: Alignment.center,
-            decoration: BoxDecoration(color: const Color(0xFFF4EFF9), borderRadius: BorderRadius.circular(11)),
-            child: Icon(icon, color: AppTheme.plum, size: 18)),
-          const SizedBox(width: 11),
-          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(title, style: const TextStyle(color: AppTheme.ink, fontSize: 11, fontWeight: FontWeight.w800)),
-            const SizedBox(height: 3),
-            Text(subtitle, style: const TextStyle(color: AppTheme.muted, fontSize: 9)),
-          ])),
-          const Icon(Icons.chevron_right_rounded, color: AppTheme.plum, size: 20),
-        ]),
-      ),
-    ),
-  );
 }

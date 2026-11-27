@@ -4,6 +4,8 @@ import '../../l10n/app_locale.dart';
 import '../../theme/app_theme.dart';
 import 'graha_data.dart';
 import 'graha_extended_data.dart';
+import '../remedies/remedy_library_screen.dart';
+import '../remedies/remedy_data.dart';
 
 class GrahaDetailScreen extends StatelessWidget {
   const GrahaDetailScreen({super.key, required this.graha});
@@ -168,6 +170,28 @@ class GrahaDetailScreen extends StatelessWidget {
                     context.tr('graha_dosha_subtitle')),
                 const SizedBox(height: 10),
                 _infoCard(extended.afflictions),
+                const SizedBox(height: 20),
+                _sectionTitle('Traditional remedies', 'Source-based reference · not a personal prescription'),
+                const SizedBox(height: 10),
+                _infoCard('Traditional associations in the uploaded source: ${remedyGrahas.firstWhere((item) => item.id == graha.id).lifeAreas}. Associated deities: ${remedyGrahas.firstWhere((item) => item.id == graha.id).deities}. Suggested worship references: ${remedyGrahas.firstWhere((item) => item.id == graha.id).remedies.join(', ')}. These are traditional associations, not predictions or diagnoses.'),
+                const SizedBox(height: 8),
+                Row(children: [
+                  Expanded(child: OutlinedButton.icon(
+                    onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                      builder: (_) => const RemedyLibraryScreen(section: RemedyLibrarySection.mantras),
+                    )),
+                    icon: const Icon(Icons.self_improvement, size: 16),
+                    label: const Text('Mantra library'),
+                  )),
+                  const SizedBox(width: 8),
+                  Expanded(child: OutlinedButton.icon(
+                    onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                      builder: (_) => const RemedyLibraryScreen(section: RemedyLibrarySection.gemstones),
+                    )),
+                    icon: const Icon(Icons.diamond_outlined, size: 16),
+                    label: const Text('Gemstone guide'),
+                  )),
+                ]),
                 const SizedBox(height: 20),
                 _sectionTitle(context.tr('graha_mantra_when'),
                     context.tr('graha_mantra_when_subtitle')),
