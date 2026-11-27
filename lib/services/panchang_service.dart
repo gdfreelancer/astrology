@@ -6,6 +6,7 @@ import '../l10n/app_locale.dart';
 import '../models/panchang_data.dart';
 import '../services/astrology/ayanamsha_service.dart';
 import '../utils/astrology_math.dart';
+import '../utils/astrology_input_validator.dart';
 
 class PanchangService {
   static const tithis=['Pratipada','Dwitiya','Tritiya','Chaturthi','Panchami','Shashthi','Saptami','Ashtami','Navami','Dashami','Ekadashi','Dwadashi','Trayodashi','Chaturdashi','Purnima'];
@@ -33,6 +34,7 @@ class PanchangService {
   ];
 
   static PanchangData calculate({required DateTime date,required PanchangLocation location}) {
+    _validateLocation(location);
     final zone=tz.getLocation(location.timeZoneId);
     final local=tz.TZDateTime(zone,date.year,date.month,date.day);
     final observer=astro.Observer(location.latitude,location.longitude,0);
@@ -106,6 +108,7 @@ class PanchangService {
     });
   }
   static List<PanchangObservance> upcomingObservances({required DateTime from,required PanchangLocation location,int days=45}){
+    _validateLocation(location);
     final zone=tz.getLocation(location.timeZoneId); final observer=astro.Observer(location.latitude,location.longitude,0);
     final out=<PanchangObservance>[];
     for(var i=0;i<days;i++){
@@ -129,6 +132,7 @@ class PanchangService {
     return out;
   }
   static List<PanchangCalendarDay> monthDays({required DateTime month,required PanchangLocation location}){
+    _validateLocation(location);
     final first=DateTime(month.year,month.month,1); final start=first.subtract(Duration(days:first.weekday%7));
     final zone=tz.getLocation(location.timeZoneId); final observer=astro.Observer(location.latitude,location.longitude,0);
     return List.generate(42,(i){
@@ -153,6 +157,7 @@ class PanchangService {
     required PanchangLocation location,
     int days = 90,
   }) {
+    _validateLocation(location);
     final zone = tz.getLocation(location.timeZoneId);
     final localStart = tz.TZDateTime(zone, from.year, from.month, from.day);
     final start = localStart.toUtc();
@@ -283,5 +288,14 @@ class PanchangService {
 
   static double _forward(double from, double to) =>
       (to - from + 360) % 360;
+
+  static void _validateLocation(PanchangLocation location) {
+    AstrologyInputValidator.validateCoordinates(
+      latitude: location.latitude,
+      longitude: location.longitude,
+    );
+    AstrologyInputValidator.validateTimeZoneId(location.timeZoneId);
+    tz.getLocation(location.timeZoneId);
+  }
 
 }
