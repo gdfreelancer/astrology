@@ -6,6 +6,7 @@ import 'package:timezone/timezone.dart' as tz;
 import '../data/nakshatra_data.dart';
 import '../models/birth_chart_result.dart';
 import '../models/kundali/kundali_graha.dart';
+import '../utils/astrology_input_validator.dart';
 import 'astrology/ayanamsha_service.dart';
 
 class BirthChartService {
@@ -19,6 +20,10 @@ class BirthChartService {
     required double longitude,
     required String gender,
   }) {
+    AstrologyInputValidator.validateDate(birthDate);
+    AstrologyInputValidator.validateLocalBirthTime(hour: hour, minute: minute);
+    AstrologyInputValidator.validateCoordinates(latitude: latitude, longitude: longitude);
+    AstrologyInputValidator.validateTimeZoneId(timeZoneId);
     final location = tz.getLocation(timeZoneId);
     final localBirth = tz.TZDateTime(
       location, birthDate.year, birthDate.month, birthDate.day, hour, minute,
