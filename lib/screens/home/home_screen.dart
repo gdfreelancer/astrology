@@ -107,6 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
         hour: profile.hour,
         minute: profile.minute,
         second: profile.second,
+        timeAccuracy: profile.timeAccuracy,
         timeZoneId: profile.timeZoneId,
         placeName: profile.placeName,
         latitude: profile.latitude,
