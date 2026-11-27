@@ -51,7 +51,7 @@ Interpretations remain descriptive and conditional, not deterministic. Rahu/Ketu
 ## Verification
 
 - Added test/services/bhava_analysis_service_test.dart.
-- Existing Vimshottari calculation tests remain in place.
+- Added test/services/vimshottari_dasha_service_test.dart for birth Nakshatra lord, longitude wraparound, sequence/year allocations, pre-birth Antardasha reconstruction and timeline boundaries.
 - Translation files are updated together for all new Phase 3 keys.
 - Flutter tests, analyzer and Android build have **not** been executed in this environment. Run the manual Android APK workflow on dev before release:
   https://github.com/gdfreelancer/astrology/actions/workflows/build-android-apk.yml
