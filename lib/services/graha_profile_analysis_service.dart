@@ -54,7 +54,6 @@ class GrahaProfileAnalysisService {
 
   static List<GrahaProfile> analyse(KundaliChart chart) {
     if (chart.grahas.isEmpty) return const [];
-    final byName = {for (final graha in chart.grahas) graha.name: graha};
     final asc = chart.ascendantSignIndex;
     final owned = <String, List<int>>{};
     for (final entry in _lords.entries) {
