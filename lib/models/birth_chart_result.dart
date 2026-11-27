@@ -9,6 +9,7 @@ class BirthChartResult {
     required this.longitude,
     required this.timeZoneId,
     required this.gender,
+    this.timeAccuracy = 'unknown',
     required this.tropicalMoonLongitude,
     required this.ayanamsa,
     required this.siderealMoonLongitude,
@@ -31,6 +32,7 @@ class BirthChartResult {
   final double longitude;
   final String timeZoneId;
   final String gender;
+  final String timeAccuracy;
   final double tropicalMoonLongitude;
   final double ayanamsa;
   final double siderealMoonLongitude;
