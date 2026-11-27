@@ -113,7 +113,8 @@ class AdvancedMatchingService {
     if (_exaltationSigns['Mars'] == mars.signIndex) {
       indicators.add('mars_exalted_sign');
     }
-    if (jupiter != null && (jupiter.signIndex == mars.signIndex ||\n        _aspectsSign(jupiter.name, jupiter.signIndex, mars.signIndex))) {
+    if (jupiter != null && (jupiter.signIndex == mars.signIndex ||
+        _aspectsSign(jupiter.name, jupiter.signIndex, mars.signIndex))) {
       indicators.add('jupiter_influence');
     }
     return ManglikAssessment(
