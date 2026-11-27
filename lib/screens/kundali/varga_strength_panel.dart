@@ -90,7 +90,7 @@ class _VargaStrengthPanelState extends State<VargaStrengthPanel> {
                     child: Row(children: [
                       SizedBox(width: 38, child: Text('D${row.division}',
                         style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800))),
-                      Expanded(child: Text('${kundaliRashiSymbols[row.signIndex]} ${context.tr(_rashiKeys[row.signIndex])} · ${context.tr(_dignityKey(row.dignity))}',
+                      Expanded(child: Text('${kundaliRashiSymbols[row.signIndex]} ${context.tr(_rashiKeys[row.signIndex])} · ${context.tr(_planetKey(row.signLord))} · ${context.tr(_relationKey(row.relationship))} · ${context.tr(_dignityKey(row.dignity))}',
                         style: const TextStyle(fontSize: 9, color: AppTheme.muted))),
                       Text('${row.points.toStringAsFixed(0)} × ${row.weight.toStringAsFixed(row.weight % 1 == 0 ? 0 : 1)}',
                         style: const TextStyle(fontSize: 9, fontWeight: FontWeight.w700)),
@@ -106,7 +106,7 @@ class _VargaStrengthPanelState extends State<VargaStrengthPanel> {
     );
   }
 
-  String _dignityKey(String value) => switch (value) {
+  String _relationKey(String value) => switch (value) {\n    'Own' => 'varga_relation_own',\n    'Great friend' => 'varga_relation_great_friend',\n    'Friend' => 'varga_relation_friend',\n    'Enemy' => 'varga_relation_enemy',\n    'Great enemy' => 'varga_relation_great_enemy',\n    _ => 'varga_relation_neutral',\n  };\n\n  String _dignityKey(String value) => switch (value) {
     'Exalted' => 'varga_exalted',
     'Debilitated' => 'varga_debilitated',
     'Moolatrikona' => 'varga_moolatrikona',
