@@ -55,7 +55,9 @@ class BirthProfile {
         hour: (json['hour'] as num).toInt(),
         minute: (json['minute'] as num).toInt(),
         second: (json['second'] as num?)?.toInt() ?? 0,
-        timeAccuracy: json['timeAccuracy'] as String? ?? 'unknown',
+        timeAccuracy: const ['exact', 'approximate', 'unknown'].contains(json['timeAccuracy'])
+            ? json['timeAccuracy'] as String
+            : 'unknown',
         placeName: json['placeName'] as String,
         latitude: (json['latitude'] as num).toDouble(),
         longitude: (json['longitude'] as num).toDouble(),
