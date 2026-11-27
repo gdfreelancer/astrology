@@ -1288,7 +1288,7 @@
   "manglik_mitigation_candidates": "Traditional mitigation indicators to review (not automatic cancellation)",
   "matching_mars_own_sign": "Mars is in its own sign",
   "matching_mars_exalted_sign": "Mars is in its exaltation sign",
-  "matching_jupiter_influence": "Jupiter aspects Mars",
+  "matching_jupiter_influence": "Jupiter is conjunct with or aspects Mars",
   "seventh_lord_dignity": "Seventh-lord sign dignity",
   "seventh_house_aspected_by": "Planets aspecting the 7th house",
   "seventh_lord_aspected_by": "Planets aspecting the 7th lord",
