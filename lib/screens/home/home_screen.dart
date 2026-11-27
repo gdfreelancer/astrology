@@ -231,7 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
         )),
         const SizedBox(width: 10),
         Expanded(child: _DashboardSummaryTile(
-          icon: Icons.saturn_rounded,
+          icon: Icons.public_rounded,
           title: 'Gochar · Shani',
           value: _gocharSummary ?? context.tr('sade_sati_inactive'),
         )),
