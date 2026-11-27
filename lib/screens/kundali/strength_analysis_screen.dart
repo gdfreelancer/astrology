@@ -200,7 +200,7 @@ class _BhavaStrengthList extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Bhava ${item.house.number} · ${kundaliRashiNames[item.signIndex]}',
+                    '${context.tr('house_number').replaceAll('{n}', '${item.house.number}')} · ${_rashiName(context, item.signIndex)}',
                     style: const TextStyle(
                       fontSize: 13,
                       color: AppTheme.ink,
@@ -216,7 +216,7 @@ class _BhavaStrengthList extends StatelessWidget {
                     label: context.tr('lord_placed_house'),
                     value: item.lordHouse == null
                         ? context.tr('not_calculated')
-                        : 'House ${item.lordHouse} · ${item.lordDignity}',
+                        : '${context.tr('house_number').replaceAll('{n}', '${item.lordHouse}')} · ${_dignityName(context, item.lordDignity)}',
                   ),
                   _DetailLine(
                     label: context.tr('bhava_occupants'),
@@ -318,4 +318,39 @@ class _Notice extends StatelessWidget {
           ),
         ),
       );
+}
+
+String _planetName(BuildContext context, String name) {
+  final key = switch (name) {
+    'Sun' => 'planet_sun',
+    'Moon' => 'planet_moon',
+    'Mars' => 'planet_mars',
+    'Mercury' => 'planet_mercury',
+    'Jupiter' => 'planet_jupiter',
+    'Venus' => 'planet_venus',
+    'Saturn' => 'planet_saturn',
+    'Rahu' => 'planet_rahu',
+    'Ketu' => 'planet_ketu',
+    _ => '',
+  };
+  return key.isEmpty ? name : context.tr(key);
+}
+
+String _rashiName(BuildContext context, int sign) {
+  const keys = [
+    'p_mesha','p_vrishabha','p_mithuna','p_karka','p_simha','p_kanya',
+    'p_tula','p_vrishchika','p_dhanu','p_makara','p_kumbha','p_meena',
+  ];
+  return context.tr(keys[sign]);
+}
+
+String _dignityName(BuildContext context, String value) {
+  final key = switch (value) {
+    'Exact exaltation degree' => 'exact_exaltation_degree',
+    'Exaltation sign' => 'exaltation_sign',
+    'Debilitation sign' => 'debilitation_sign',
+    'Own sign' => 'own_sign',
+    _ => 'other_dignity_unassessed',
+  };
+  return context.tr(key);
 }
