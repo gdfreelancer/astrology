@@ -1,0 +1,85 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:timezone/data/latest.dart' as timezone_data;
+import 'package:timezone/timezone.dart' as tz;
+
+import 'package:astrology/services/birth_chart_service.dart';
+
+void main() {
+  setUpAll(timezone_data.initializeTimeZones);
+
+  group('BirthChartService', () {
+    test('converts local historical birth time to the correct UTC instant', () {
+      final result = BirthChartService.calculate(
+        birthDate: DateTime(2000, 1, 1),
+        hour: 2,
+        minute: 30,
+        timeZoneId: 'Asia/Kolkata',
+        placeName: 'Test location',
+        latitude: 23.0225,
+        longitude: 72.5714,
+        gender: 'Not specified',
+      );
+
+      expect(result.birthLocal, isA<tz.TZDateTime>());
+      expect(result.birthUtc, DateTime.utc(1999, 12, 31, 21));
+      expect(result.timeZoneId, 'Asia/Kolkata');
+    });
+
+    test('returns complete normalized chart structures', () {
+      final result = BirthChartService.calculate(
+        birthDate: DateTime(2000, 1, 1),
+        hour: 12,
+        minute: 0,
+        timeZoneId: 'UTC',
+        placeName: 'Test location',
+        latitude: 0,
+        longitude: 0,
+        gender: 'Not specified',
+      );
+      final chart = result.kundaliChart;
+
+      expect(chart.grahas, hasLength(9));
+      expect(chart.bhavas, hasLength(12));
+      expect(chart.ascendantLongitude, inInclusiveRange(0, 360));
+      expect(chart.midheavenLongitude, inInclusiveRange(0, 360));
+      expect(chart.ascendantSignIndex, inInclusiveRange(0, 11));
+
+      for (final graha in chart.grahas) {
+        expect(graha.longitude, inInclusiveRange(0, 360));
+        expect(graha.signIndex, inInclusiveRange(0, 11));
+        expect(graha.houseNumber, inInclusiveRange(1, 12));
+        expect(graha.bhavaNumber, inInclusiveRange(1, 12));
+        expect(graha.dailyMotion.isFinite, isTrue);
+      }
+    });
+
+    test('rejects invalid coordinates and clock values before calculation', () {
+      expect(
+        () => BirthChartService.calculate(
+          birthDate: DateTime(2000, 1, 1),
+          hour: 12,
+          minute: 0,
+          timeZoneId: 'UTC',
+          placeName: 'Invalid',
+          latitude: 91,
+          longitude: 0,
+          gender: 'Not specified',
+        ),
+        throwsArgumentError,
+      );
+      expect(
+        () => BirthChartService.calculate(
+          birthDate: DateTime(2000, 1, 1),
+          hour: 24,
+          minute: 0,
+          timeZoneId: 'UTC',
+          placeName: 'Invalid',
+          latitude: 0,
+          longitude: 0,
+          gender: 'Not specified',
+        ),
+        throwsRangeError,
+      );
+    });
+  });
+}
